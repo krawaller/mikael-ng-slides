@@ -1,0 +1,31 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  compound = true
+
+  subgraph cluster_app {
+    label = "Parent"
+    player
+    bogus1
+  }
+
+  subgraph cluster_scene {
+    label = "ConfirmComponent"
+    bogus3
+    bogus2
+  }
+
+  player, bogus1, bogus2 [color=transparent,fontcolor=transparent,label=" "]
+
+  bogus3 [style=dashed, label="mode"]
+
+  player -> disabled [ltail=cluster_app, dir=none]
+  disabled -> bogus3 [lhead=cluster_scene]
+
+  bogus2 -> link [ltail=cluster_scene, dir=none, constraint=none]
+  link -> bogus1 [lhead=cluster_app]
+
+  link [label="confirmation"]
+
+  {rank=same; disabled, link}
+}

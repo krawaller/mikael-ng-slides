@@ -1,0 +1,1 @@
+This demo shows how the star is a shorthand for structure directives.

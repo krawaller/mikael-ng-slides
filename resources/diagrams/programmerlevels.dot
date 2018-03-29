@@ -1,0 +1,23 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  
+  #labelloc = t
+  #label = "Programmer maturity levels\n\n"
+  #labelfontname = "sans-serif"
+  #fontsize=20
+
+  Level1 -> Level2 -> Level3
+
+  Level1desc [shape=box, label="Copy & paste,\ndoesn't understand all,\nbut gets stuff done"]
+  Level2desc [shape=box, label="Applies design patterns,\nabstracts out helpers,\nlikes to feel clever"]
+  Level3desc [shape=box, label="Sees the big picture,\nmakes pragmatic decisions,\nvalues readability\nand maintainability"]
+
+  Level1 -> Level1desc [arrowhead=none]
+  Level2 -> Level2desc [arrowhead=none]
+  Level3 -> Level3desc [arrowhead=none]
+
+  {rank=same; Level1, Level1desc}
+  {rank=same; Level2, Level2desc}
+  {rank=same; Level3, Level3desc}
+}

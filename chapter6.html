@@ -1,0 +1,974 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Dependency injection</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="icon" type="image/x-icon" href="mc2/images/favicon.ico">
+
+    <link rel="stylesheet" href="mc2/styles/reveal.css">
+    <link rel="stylesheet" href="mc2/styles/theme.css" id="theme">
+    <link rel="stylesheet" href="mc2/styles/code.css">
+    <!--STARTCOURSESPECIFICSTYLES--><link rel="stylesheet" href="styles/mystyles.css">
+<link rel="stylesheet" href="styles/streams.css"><!--ENDCOURSESPECIFICSTYLES-->
+  </head>
+
+  <body>
+    <div id="pos"></div>
+    <div class="reveal">
+      <div class="slides">
+        <section class="slide chaptertitle">
+          <div class="slidecontent">
+            <div class="chapternumber"> chapter 6 of 13 </div>
+            <h1>Dependency injection</h1>
+            <span>Providing the ingredients</p>
+</span>
+          </div>
+        </section>
+        
+        <!--STARTSECTIONINDEX--><section class="slide sectionlist">
+  <div class="slidecontent">
+    <h3>Sections in this chapter</h3>
+    <ol>
+    <li><a href="#/2">Dependency&nbsp;VS&nbsp;input</a></li>
+<li><a href="#/3">Injection&nbsp;explained</a></li>
+<li><a href="#/4">Dependencies&nbsp;in&nbsp;AngularJS</a></li>
+<li><a href="#/5">Dependencies&nbsp;in&nbsp;Angular</a></li>
+<li><a href="#/6">Providing&nbsp;dependencies</a></li>
+<li><a href="#/7">Non&#8209;class&nbsp;dependencies</a></li>
+<li><a href="#/8">Services</a></li>
+<li><a href="#/9">Gamebook&nbsp;&#8209;&nbsp;dependencies</a></li>
+    </ol>
+  </div>
+</section>
+<!--ENDSECTIONINDEX-->
+        <!--STARTCHAPTERCONTENT--><!--STARTSECTION1--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 1/8</div>
+      <h3>Dependency VS input</h3>
+      <p>What do we actually mean?</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="6-1-1">
+<span class="pos">6-1-1</span>
+<div class="slidecontent"><p>Take a look at this <strong>hypothetical function</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> complexLib <span class="hljs-keyword">from</span> <span class="hljs-string">'complexLib'</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">someFunction</span>(<span class="hljs-params">arg1,arg2</span>)</span>{
+  <span class="hljs-comment">/*
+    Somehow calculate `result` using `arg1`,
+    `arg2` and methods on `complexLib`
+  */</span>
+  <span class="hljs-keyword">return</span> result;
+}
+</code></pre>
+</div></section><section class="slide" data-pos="6-1-2">
+<span class="pos">6-1-2</span>
+<div class="slidecontent"><p>If we were to <strong>graph <code>someFunction</code></strong>, it might look like this:</p>
+<p><img src="resources/diagrams/somefunction.svg" alt=""></p>
+</div></section><section class="slide" data-pos="6-1-3">
+<span class="pos">6-1-3</span>
+<div class="slidecontent"><p>But although that <strong>maps the full signature</strong>, it doesn&#39;t capture the <strong>dependency on <code>complexLib</code></strong>. Here&#39;s the <strong>complete truth</strong>:</p>
+<p><img src="resources/diagrams/somefunction-full.svg" alt=""></p>
+</div></section><section class="slide" data-pos="6-1-4">
+<span class="pos">6-1-4</span>
+<div class="slidecontent"><p>As <code>someFunction</code> is currently implemented there is a <strong>big problem with <code>testability</code></strong>, since we <strong>cannot control the dependencies</strong>.</p>
+</div></section><section class="slide" data-pos="6-1-5">
+<span class="pos">6-1-5</span>
+<div class="slidecontent"><p>Ideally we would just want to test that <code>someFunction</code> <strong>calls the correct methods on <code>complexLib</code></strong>, given the values of the inputs.</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">let</span> complexLib = myMock <span class="hljs-comment">// someFunction won't use this! :(</span>
+
+<span class="hljs-keyword">let</span> result = someFunction(testval1,testval2)
+
+assert.equal(result,expectedResult)
+assert.equal(myMock.usedMethod.firstCall,expectedArgs)
+</code></pre>
+<p>But, how do we <strong>make <code>someFunction</code> use <code>myMock</code></strong>?</p>
+</div></section><section class="slide list" data-pos="6-1-6">
+<span class="pos">6-1-6</span>
+<div class="slidecontent">
+<p>Let&#39;s use this simple example to explore <strong>4 options to handle the dependency</strong>:</p>
+<ul>
+<li><span>a</span>in the signature</li>
+<li><span>b</span>in a prop</li>
+<li><span>c</span>in the context</li>
+<li><span>d</span>with a constructor</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="6-1-7">
+<span class="pos">6-1-7</span>
+<div class="slidecontent">
+<p>We could simply <strong>change the signature</strong> from this...</p>
+<pre><code><span class="hljs-function"><span class="hljs-title">someFunction</span><span class="hljs-params">(arg1, arg2)</span></span>
+</code></pre><p>...to this: </p>
+<pre><code><span class="hljs-function"><span class="hljs-title">someFunction</span><span class="hljs-params">(arg1, arg2, complexLib)</span></span>
+</code></pre></div></section><section class="slide" data-pos="6-1-8">
+<span class="pos">6-1-8</span>
+<div class="slidecontent"><p>Now that the <strong><code>complexLib</code> implementation is passed in</strong>, we can easily <strong>use a mock</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">let</span> result = someFunction(testval1, testval2, myMock)
+
+assert.equal(result,expectedResult)
+assert.equal(myMock.usedMethod.firstCall,expectedArgs)
+</code></pre>
+</div></section><section class="slide" data-pos="6-1-9">
+<span class="pos">6-1-9</span>
+<div class="slidecontent"><p>This works, and is probably the <strong>easiest solution</strong>. Now <code>someFunction</code> is <strong>easily testable</strong> and <strong>not tied to a specific <code>complexLib</code> implementation</strong>. Loose coupling!</p>
+</div></section><section class="slide" data-pos="6-1-10">
+<span class="pos">6-1-10</span>
+<div class="slidecontent"><p>The downside is that we have <strong>mixed inputs with dependencies</strong> in the signature, which isn&#39;t super intutitive.</p>
+<p>But <code>someFunction</code> is a <strong>function</strong>, and they only have <strong>one natural point of entry</strong> - the parameters!</p>
+</div></section><section class="slide num numB" data-pos="6-1-11">
+<span class="pos">6-1-11</span>
+<div class="slidecontent">
+<p>We could <strong>attach them as props on the function</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> complexLib <span class="hljs-keyword">from</span> <span class="hljs-string">'complexLib'</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">someFunction</span>(<span class="hljs-params">arg1,arg2</span>)</span>{
+  <span class="hljs-comment">/*
+    Somehow calculate `result` using `arg1`, `arg2`
+    and methods on `someFunction.complexLib`
+  */</span>
+  <span class="hljs-keyword">return</span> result;
+}
+someFunction.complexLib = complexLib
+</code></pre>
+</div></section><section class="slide" data-pos="6-1-12">
+<span class="pos">6-1-12</span>
+<div class="slidecontent"><p>Now we would <strong>test it like thus</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">let</span> oldImplementation = someFunction.complexLib
+someFunction.comlexLib = myMock
+
+<span class="hljs-keyword">let</span> result = someFunction(testval1, testval2)
+
+assert.equal(result,expectedResult)
+assert.equal(myMock.usedMethod.firstCall,expectedArgs)
+
+someFunction.complexLib = oldImplementation
+</code></pre>
+<p>It works, but it is <strong>not very convenient</strong>.</p>
+</div></section><section class="slide num numC" data-pos="6-1-13">
+<span class="pos">6-1-13</span>
+<div class="slidecontent">
+<p>Or we could <strong>use the context</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">someFunction</span>(<span class="hljs-params">arg1,arg2</span>)</span>{
+  <span class="hljs-comment">/*
+    Somehow calculate `result` using `arg1`, `arg2`
+    and methods on `this.complexLib`
+  */</span>
+  <span class="hljs-keyword">return</span> result;
+}
+</code></pre>
+</div></section><section class="slide" data-pos="6-1-14">
+<span class="pos">6-1-14</span>
+<div class="slidecontent"><p>Now you would have to <strong>call <code>someFunction</code> like thus</strong>:</p>
+<pre><code><span class="hljs-keyword">import</span> complexLib <span class="hljs-keyword">from</span> <span class="hljs-string">'complexLib'</span>
+<span class="hljs-keyword">let</span> result = someFunction.call({complexLib}, arg1, arg2)
+</code></pre><p>Not much better!</p>
+</div></section><section class="slide" data-pos="6-1-15">
+<span class="pos">6-1-15</span>
+<div class="slidecontent"><p>We can improve the situation by <strong>defaulting to a private reference</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> complexLib <span class="hljs-keyword">from</span> <span class="hljs-string">'complexLib'</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">someFunction</span>(<span class="hljs-params">arg1,arg2</span>)</span>{
+  <span class="hljs-comment">/*
+    Somehow calculate `result` using `arg1`, `arg2`
+    and methods on `this.complexLib || complexLib`
+  */</span>
+  <span class="hljs-keyword">return</span> result;
+}
+</code></pre>
+</div></section><section class="slide" data-pos="6-1-16">
+<span class="pos">6-1-16</span>
+<div class="slidecontent"><p>Now a <strong>normal call is normal again</strong>:</p>
+<pre><code>let result = someFunction(<span class="hljs-name">arg1</span>, arg2)
+</code></pre><p>...while <strong>testing is still possible</strong>:</p>
+<pre><code><span class="hljs-keyword">let</span> result = someFunction.<span class="hljs-keyword">call</span>({complexLi<span class="hljs-variable">b:myMock</span>}, arg1, arg2)
+</code></pre></div></section><section class="slide num numD" data-pos="6-1-17">
+<span class="pos">6-1-17</span>
+<div class="slidecontent">
+<p>A final example - we could <strong>provide someFunction from a constructor</strong> to which we pass in the dependency:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSomeFunc</span><span class="hljs-params">(dep)</span></span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">someFunc</span><span class="hljs-params">(arg1,arg)</span></span>{
+    <span class="hljs-comment">// calc result using `dep`</span>
+    <span class="hljs-keyword">return</span> result;
+  }
+}
+</code></pre></div></section><section class="slide" data-pos="6-1-18">
+<span class="pos">6-1-18</span>
+<div class="slidecontent"><p><strong>Normal usage</strong> will now look like this:</p>
+<pre><code><span class="hljs-attribute">let someFunc</span> = getSomeFunc(complexLib);
+<span class="hljs-attribute">let result</span> = someFunc(arg1, arg2);
+</code></pre><p>...while we <strong>test like so</strong>:</p>
+<pre><code><span class="hljs-attribute">let someFunc</span> = getSomeFunc(myMock);
+<span class="hljs-attribute">let result</span> = someFunc(arg1, arg2);
+</code></pre></div></section><section class="slide" data-pos="6-1-19">
+<span class="pos">6-1-19</span>
+<div class="slidecontent"><p>All of these setups sort of work, but all have downsides. The important thing is to...</p>
+<ul>
+<li><strong>understand the difference</strong> between input and dependency</li>
+<li><strong>not have a tight coupling</strong> to dependencies in your implementation</li>
+</ul>
+</div></section>
+</section>
+<!--ENDSECTION1-->
+<!--STARTSECTION2--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 2/8</div>
+      <h3>Injection explained</h3>
+      <p>needles aren&#39;t that scary</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="6-2-1">
+<span class="pos">6-2-1</span>
+<div class="slidecontent"><p>Now we will take a look at <strong>dependency injection</strong> as a concept!</p>
+</div></section><section class="slide list" data-pos="6-2-2">
+<span class="pos">6-2-2</span>
+<div class="slidecontent">
+<p>In essence, the <strong>idea</strong> is that if we can</p>
+<ul>
+<li><span>a</span><strong>separate dependencies from inputs</strong>, and</li>
+<li><span>b</span><strong>explain what dependencies we need</strong>, then</li>
+<li><span>c</span>the <strong>dependencies are injected automatically</strong>!</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="6-2-3">
+<span class="pos">6-2-3</span>
+<div class="slidecontent">
+<p>Borrowing from an earlier example, imagine a system where <strong>all functions have the following syntax</strong>:</p>
+<pre><code><span class="hljs-function"><span class="hljs-title">everyFunction</span>(<span class="hljs-params">...args, dependencies</span>)</span>
+</code></pre></div></section><section class="slide" data-pos="6-2-4">
+<span class="pos">6-2-4</span>
+<div class="slidecontent"><p>In other words, the <strong>last argument is an object with dependencies</strong>.</p>
+<p>Thus we have <strong>achieved separation</strong> between dependencies and inputs.</p>
+</div></section><section class="slide num numB" data-pos="6-2-5">
+<span class="pos">6-2-5</span>
+<div class="slidecontent">
+<p>Now also imagine that every function somehow <strong>specifies what dependencies it needs</strong>, perhaps with a <strong>definition object on the function</strong>:</p>
+<pre><code class="lang-javascript">someFunction.neededDeps = {
+  <span class="hljs-attr">lib</span>: <span class="hljs-string">'dependencyID'</span>,
+  <span class="hljs-attr">anotherLib</span>: <span class="hljs-string">'anotherDependencyID'</span>
+}
+</code></pre>
+</div></section><section class="slide" data-pos="6-2-6">
+<span class="pos">6-2-6</span>
+<div class="slidecontent"><p>Which would mean that <strong><code>someFunction</code> expects to be called thusly</strong>:</p>
+<pre><code class="lang-javascript">someFunction(arg1,arg2,arg3,{
+  <span class="hljs-attr">lib</span>: instanceOfLib,
+  <span class="hljs-attr">anotherLib</span>: instanceOfAnotherLib
+})
+</code></pre>
+</div></section><section class="slide num numC" data-pos="6-2-7">
+<span class="pos">6-2-7</span>
+<div class="slidecontent">
+<p>Finally, imagine that we <strong>abstract out the dependency providing</strong> to a helper function:</p>
+<pre><code><span class="hljs-function"><span class="hljs-title">callWithDeps</span><span class="hljs-params">(someFunction,arg1,arg2,arg3)</span></span>
+</code></pre><p>It is now <strong>up to <code>callWithDeps</code> to call <code>someFunction</code></strong> with the needed <strong>dependencies</strong>!</p>
+</div></section><section class="slide" data-pos="6-2-8">
+<span class="pos">6-2-8</span>
+<div class="slidecontent"><p>Internally, <code>callWithDeps</code> would</p>
+<ol>
+<li><strong>look at the <code>neededDeps</code> prop</strong> of the provided function.</li>
+<li>use the <strong>dependencyID:s</strong> to <strong>procure dep instances</strong> from some kind of <strong>repository</strong></li>
+<li><strong>call the function with the deps</strong></li>
+</ol>
+</div></section><section class="slide" data-pos="6-2-9">
+<span class="pos">6-2-9</span>
+<div class="slidecontent"><p>Of course this assumes that the <strong>dependencies have been registered in the repository</strong> with the corresponding ID:s.</p>
+</div></section><section class="slide question" data-pos="6-2-10">
+<span class="pos">6-2-10</span>
+<div class="slidecontent">
+<p>Ok, so we abstract out the dependency providing. Fine. <strong>What is the point</strong>?</p>
+</div></section><section class="slide answer" data-pos="6-2-11">
+<span class="pos">6-2-11</span>
+<div class="slidecontent">
+<p>There&#39;s many! Here&#39;s a few:</p>
+<ul>
+<li>It makes usage <strong>convenient</strong> (if done right)</li>
+<li>We can <strong>manipulate the repo</strong> in a testing scenario to <strong>provide mocks</strong></li>
+<li>The <strong>repository becomes a recipe for the app</strong></li>
+<li>It makes <strong>static analysis</strong> of the app easier, enabling things like <strong>dependency graphs</strong>.</li>
+</ul>
+</div></section><section class="slide" data-pos="6-2-12">
+<span class="pos">6-2-12</span>
+<div class="slidecontent"><p>Also, in our example we played around with <strong>dependencies for function calls</strong>.</p>
+<p>But in our Angular code we declare <strong>dependencies for instantiation</strong>, which makes more sense to leave to the system. Subsequent usage of the instance isn&#39;t affected.</p>
+</div></section><section class="slide" data-pos="6-2-13">
+<span class="pos">6-2-13</span>
+<div class="slidecontent"><p>A final note: <strong>dependency injection</strong> (DI), and <strong>inversion of control</strong> (IoC) which DI is an example of, are <strong>design patterns</strong> with <strong>exact definitions</strong> that we haven&#39;t religiously adhered to in our explanations.</p>
+</div></section>
+</section>
+<!--ENDSECTION2-->
+<!--STARTSECTION3--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 3/8</div>
+      <h3>Dependencies in AngularJS</h3>
+      <p>Writing a wishlist yesterday</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="6-3-1">
+<span class="pos">6-3-1</span>
+<div class="slidecontent"><p>Already back in <strong>AngularJS</strong> we <strong>had dependency injection</strong>. </p>
+<p>In order to understand the new Angular implementation we will first <strong>explore AngularJS&#39;s solution</strong>!</p>
+</div></section><section class="slide" data-pos="6-3-2">
+<span class="pos">6-3-2</span>
+<div class="slidecontent"><p>AngularJS used a very simple system: the <strong>constructor function parameters</strong> were used as <strong>dependency ID:s</strong>.</p>
+</div></section><section class="slide" data-pos="6-3-3">
+<span class="pos">6-3-3</span>
+<div class="slidecontent"><p>So when AngularJS needs to <strong>call this constructor</strong>:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myConstructor</span><span class="hljs-params">(someDepName, anotherDepName)</span></span>{
+  <span class="hljs-comment">// doing stuff</span>
+}
+</code></pre><p>...it would <strong>look in the repository</strong> for dependencies named <strong><code>someDepName</code></strong> and <strong><code>anotherDepName</code></strong>.</p>
+</div></section><section class="slide" data-pos="6-3-4">
+<span class="pos">6-3-4</span>
+<div class="slidecontent"><p>So if you had previously <strong>registered resources</strong>...</p>
+<pre><code><span class="hljs-keyword">module</span>.service(<span class="hljs-string">'myService'</span>, definition)
+<span class="hljs-keyword">module</span>.<span class="hljs-keyword">value</span>(<span class="hljs-string">'someConst'</span>, <span class="hljs-number">42</span>)
+</code></pre></div></section><section class="slide" data-pos="6-3-5">
+<span class="pos">6-3-5</span>
+<div class="slidecontent"><p>...then your constructor could simply <strong>name these resources</strong>:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myConstructor</span><span class="hljs-params">(myService, someConst)</span></span>{
+  <span class="hljs-comment">// doing stuff</span>
+}
+</code></pre><p>...and they <strong>would be provided to you</strong>.</p>
+</div></section><section class="slide" data-pos="6-3-6">
+<span class="pos">6-3-6</span>
+<div class="slidecontent"><p>There was also a bunch of <strong>built-in resources</strong> that you could name:</p>
+<pre><code class="lang-javascript">[<span class="hljs-string">'$scope'</span>,<span class="hljs-string">'$rootScope'</span>,<span class="hljs-string">'$http'</span>, ...]
+</code></pre>
+<p>The <code>$</code> character signifies that this is built-in and not user defined.</p>
+</div></section><section class="slide question" data-pos="6-3-7">
+<span class="pos">6-3-7</span>
+<div class="slidecontent">
+<p>Wait. So the parameters are resource ID:s. I get a <strong>reference to the function</strong>. But how do I <strong>derive the parameter names</strong> from that? There is no <code>func.params</code> thing, is there?</p>
+</div></section><section class="slide answer" data-pos="6-3-8">
+<span class="pos">6-3-8</span>
+<div class="slidecontent">
+<p>No, <strong>there isn&#39;t</strong>, and I&#39;m glad you asked!</p>
+<p>So, the black magic they&#39;re using is a <strong>weirdness with string casting</strong> in JavaScript.</p>
+</div></section><section class="slide" data-pos="6-3-9">
+<span class="pos">6-3-9</span>
+<div class="slidecontent"><p>For example, if we try to <strong>cast an object to a string</strong>...</p>
+<pre><code class="lang-javascript">myObj.toString()
+</code></pre>
+<p>...we get this <strong>completely useless output</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-string">"[object Object]"</span>
+</code></pre>
+</div></section><section class="slide" data-pos="6-3-10">
+<span class="pos">6-3-10</span>
+<div class="slidecontent"><p>But, if we <strong>cast a function to a string</strong>...</p>
+<pre><code class="lang-javascript">myFunc.toString()
+</code></pre>
+<p>...we get the <strong>source code as a string</strong>!</p>
+<pre><code class="lang-javascript"><span class="hljs-string">"function myFunc(anArg, anotherArg, aThirdArg){ ... }"</span>
+</code></pre>
+</div></section><section class="slide" data-pos="6-3-11">
+<span class="pos">6-3-11</span>
+<div class="slidecontent"><p>So attacking that string with some <strong>regex magic</strong>...</p>
+<pre><code class="lang-javascript">myFunc.toString().match(<span class="hljs-regexp">/^[^(]*\((.*?)\)/</span>)[<span class="hljs-number">1</span>].split(<span class="hljs-regexp">/, */</span>)
+</code></pre>
+<p>...we get a <strong>list of parameter names</strong>!</p>
+<pre><code class="lang-javascript">[<span class="hljs-string">'anArg'</span>, <span class="hljs-string">'anotherArg'</span>, <span class="hljs-string">'aThirdArg'</span>]
+</code></pre>
+<p>This is <strong>what AngularJS does under the hood</strong>.</p>
+</div></section><section class="slide" data-pos="6-3-12">
+<span class="pos">6-3-12</span>
+<div class="slidecontent"><p>Zooming out: the dependency injection in AngularJS was <strong>widely appreciated</strong>. But it was also <strong>criticised</strong>:</p>
+<ul>
+<li>The <strong>reliance on parameter spelling is brittle</strong></li>
+<li>More <strong>advanced provider gymnastics</strong> was hard</li>
+</ul>
+<p>Both these issues were <strong>addressed in the new Angular version</strong>!</p>
+</div></section>
+</section>
+<!--ENDSECTION3-->
+<!--STARTSECTION4--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 4/8</div>
+      <h3>Dependencies in Angular</h3>
+      <p>Writing a wishlist today</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="6-4-1">
+<span class="pos">6-4-1</span>
+<div class="slidecontent"><p>Recall the <strong><code>someFunction</code> example</strong>, where we </p>
+<ul>
+<li>highlighted the importance to <strong>distinguish between inputs and dependencies</strong></li>
+<li>showed that this is <strong>difficult to do for functions</strong> since they only have one entry point</li>
+<li>said that <strong>dependencies often end up in the signature</strong> for this reason</li>
+</ul>
+</div></section><section class="slide" data-pos="6-4-2">
+<span class="pos">6-4-2</span>
+<div class="slidecontent"><p>In Angular, <strong>all application parts</strong> - whether actual <code>Components</code> or <code>Directives</code> or whatnot - <strong>are classes</strong>...</p>
+<pre><code class="lang-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SomeApplicationPart</span> </span>{
+  <span class="hljs-keyword">constructor</span>(){ ... }
+  someProp = initialVal
+  someMethod(){ ... }
+}
+</code></pre>
+<p>...which, in contrast to regular function, means we have <strong>many potential entry point</strong>!</p>
+</div></section><section class="slide" data-pos="6-4-3">
+<span class="pos">6-4-3</span>
+<div class="slidecontent"><p>The <strong>inputs</strong> (and <strong>outputs</strong>) in an Angular component are <strong>decorated properties</strong>...</p>
+<pre><code class="lang-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SomeApplicationPart</span> </span>{
+  <span class="hljs-keyword">constructor</span>(){ ... }
+  @Input someProp = initialVal <span class="hljs-comment">// &lt;--- input!</span>
+  @Output() anotherProp = <span class="hljs-keyword">new</span> Emitter&lt;someType&gt;() <span class="hljs-comment">// &lt;--- output!</span>
+  someMethod(){ ... }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="6-4-4">
+<span class="pos">6-4-4</span>
+<div class="slidecontent"><p>...while <strong>dependencies</strong> have a very natural home in the <strong>constructor signature</strong>!</p>
+<pre><code class="lang-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SomeApplicationPart</span> </span>{
+  <span class="hljs-keyword">constructor</span>(dep1, dep2){ ... } <span class="hljs-comment">// &lt;--- our dependencies</span>
+  @Input someProp = initialVal
+  @Output() anotherProp = <span class="hljs-keyword">new</span> Emitter&lt;someType&gt;()
+  someMethod(){ ... }
+}
+</code></pre>
+<p>Let&#39;s now dig into exactly <strong>how</strong> they are listed!</p>
+</div></section><section class="slide" data-pos="6-4-5">
+<span class="pos">6-4-5</span>
+<div class="slidecontent"><p>First off, the <strong>dependency ID:s are not just pure strings</strong> as in Angular1.</p>
+<p>We now call them <strong>tokens</strong>, and most often they are <strong>the class we want an instance from</strong>.</p>
+</div></section><section class="slide" data-pos="6-4-6">
+<span class="pos">6-4-6</span>
+<div class="slidecontent"><p>In an <strong>ES6 version</strong> (that is, non-TypeScript) we <strong>add the token as metadata</strong> using a <strong>decorator</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SomeApplicationPart</span> </span>{
+  <span class="hljs-keyword">constructor</span>(
+    @Inject(Dep1Class) dep1,
+    @Inject(Dep2Class) dep2
+  ){ ... }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="6-4-7">
+<span class="pos">6-4-7</span>
+<div class="slidecontent"><p>In a <strong>TypeScript version</strong> we just do <strong>regular type annotation</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> SomeApplicationPart {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params">dep1: Dep1Class, dep2: Dep2Class</span>) {...}
+}
+</code></pre>
+<p>The <strong>token</strong> and <strong>type</strong> are one and the same!</p>
+<p>Even React lovers grudgingly admit that this syntax is <strong>supremely elegant</strong>!</p>
+</div></section><section class="slide" data-pos="6-4-8">
+<span class="pos">6-4-8</span>
+<div class="slidecontent"><p>If you want the dependencies to <strong>become props on the instance</strong>, typescript has the <strong><code>public</code></strong> keyword</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> SomeApplicationPart {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params">dep1: Dep1Class, <span class="hljs-keyword">public</span> dep2: Dep2Class</span>) {...}
+}
+
+instance.dep1 <span class="hljs-comment">// undefined</span>
+instance.dep2 <span class="hljs-comment">// Dep2Class instance</span>
+</code></pre>
+<p>We can also use <strong><code>private</code></strong>, and then they&#39;re <strong>not available in the template</strong>.</p>
+</div></section>
+</section>
+<!--ENDSECTION4-->
+<!--STARTSECTION5--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 5/8</div>
+      <h3>Providing dependencies</h3>
+      <p>the delivery service</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="6-5-1">
+<span class="pos">6-5-1</span>
+<div class="slidecontent"><p>So now we know <strong>how dependencies are specified</strong>.</p>
+<p>Time to see <strong>how they are provided</strong>!</p>
+</div></section><section class="slide" data-pos="6-5-2">
+<span class="pos">6-5-2</span>
+<div class="slidecontent"><p>As you might have guessed, the vehicle for this is <strong>NgModule</strong>.</p>
+<p>Every module can list resources for dependency injection in their <strong><code>providers</code></strong> metadata property.</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@NgModule</span>({
+  providers: [provider1, provider2, ...]
+})
+</code></pre>
+</div></section><section class="slide" data-pos="6-5-3">
+<span class="pos">6-5-3</span>
+<div class="slidecontent"><p>A <code>provider</code> is an <strong>object</strong> that...</p>
+<ul>
+<li><strong>mentions a dependency token</strong> and</li>
+<li><strong>explains how to get it</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="6-5-4">
+<span class="pos">6-5-4</span>
+<div class="slidecontent"><p>The <strong>most common configuration</strong> looks like this:</p>
+<pre><code class="lang-javascript">{ <span class="hljs-attr">provide</span>: SomeClass, <span class="hljs-attr">useClass</span>: SomeClass }
+</code></pre>
+<p>Note that...</p>
+<ul>
+<li>the <strong><code>provide</code></strong> prop contains the <strong>token</strong>, and</li>
+<li>the <strong><code>useClass</code></strong> prop mentions the <strong>class to be instantiated</strong>.</li>
+</ul>
+</div></section><section class="slide" data-pos="6-5-5">
+<span class="pos">6-5-5</span>
+<div class="slidecontent"><p>Because <strong>using the wanted class as a token is so common</strong>, Angular lets you use this:</p>
+<pre><code><span class="hljs-attribute">SomeClass</span>
+</code></pre><p>...as a shorthand for this:</p>
+<pre><code>{ <span class="hljs-attribute">provide</span>: SomeClass, useClass: SomeClass }
+</code></pre></div></section><section class="slide list" data-pos="6-5-6">
+<span class="pos">6-5-6</span>
+<div class="slidecontent">
+<p>So there are <strong>three parts to DI</strong>:</p>
+<ul>
+<li><span>a</span>Declaring the <strong>class to be injected</strong></li>
+<li><span>b</span><strong>Providing the dependency</strong> in <code>NgModule</code></li>
+<li><span>c</span>Use it as <strong>construction parameter</strong> in a component.</li>
+</ul>
+<p>Let&#39;s see all this in action!</p>
+</div></section><section class="slide num numA" data-pos="6-5-7">
+<span class="pos">6-5-7</span>
+<div class="slidecontent">
+<p>Here&#39;s the super useful <strong>class we want to inject</strong>:</p>
+<pre><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dependency</span> </span>{
+  foo = <span class="hljs-string">'bar'</span>
+}
+</code></pre><p>An instance would get a prop <code>foo</code> with the value <code>&#39;bar&#39;</code>.</p>
+</div></section><section class="slide num numB" data-pos="6-5-8">
+<span class="pos">6-5-8</span>
+<div class="slidecontent">
+<p>To <strong>make <code>Dependency</code> available</strong> we register it in an <code>NgModule</code>:</p>
+<pre><code><span class="hljs-variable">@NgModule</span>({
+    <span class="hljs-attribute">imports</span>:      [ BrowserModule ],
+    <span class="hljs-attribute">declarations</span>: [ AppComponent ],
+    <span class="hljs-attribute">bootstrap</span>:    [ AppComponent ],
+    <span class="hljs-attribute">providers</span>:    [ Dependency ] <span class="hljs-comment">// [ {provides: Dependency, useClass: Dependency} ]</span>
+})
+class AppModule {}
+</code></pre></div></section><section class="slide num numC" data-pos="6-5-9">
+<span class="pos">6-5-9</span>
+<div class="slidecontent">
+<p>Now we can <strong>inject it into a component</strong>:</p>
+<pre><code><span class="hljs-variable">@Component</span>({
+  <span class="hljs-attribute">selector</span>: <span class="hljs-string">'app'</span>,
+  <span class="hljs-attribute">template</span>: <span class="hljs-built_in">`Value from dependency: {{dep.foo}}`</span>,
+})
+export class AppComponent {
+  <span class="hljs-selector-tag">constructor</span>(public <span class="hljs-attribute">dep</span>: Dependency) {}
+}
+</code></pre><p>You can <strong>see this in action</strong> in the <a href="resources/supportsite/demos/injection_class" target="_blank">Class Dependency</a> demo!</p>
+</div></section><section class="slide" data-pos="6-5-10">
+<span class="pos">6-5-10</span>
+<div class="slidecontent"><p>Note that <strong>providers aren&#39;t limited by lines of sight</strong>. Unless you take specific measures, <strong>all providers are visible in all modules</strong>.</p>
+<p>This is by design; normally you want all components to <strong>share a single instance</strong> of your service.</p>
+</div></section><section class="slide" data-pos="6-5-11">
+<span class="pos">6-5-11</span>
+<div class="slidecontent"><p>This means that when you want to <strong>test your components</strong> (or directives or other part), we <strong>use test-specific providers</strong>.</p>
+</div></section><section class="slide" data-pos="6-5-12">
+<span class="pos">6-5-12</span>
+<div class="slidecontent"><p>Unlike in AngularJS, the <strong>built-in injectables</strong> are <strong>not automatically available</strong>! You have to manually <strong>import the module they live in</strong>.</p>
+<p>For example, the <strong><code>http</code> service</strong> is provided by the <strong><code>HttpModule</code></strong>, which must be <strong>imported by your module</strong>.</p>
+</div></section><section class="slide" data-pos="6-5-13">
+<span class="pos">6-5-13</span>
+<div class="slidecontent"><p>The <strong>robust and flexible dependency injection</strong> is one of Angular&#39;s <strong>main advantage over other frameworks</strong> such as React, which lacks an equivalent system.</p>
+</div></section><section class="slide" data-pos="6-5-14">
+<span class="pos">6-5-14</span>
+<div class="slidecontent"><p>So it might <strong>seem abstract and hard</strong>, but <strong>take the time to get to know it</strong> as it will be well worth the effort!</p>
+</div></section>
+</section>
+<!--ENDSECTION5-->
+<!--STARTSECTION6--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 6/8</div>
+      <h3>Non-class dependencies</h3>
+      <p>not as classy anymore</p>
+</p>
+    </div>
+  </section>
+  <section class="slide question" data-pos="6-6-1">
+<span class="pos">6-6-1</span>
+<div class="slidecontent">
+<p>We just saw the elegant solution to <strong>providing class instances</strong> by using <strong>the token as the type</strong> for the parameter.</p>
+<p>But, what if we want to provide, say <strong>a constant</strong>?</p>
+</div></section><section class="slide answer" data-pos="6-6-2">
+<span class="pos">6-6-2</span>
+<div class="slidecontent">
+<p>For this you would provide <strong><code>useValue</code></strong> instead of <code>useClass</code>:</p>
+<pre><code>{<span class="hljs-attribute">provide</span>: MyToken, useValue: <span class="hljs-number">42</span>}
+</code></pre><p>But you already noticed the bigger problem - <strong>what should <code>MyToken</code> be</strong>?</p>
+</div></section><section class="slide" data-pos="6-6-3">
+<span class="pos">6-6-3</span>
+<div class="slidecontent"><p>We could imagine making a <strong>dummy class</strong>:</p>
+<pre><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyToken</span> </span>{}
+</code></pre><p>And <strong>use that as type</strong> in the component:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">constructor</span><span class="hljs-params">(val: MyToken)</span></span>
+</code></pre></div></section><section class="slide" data-pos="6-6-4">
+<span class="pos">6-6-4</span>
+<div class="slidecontent"><p>Or we could just use a <strong>string constant</strong>:</p>
+<pre><code><span class="hljs-keyword">const</span> MyToken = <span class="hljs-string">'SOME_UNIQUE_STRING'</span>
+</code></pre></div></section><section class="slide list" data-pos="6-6-5">
+<span class="pos">6-6-5</span>
+<div class="slidecontent">
+<p>But there are <strong>two problems</strong> with these solutions:</p>
+<ul>
+<li><span>a</span>There&#39;s a <strong>type mismatch</strong>. We claim <code>val</code> is a <code>MyToken</code>, but it is a number!</li>
+<li><span>b</span><strong>Dummy classes are inelegant</strong> and <strong>magic strings dangerous</strong>.</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="6-6-6">
+<span class="pos">6-6-6</span>
+<div class="slidecontent">
+<p>We solve the <strong>type mismatch</strong> by using the <strong><code>Inject</code> decorator</strong> we saw earlier for the non-typescript version:</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">constructor</span><span class="hljs-params">(@Inject(MyToken)</span> <span class="hljs-title">val</span>:</span> number) <span class="hljs-comment">{}</span>
+</code></pre></div></section><section class="slide" data-pos="6-6-7">
+<span class="pos">6-6-7</span>
+<div class="slidecontent"><p>Now the <strong>token is supplied as metadata</strong>, and we have a <strong>true type annotation</strong>.</p>
+<p>Not as sleek as when the token was the type, but for good reason - the <strong>token isn&#39;t the type</strong> here!</p>
+</div></section><section class="slide num numB" data-pos="6-6-8">
+<span class="pos">6-6-8</span>
+<div class="slidecontent">
+<p>Regarding tokens for non-class dependencies, Angular has an <strong><code>InjectionToken</code></strong> creator for this purpose:</p>
+<pre><code><span class="hljs-keyword">const</span> MyToken = InjectionToken(<span class="hljs-string">'someDescriptiveString'</span>);
+
+<span class="hljs-comment">// Typed version</span>
+<span class="hljs-keyword">const</span> MyToken = InjectionToken&lt;SomeType&gt;(<span class="hljs-string">'someDescriptiveString'</span>);
+</code></pre></div></section><section class="slide" data-pos="6-6-9">
+<span class="pos">6-6-9</span>
+<div class="slidecontent"><p>Previously there was an <strong><code>OpaqueToken</code></strong>, but that has been deprecated and replaced by <code>InjectionToken</code>.</p>
+</div></section><section class="slide" data-pos="6-6-10">
+<span class="pos">6-6-10</span>
+<div class="slidecontent"><p>If you need more control, there&#39;s also a <strong><code>useFactory</code> option</strong> where you supply a function, and the <strong>returned value is provided</strong>.</p>
+<pre><code>{<span class="hljs-attribute">provide</span>: MyToken, useFactory: ()=&gt; <span class="hljs-number">42</span>}
+</code></pre><p>Try it in the <a href="resources/supportsite/demos/injection_value_opaque" target="_blank">Constant Dependency</a> demo!</p>
+</div></section><section class="slide" data-pos="6-6-11">
+<span class="pos">6-6-11</span>
+<div class="slidecontent"><p>For when you need <strong>other dependencies injected into the factory</strong> you need to <strong>list the tokens in the <code>deps</code> prop</strong>.</p>
+<pre><code>{
+  <span class="hljs-attribute">provide</span>: MyToken,
+  useFactory: (someDep)=&gt; someDep.<span class="hljs-built_in">doSomething</span>(),
+  deps: [SomeDepToken]
+}
+</code></pre><p>See this in action in the <a href="resources/supportsite/demos/injection_value_factory_dep" target="_blank">Dependency Factory</a> demo!</p>
+</div></section><section class="slide" data-pos="6-6-12">
+<span class="pos">6-6-12</span>
+<div class="slidecontent"><p>A final note: don&#39;t hesitate to <strong>use dependency injection for constants</strong>!</p>
+<p>It might <strong>seem like overkill</strong>, but the...</p>
+<ul>
+<li><strong>fine-grained control</strong> and</li>
+<li><strong>code predictability</strong></li>
+</ul>
+<p>..that you gain is hard to beat!</p>
+</div></section>
+</section>
+<!--ENDSECTION6-->
+<!--STARTSECTION7--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 7/8</div>
+      <h3>Services</h3>
+      <p>where are they?</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="6-7-1">
+<span class="pos">6-7-1</span>
+<div class="slidecontent"><p>Let&#39;s take a brief moment to discuss the word <strong><code>Service</code></strong>.</p>
+<p>In <strong>AngularJS they meant something specific</strong> - it was a <strong>type of building block</strong> that we explicitly defined on our modules, alongside <code>controllers</code> and <code>directives</code> and the rest.</p>
+<p>Yet so far we&#39;ve seen <strong>no mention of them in the new Angular</strong>!</p>
+</div></section><section class="slide" data-pos="6-7-2">
+<span class="pos">6-7-2</span>
+<div class="slidecontent"><p>That is simply because we <strong>don&#39;t need the concept</strong>. Angular lets us <strong>provide whatever values we want</strong> through registering providers in our modules.</p>
+<p>Where those values come from is <strong>completely up to us</strong>.</p>
+</div></section><section class="slide" data-pos="6-7-3">
+<span class="pos">6-7-3</span>
+<div class="slidecontent"><p>Still, the <strong>term <code>Service</code> has carried over to Angular</strong>, even though it has <strong>no technical meaning</strong>.</p>
+<p>It simply means <strong>a <code>class</code> available for injection</strong>.</p>
+</div></section><section class="slide" data-pos="6-7-4">
+<span class="pos">6-7-4</span>
+<div class="slidecontent"><p>As with AngularJS, there are a whole slew of <strong>built-in &quot;services&quot;</strong>.</p>
+<p>And just like with directives, a big part of <strong>learning Angular</strong> means <strong>learning what is already there</strong> and <strong>when to use it</strong>.</p>
+</div></section><section class="slide" data-pos="6-7-5">
+<span class="pos">6-7-5</span>
+<div class="slidecontent"><p>If your <strong>dependency has dependencies</strong>, we need to <strong>mark it with the <code>Injectable</code> decorator</strong> to let Angular know that this class also needs to be part of the dependency graph.</p>
+<pre><code><span class="hljs-meta">@Injectable</span>()
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> Dependency {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> foo:Dependency2</span>){}
+}
+</code></pre></div></section><section class="slide" data-pos="6-7-6">
+<span class="pos">6-7-6</span>
+<div class="slidecontent"><p>Although <strong>dependencies with dependencies might seem a special case</strong>, make note;</p>
+<ul>
+<li>This is actually where <strong>DI really shines</strong>, as managing this manually is hard</li>
+<li>It <strong>isn&#39;t that uncommon</strong>. For example, your custom service might use the http service.</li>
+</ul>
+</div></section><section class="slide list" data-pos="6-7-7">
+<span class="pos">6-7-7</span>
+<div class="slidecontent">
+<p>Typically, a service will...</p>
+<ul>
+<li><span>a</span><strong>own a piece of data</strong> that is of interest to many components</li>
+<li><span>b</span>allow components to <strong>subscribe to that data</strong></li>
+<li><span>c</span>allow components to <strong>update the data</strong>, and notify all subscribers when that happen</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="6-7-8">
+<span class="pos">6-7-8</span>
+<div class="slidecontent">
+<p>The data will be a <strong>private variable</strong> within the service class:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Injectable</span>()
+<span class="hljs-keyword">class</span> serviceExample {
+  <span class="hljs-keyword">private</span> data = someInitialValue;
+}
+</code></pre>
+<p>It is <strong>not directly accessible</strong> from the outside.</p>
+</div></section><section class="slide num numB" data-pos="6-7-9">
+<span class="pos">6-7-9</span>
+<div class="slidecontent">
+<p>Instead, the service provides a <strong>subscription service</strong>:</p>
+<pre><code class="lang-typescript">  <span class="hljs-keyword">private</span> listeners: <span class="hljs-built_in">Function</span>[] = [];
+  subscribe(callback: <span class="hljs-built_in">Function</span>){
+    <span class="hljs-keyword">this</span>.listeners.push(callback);
+    callback(<span class="hljs-keyword">this</span>.data); <span class="hljs-comment">// also serve them the data as is right now</span>
+  }
+</code></pre>
+</div></section><section class="slide" data-pos="6-7-10">
+<span class="pos">6-7-10</span>
+<div class="slidecontent"><p>Components will <strong>call <code>.subscribe</code> with a callback</strong> which will be called with the data whenever the data updates.</p>
+<p>Typically, in that callback, the component will <strong>store a local reference</strong> to the data:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">constructor</span>(<span class="hljs-params">service: Service</span>){
+  service.subscribe(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> <span class="hljs-keyword">this</span>.data = data);
+}
+</code></pre>
+</div></section><section class="slide" data-pos="6-7-11">
+<span class="pos">6-7-11</span>
+<div class="slidecontent"><p>The service usually has a private <code>notifyListeners</code> method that will call all currently registered subscribers with the fresh data:</p>
+<pre><code class="lang-typescript">  <span class="hljs-keyword">private</span> notifyListeners(){
+    <span class="hljs-keyword">this</span>.listeners.forEach(<span class="hljs-function"><span class="hljs-params">cb</span> =&gt;</span> cb(<span class="hljs-keyword">this</span>.data));
+  }
+</code></pre>
+</div></section><section class="slide num numC" data-pos="6-7-12">
+<span class="pos">6-7-12</span>
+<div class="slidecontent">
+<p>Finally, the service usually exposes an <strong>.updateData</strong> method which will...</p>
+<ul>
+<li>update the private data</li>
+<li>call the <code>.notifyListeners</code> method</li>
+</ul>
+<pre><code class="lang-typescript">  updateData(newData){
+    <span class="hljs-keyword">this</span>.data = newData;
+    <span class="hljs-keyword">this</span>.notifyListeners();
+  }
+</code></pre>
+</div></section><section class="slide" data-pos="6-7-13">
+<span class="pos">6-7-13</span>
+<div class="slidecontent"><p>Here&#39;s the <strong>full source</strong> for our typical example service:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Injectable</span>()
+<span class="hljs-keyword">class</span> serviceExample {
+  <span class="hljs-keyword">private</span> data = someInitialValue;
+  <span class="hljs-keyword">private</span> listeners: <span class="hljs-built_in">Function</span>[] = [];
+  subscribe(callback: <span class="hljs-built_in">Function</span>){
+    <span class="hljs-keyword">this</span>.listeners.push(callback);
+    callback(<span class="hljs-keyword">this</span>.data); <span class="hljs-comment">// also serve them the data as is right now</span>
+  }
+  updateData(newData){
+    <span class="hljs-keyword">this</span>.data = newData;
+    <span class="hljs-keyword">this</span>.notifyListeners();
+  }
+  <span class="hljs-keyword">private</span> notifyListeners(){
+    <span class="hljs-keyword">this</span>.listeners.forEach(<span class="hljs-function"><span class="hljs-params">cb</span> =&gt;</span> cb(<span class="hljs-keyword">this</span>.data));
+  }
+}
+</code></pre>
+</div></section>
+</section>
+<!--ENDSECTION7-->
+<!--STARTSECTION8--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 8/8</div>
+      <h3>Gamebook - dependencies</h3>
+      <p>Lethal injection</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="6-8-1">
+<span class="pos">6-8-1</span>
+<div class="slidecontent"><p>You know the drill;</p>
+<ol>
+<li><strong>copy the folder of the previous version</strong>,</li>
+<li><strong>paste it</strong> right next to that version, and</li>
+<li>give it the name <strong><code>FF06-dependencies</code></strong>.</li>
+</ol>
+</div></section><section class="slide" data-pos="6-8-2">
+<span class="pos">6-8-2</span>
+<div class="slidecontent"><p>So! If <strong>dependency injection</strong> is as cool as they say, we&#39;d better <strong>use it in our gamebook app</strong>!</p>
+<p>To try our hand at this, we&#39;re going to implement a <strong><code>StateHandler</code></strong> service.</p>
+</div></section><section class="slide" data-pos="6-8-3">
+<span class="pos">6-8-3</span>
+<div class="slidecontent"><p>This service will <strong>take over responsibilities from <code>app.ts</code></strong>, primarily the <strong>ownership of <code>gameState</code></strong>.</p>
+<p>Instead, <code>app.ts</code> and <code>scene.ts</code> will have to <strong>subscribe</strong> to the data on the service, much like example you just saw.</p>
+</div></section><section class="slide" data-pos="6-8-4">
+<span class="pos">6-8-4</span>
+<div class="slidecontent"><p>However, instead of making the components subscribe and update <code>GameState</code>, consider this; in the components we...</p>
+<ul>
+<li>use <code>GameState</code> only to calculate <code>CurrentScene</code></li>
+<li>update <code>GameState</code> after selecting an <code>Option</code></li>
+</ul>
+</div></section><section class="slide" data-pos="6-8-5">
+<span class="pos">6-8-5</span>
+<div class="slidecontent"><p>So, let&#39;s reflect that in our service API! We should let components...</p>
+<ul>
+<li><strong>subscribe to <code>Scene</code></strong>, not <code>GameState</code> (thus moving the getter logic to the service)</li>
+<li><strong>submit an <code>Option</code></strong>, not <code>GameState</code> (and let the service figure out the updated state)</li>
+</ul>
+<p>If you did the <strong>reset challenge</strong> then we also need a separate <code>.reset</code> method on the service.</p>
+</div></section><section class="slide list" data-pos="6-8-6">
+<span class="pos">6-8-6</span>
+<div class="slidecontent">
+<p>So, here&#39;s the masterplan!</p>
+<ul>
+<li><span>a</span><strong>add a <code>statehandler.ts</code> file</strong> with the service</li>
+<li><span>b</span><strong>expose the service in <code>NgModule</code></strong></li>
+<li><span>c</span><strong>use it in <code>SceneComponent</code></strong></li>
+<li><span>d</span><strong>use it in <code>AppComponent</code></strong></li>
+</ul>
+</div></section><section class="slide num numA" data-pos="6-8-7">
+<span class="pos">6-8-7</span>
+<div class="slidecontent">
+<p>Here&#39;s a <strong>skeleton for <code>statehandler.ts</code></strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> StateHandler {
+  <span class="hljs-keyword">private</span> listeners: <span class="hljs-built_in">Function</span>[] <span class="hljs-comment">// all interested callbacks</span>
+  <span class="hljs-keyword">private</span> gameState: GameState <span class="hljs-comment">// current state</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">get</span> currentScene() { ... } <span class="hljs-comment">// calculate using `gameState` + adventure</span>
+  <span class="hljs-keyword">private</span> notifyListeners() { ... } <span class="hljs-comment">// call all callbacks with `currentScene`</span>
+  subscribeToScene(cb: <span class="hljs-built_in">Function</span>) { ... } <span class="hljs-comment">// add listener</span>
+  executeOption(opt: Option) { ... } <span class="hljs-comment">// update state, notify listeners</span>
+  reset() { ... } <span class="hljs-comment">// reset to adventure startstate, notify listeners</span>
+}
+</code></pre>
+</div></section><section class="slide num numB" data-pos="6-8-8">
+<span class="pos">6-8-8</span>
+<div class="slidecontent">
+<p>With the <code>stateHandler</code> created, we must <strong>add it to the <code>providers</code> array</strong> in the root <code>NgModule</code>:</p>
+<pre><code class="lang-typescript">providers: [ StateHandler ]
+</code></pre>
+<p>We&#39;ll use the <strong>normal shorthand where the class is also the token</strong>.</p>
+</div></section><section class="slide num numC" data-pos="6-8-9">
+<span class="pos">6-8-9</span>
+<div class="slidecontent">
+<p>Now we turn to <code>SceneComponent</code>, which should get the <strong>service injected</strong>. And:</p>
+<ul>
+<li>Instead of <strong>receiving <code>currentScene</code> as an input</strong> it should <strong>subscribe via the service</strong></li>
+<li>Instead of <strong>emitting <code>Option</code> as an output</strong> it should <strong>send it to the service</strong></li>
+</ul>
+<p>In other words, it will <strong>no longer have inputs or outputs</strong>!</p>
+</div></section><section class="slide num numD" data-pos="6-8-10">
+<span class="pos">6-8-10</span>
+<div class="slidecontent">
+<p>...which also means that <strong><code>AppComponent</code> becomes skinnier</strong> since it no longer needs to pass stuff to <code>SceneComponent</code>.</p>
+<p>In fact, it doesn&#39;t even need the service either! Unless you made it <strong>apply special graphics to GameOver scenes</strong>, in which case we do need to subscribe to <code>Scene</code> from the service.</p>
+</div></section><section class="slide" data-pos="6-8-11">
+<span class="pos">6-8-11</span>
+<div class="slidecontent"><p><strong>Build, reload</strong>, and see if <strong>all still works like before</strong>!</p>
+</div></section><section class="slide challenge" data-pos="6-8-12">
+<span class="pos">6-8-12</span>
+<div class="slidecontent"><p><strong>Challenge</strong>: If you have time left over, let&#39;s <strong>clean up a code smell</strong>!</p>
+<p>Right now we&#39;re <strong><code>import</code>ing the <code>adventure</code> data</strong> in <code>app.ts</code> to use it inside <code>AppComponent</code>, and in <code>statehandler.ts</code> to initiate game state in the <code>StateHandler</code> service.</p>
+<p>We should inject the adventure to those places instead!</p>
+</div></section><section class="slide" data-pos="6-8-13">
+<span class="pos">6-8-13</span>
+<div class="slidecontent"><p>This will likely involve an <strong>InjectionToken</strong> defined in a separate file, that you refer to in the <code>NgModules</code> providers array as well as in the <code>AppComponent</code>.</p>
+<p>If you need, peek again at the <a href="resources/supportsite/demos/injection_value_opaque" target="_blank">Inject non-class</a> demo.</p>
+</div></section><section class="slide challenge" data-pos="6-8-14">
+<span class="pos">6-8-14</span>
+<div class="slidecontent"><p><strong>Challenge</strong>: And here&#39;s a neat one - why not <strong>make <code>stateHandler</code> load and save to localStorage</strong>?</p>
+<p>In other words - when you go to the next page, and <strong>reload</strong>, your <strong>state should be saved</strong>!</p>
+</div></section><section class="slide" data-pos="6-8-15">
+<span class="pos">6-8-15</span>
+<div class="slidecontent"><p>Two lines of code that <strong>might come in handy</strong> for this:</p>
+<pre><code class="lang-typescript"><span class="hljs-built_in">JSON</span>.parse( localStorage.getItem(SAVEKEY) || <span class="hljs-string">"{}"</span> ) <span class="hljs-comment">// loading</span>
+</code></pre>
+<p>...and...</p>
+<pre><code class="lang-typescript">localStorage.setItem( SAVEKEY, <span class="hljs-built_in">JSON</span>.stringify(state) );
+</code></pre>
+<p>...where <code>SAVEKEY</code> is some unique string identifier.</p>
+</div></section>
+</section>
+<!--ENDSECTION8--><!--ENDCHAPTERCONTENT-->
+        
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var basehref = window.location.href.replace(/chapter\d.*?$/,'')
+
+      document.addEventListener("keydown",function(e){
+        var code = e.which || e.keyCode;
+        if (code===13){
+          window.location.href = basehref+"index.html?from="+(6-1);
+        } else if (code >= 49 && code <= 8+48) {
+          window.location.hash = "#/" + (code-48+1+0);
+        }
+        if (6 < 13) {
+          if (code===99){ // the letter C for next Chapter
+            window.location.href = basehref+"chapter"+(6+1)+".html"
+          }
+        }
+      });
+    </script>
+    <script src="mc2/scripts/head.js" type="text/javascript"></script>
+    <script src="mc2/scripts/reveal.js" type="text/javascript"></script>
+    <script src="mc2/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    showNotes: false,
+    transition: 'slide',
+    dependencies: [
+      { src: 'mc2/scripts/plugin/notes/notes.js', async: true }
+    ]
+  })
+
+    window.onload = function(){
+
+      var links = document.querySelectorAll("a.link");
+      for(var i=0;i<links.length;i++){
+        var link = links[i];
+        link.innerHTML = link.innerHTML.replace(/ /g,'&nbsp;')
+      }
+      var posElem = document.getElementById('pos')
+      function updateReference(){
+        setTimeout(function(){
+          var currentpos = document.querySelector('section.present[data-pos]')
+          if (currentpos){
+            posElem.innerHTML = currentpos.getAttribute('data-pos')
+          } else {
+            posElem.innerHTML = ''
+          }
+          if (document.querySelector('.present.chaptertitle')){
+            document.body.classList.add('atchaptertitle');
+          } else {
+            document.body.classList.remove('atchaptertitle');
+          }
+        },10)
+      }
+
+      window.addEventListener("hashchange",updateReference);
+
+      updateReference();
+    };
+
+    </script>
+    <!--STARTCOURSESPECIFICSCRIPTS--><script type="text/javascript" src="scripts/streams.js"></script><!--ENDCOURSESPECIFICSCRIPTS-->
+  </body>
+</html>

@@ -1,0 +1,14 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  View
+  Model
+
+
+  Model -> View [color=transparent,label=" "]
+
+  Model -> View [label="values"]
+
+  View -> Model [label="events",fontcolor="lightgray",color="lightgray"]
+
+}

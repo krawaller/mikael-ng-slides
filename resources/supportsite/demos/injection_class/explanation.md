@@ -1,0 +1,1 @@
+Showing off dependency injection, using the class as both type and token.

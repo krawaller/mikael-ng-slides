@@ -1,0 +1,1 @@
+Three different ways to populate a property from a model value.

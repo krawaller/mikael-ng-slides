@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="719px" height="468px" viewBox="0 0 719 468" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 4</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Diagram-Copy" transform="translate(-342.000000, -281.000000)">
+            <g id="Group-4" transform="translate(342.000000, 281.000000)">
+                <rect id="Rectangle-5" fill="#FFFFFF" x="0" y="0" width="719" height="468"></rect>
+                <g id="Group-3" transform="translate(59.000000, 54.000000)">
+                    <g id="Group">
+                        <rect id="Rectangle-2-Copy" fill="#9C9C9C" x="0" y="300" width="599" height="60" rx="2"></rect>
+                        <rect id="Rectangle-2-Copy-2" fill="#5898AD" x="0" y="225" width="599" height="60" rx="2"></rect>
+                        <rect id="Rectangle-2-Copy-3" fill="#186680" x="0" y="150" width="599" height="60" rx="2"></rect>
+                        <rect id="Rectangle-2-Copy-6" fill="#9C9C9C" x="0" y="75" width="160" height="60" rx="2"></rect>
+                        <rect id="Rectangle-2-Copy-7" fill="#9C9C9C" x="439" y="75" width="160" height="60" rx="2"></rect>
+                        <rect id="Rectangle-2-Copy-8" fill="#9C9C9C" x="220" y="75" width="160" height="60" rx="2"></rect>
+                        <rect id="Rectangle-2-Copy-9" fill="#9C9C9C" x="0" y="0" width="160" height="60" rx="2"></rect>
+                        <rect id="Rectangle-2-Copy-10" fill="#9C9C9C" x="439" y="0" width="160" height="60" rx="2"></rect>
+                        <rect id="Rectangle-2-Copy-11" fill="#9C9C9C" x="220" y="0" width="160" height="60" rx="2"></rect>
+                        <text id="INFRASTRUCTURE" font-family="Roboto-Regular, Roboto" font-size="20" font-weight="normal" fill="#FFFFFF">
+                            <tspan x="216.101562" y="337">INFRASTRUCTURE</tspan>
+                        </text>
+                        <text id="HOST-OPERATION-SYSTE" font-family="Roboto-Regular, Roboto" font-size="20" font-weight="normal" fill="#FFFFFF">
+                            <tspan x="176.155273" y="262">HOST OPERATION SYSTEM</tspan>
+                        </text>
+                        <text id="DOCKER-ENGINE" font-family="Roboto-Regular, Roboto" font-size="20" font-weight="normal" fill="#FFFFFF">
+                            <tspan x="224.316406" y="187">DOCKER ENGINE</tspan>
+                        </text>
+                        <text id="BINS/LIBS" font-family="Roboto-Regular, Roboto" font-size="20" font-weight="normal" fill="#FFFFFF">
+                            <tspan x="253.113281" y="112">BINS/LIBS</tspan>
+                        </text>
+                        <text id="APP-2" font-family="Roboto-Regular, Roboto" font-size="20" font-weight="normal" fill="#FFFFFF">
+                            <tspan x="272.268555" y="37">APP 2</tspan>
+                        </text>
+                        <text id="BINS/LIBS-Copy-2" font-family="Roboto-Regular, Roboto" font-size="20" font-weight="normal" fill="#FFFFFF">
+                            <tspan x="34.1132812" y="112">BINS/LIBS</tspan>
+                        </text>
+                        <text id="BINS/LIBS-Copy-3" font-family="Roboto-Regular, Roboto" font-size="20" font-weight="normal" fill="#FFFFFF">
+                            <tspan x="473.113281" y="112">BINS/LIBS</tspan>
+                        </text>
+                        <text id="APP-1" font-family="Roboto-Regular, Roboto" font-size="20" font-weight="normal" fill="#FFFFFF">
+                            <tspan x="53.2685547" y="37">APP 1</tspan>
+                        </text>
+                        <text id="APP-3" font-family="Roboto-Regular, Roboto" font-size="20" font-weight="normal" fill="#FFFFFF">
+                            <tspan x="492.268555" y="37">APP 3</tspan>
+                        </text>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

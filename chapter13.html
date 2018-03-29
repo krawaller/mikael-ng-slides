@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Appendix: various NG</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="icon" type="image/x-icon" href="mc2/images/favicon.ico">
+
+    <link rel="stylesheet" href="mc2/styles/reveal.css">
+    <link rel="stylesheet" href="mc2/styles/theme.css" id="theme">
+    <link rel="stylesheet" href="mc2/styles/code.css">
+    <!--STARTCOURSESPECIFICSTYLES--><link rel="stylesheet" href="styles/mystyles.css">
+<link rel="stylesheet" href="styles/streams.css"><!--ENDCOURSESPECIFICSTYLES-->
+  </head>
+
+  <body>
+    <div id="pos"></div>
+    <div class="reveal">
+      <div class="slides">
+        <section class="slide chaptertitle">
+          <div class="slidecontent">
+            <div class="chapternumber"> chapter 13 of 13 </div>
+            <h1>Appendix: various NG</h1>
+            <span>Give me more, give me more</p>
+</span>
+          </div>
+        </section>
+        <section class="slide">
+
+<div class="slidecontent"><p>This appendix chapter collects <strong>various specific API:s</strong> in the Angular framework.</p>
+</div></section>
+        <!--STARTSECTIONINDEX--><section class="slide sectionlist">
+  <div class="slidecontent">
+    <h3>Sections in this chapter</h3>
+    <ol>
+    <li><a href="#/3">Pipes</a></li>
+<li><a href="#/4">Routing</a></li>
+<li><a href="#/5">Animations</a></li>
+<li><a href="#/6">Testing&nbsp;Angular</a></li>
+    </ol>
+  </div>
+</section>
+<!--ENDSECTIONINDEX-->
+        <!--STARTCHAPTERCONTENT--><!--STARTSECTION1--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 1/4</div>
+      <h3>Pipes</h3>
+      <p>a.k.a. filters</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="13-1-1">
+<span class="pos">13-1-1</span>
+<div class="slidecontent"><p>Pipes are primarily a way to <strong>transform strings</strong>, although they can also be used on other values.</p>
+<p>In other words, a regular <strong>pure function*</strong>!</p>
+<p><img src="resources/diagrams/pipe.svg" alt=""></p>
+</div></section><section class="slide" data-pos="13-1-2">
+<span class="pos">13-1-2</span>
+<div class="slidecontent"><p><strong>AngularJS called them filters</strong>, but this was a bit <strong>confusing</strong> since</p>
+<ul>
+<li>they <strong>didn&#39;t necessarily filter</strong> anything</li>
+<li>there was a <strong>filter named filter</strong> :)</li>
+</ul>
+</div></section><section class="slide" data-pos="13-1-3">
+<span class="pos">13-1-3</span>
+<div class="slidecontent"><p>Angular has the <strong>same special syntax</strong> for pipes as AngularJS:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>The party is planned to be at {{partyDate | formatDate}}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+</code></pre>
+<p>The bracket contents is <strong>equivalent</strong> to:</p>
+<pre><code><span class="hljs-function"><span class="hljs-title">formatDate</span><span class="hljs-params">(partyDate)</span></span>
+</code></pre></div></section><section class="slide" data-pos="13-1-4">
+<span class="pos">13-1-4</span>
+<div class="slidecontent"><p>When your want <strong>arguments</strong>, list them after <strong>colons</strong>:</p>
+<pre><code class="lang-html">The party is at {{partyDate | formatDate : &#39;dd/mm&#39;}}
+</code></pre>
+<p>Now the brackets translate to:</p>
+<pre><code><span class="hljs-function"><span class="hljs-title">formatDate</span><span class="hljs-params">(partyDate, <span class="hljs-string">'dd/mm'</span>)</span></span>
+</code></pre></div></section><section class="slide question" data-pos="13-1-5">
+<span class="pos">13-1-5</span>
+<div class="slidecontent">
+<p>But, as we said, <strong>pipes are just functions</strong>. Was it really <strong>necessary to invent this new syntax</strong>?</p>
+</div></section><section class="slide answer" data-pos="13-1-6">
+<span class="pos">13-1-6</span>
+<div class="slidecontent">
+<p>Perhaps not, but there are <strong>two good reasons</strong> for it!</p>
+<p>First off, here we <strong>know that <code>formatDate</code> is a <code>Pipe</code></strong>:</p>
+<pre><code>{{partyDate | formatDate : <span class="hljs-string">'dd/mm'</span>}}
+</code></pre><p>While here it could be <strong>any function</strong> in the same scope:</p>
+<pre><code class="lang-javascript">formatDate(partyDate, <span class="hljs-string">'dd/mm'</span>)
+</code></pre>
+</div></section><section class="slide" data-pos="13-1-7">
+<span class="pos">13-1-7</span>
+<div class="slidecontent"><p>Secondly, we can <strong>have many pipes</strong>:</p>
+<pre><code>{{partyDate | formatDate : <span class="hljs-string">'dd/mm'</span> | frameWithNotes}}
+</code></pre><p>which we have to <strong>write in reverse order</strong> in regular code:</p>
+<pre><code class="lang-javascript">frameWithNotes( formatDate(partyDate, <span class="hljs-string">'dd/mm'</span>) )
+</code></pre>
+</div></section><section class="slide" data-pos="13-1-8">
+<span class="pos">13-1-8</span>
+<div class="slidecontent"><p>To <strong>see a pipe in action</strong> and <strong>how they are registered</strong>, check out the <a href="resources/supportsite/demos/pipe" target="_blank">Pipe</a> demo!</p>
+</div></section><section class="slide" data-pos="13-1-9">
+<span class="pos">13-1-9</span>
+<div class="slidecontent"><p>There are of course a number of <strong>built-in pipes</strong>, such as <strong><code>DatePipe</code></strong>, <strong><code>UpperCasePipe</code></strong> and <strong><code>CurrencyPipe</code></strong> among others.</p>
+<p>Note that you <strong>must import the NgModules they reside in</strong> to be able to use them!</p>
+</div></section><section class="slide" data-pos="13-1-10">
+<span class="pos">13-1-10</span>
+<div class="slidecontent"><p>The built-in <strong><code>Async</code></strong> pipe deserves a <strong>special mention</strong>, as it can be a <strong>huge code saver</strong> in the right circumstances. </p>
+<p>Check it out in the <a href="resources/supportsite/demos/asyncpipe" target="_blank">Async Pipe</a> demo.</p>
+</div></section><section class="slide" data-pos="13-1-11">
+<span class="pos">13-1-11</span>
+<div class="slidecontent"><p>Notable <strong>omissions</strong> among the built-in pipes are equivalents to <strong><code>filter</code> and <code>orderBy</code></strong> from AngularJS.</p>
+<p>Find out exactly <strong>why</strong> they were omitted in the <a href="https://angular.io/docs/ts/latest/guide/pipes.html#!#no-filter-pipe">Filter omission explanation</a> in the official docs.</p>
+</div></section><section class="slide" data-pos="13-1-12">
+<span class="pos">13-1-12</span>
+<div class="slidecontent"><p>A final note: by default pipes are <strong>pure</strong>, meaning they are <strong>only applied when a change to the input is detected</strong>.</p>
+<p>But sometimes you might need the pipe to <strong>always be applied on every rerender</strong>. If so, set <code>pure</code> to false:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Pipe</span>({
+  name: <span class="hljs-string">'myPipe'</span>,
+  pure: <span class="hljs-literal">false</span>
+})
+</code></pre>
+</div></section>
+</section>
+<!--ENDSECTION1-->
+<!--STARTSECTION2--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 2/4</div>
+      <h3>Routing</h3>
+      <p>Finding the way</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="13-2-1">
+<span class="pos">13-2-1</span>
+<div class="slidecontent"><p>Before we say anything, a word of warning - the <strong>Angular router has received many makeovers</strong>, so make sure any online material is up to date, otherwise you risk being severely confused.</p>
+</div></section><section class="slide" data-pos="13-2-2">
+<span class="pos">13-2-2</span>
+<div class="slidecontent"><p>Also, there are whispers that the great reception of the <strong>recent overhaul of the React Router</strong> might cause even further changes, so, <strong>don&#39;t get too attached to the API</strong>!</p>
+</div></section><section class="slide" data-pos="13-2-3">
+<span class="pos">13-2-3</span>
+<div class="slidecontent"><p>Partly because of this we <strong>won&#39;t dig too deep into the router in this course</strong>, but we still want you to <strong>get a sense for how it is working</strong>.</p>
+<p>So now we&#39;ll <strong>walk through the basic functionality</strong> which <strong>covers the vast majority of use cases</strong>.</p>
+</div></section><section class="slide list" data-pos="13-2-4">
+<span class="pos">13-2-4</span>
+<div class="slidecontent">
+<p>Here&#39;s <strong>what we&#39;ll cover</strong>:</p>
+<ul>
+<li><span>a</span>routes definition</li>
+<li><span>b</span>installing the routes</li>
+<li><span>c</span>select strategy</li>
+<li><span>d</span>providing an outlet</li>
+<li><span>e</span>navigating</li>
+<li><span>f</span>parameters</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="13-2-5">
+<span class="pos">13-2-5</span>
+<div class="slidecontent">
+<p>Here&#39;s a <strong>simple routes definition example</strong>: </p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> routes = [
+  {path: <span class="hljs-string">''</span>, component: HomeComponent},
+  {path: <span class="hljs-string">'product/:tool'</span>, component: ProductComponent}
+]
+</code></pre>
+<p>As you can see we are <strong>connecting paths to components</strong>.</p>
+</div></section><section class="slide" data-pos="13-2-6">
+<span class="pos">13-2-6</span>
+<div class="slidecontent"><p>The syntax might <strong>seem verbose</strong>, but the reason for having an array of objects is to accommodate <strong>lots of other functionality</strong> - child routes, extra settings, data, etc.</p>
+</div></section><section class="slide num numB" data-pos="13-2-7">
+<span class="pos">13-2-7</span>
+<div class="slidecontent">
+<p>We <strong>make our app use the routes</strong> by importing the result of <strong>feeding <code>routes</code> to a <code>RouterModule</code> method</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@NgModule</span>({
+    imports: [ BrowserModule, RouterModule.forRoot(routes) ],
+    ...
+</code></pre>
+<p>Now we&#39;re <strong>navigating from the root</strong>, but we could <strong>also use routes from a child component</strong>.</p>
+</div></section><section class="slide num numC" data-pos="13-2-8">
+<span class="pos">13-2-8</span>
+<div class="slidecontent">
+<p>When we make a <strong>SPA</strong>, by definition, we <strong>don&#39;t want the browser to reload between pages</strong>. Yet we still want the user to be able to <strong>use browser controls</strong>!</p>
+<p>We must therefore employ <strong>some kind of strategy</strong> that marries <strong>internal navigation with the browser address bar</strong>.</p>
+</div></section><section class="slide" data-pos="13-2-9">
+<span class="pos">13-2-9</span>
+<div class="slidecontent"><p>There are primarily three ways to <strong>handle navigation in a SPA</strong>:</p>
+<table class="deflist">
+  <tr>
+    <td><a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"><code>pushState</code></a></td>
+    <td>Makes the URL look &quot;real&quot;</td>
+  </tr>
+  <tr>
+    <td>hash navigation</td>
+    <td>Using the trailing <code>#something</code> part of the URL</td>
+  </tr>
+  <tr>
+    <td>in memory</td>
+    <td>Means browser controls won&#39;t work</td>
+  </tr>
+</table>
+
+<p>Of course there are <strong>lots more details</strong> that we&#39;re skipping over here.</p>
+</div></section><section class="slide" data-pos="13-2-10">
+<span class="pos">13-2-10</span>
+<div class="slidecontent"><p>We <strong>select strategy</strong> by <strong>registering the corresponding provider</strong> in the route-providing module:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@NgModule</span>({
+    imports: [ BrowserModule, RouterModule.forRoot(routes) ],
+    providers: [
+      {provide: LocationStrategy, useClass: HashLocationStrategy}
+    ],
+    ...
+</code></pre>
+<p>The router will then <strong>handle navigation accordingly</strong>.</p>
+</div></section><section class="slide num numD" data-pos="13-2-11">
+<span class="pos">13-2-11</span>
+<div class="slidecontent">
+<p>Obviously we must also <strong>render the matched component</strong> somewhere! The Router does this through the <strong><code>ng-output</code> directive</strong>, meaning the <strong>root component template</strong> can look something like this:</p>
+<pre><code><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>My amazing app<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">router-outlet</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">router-outlet</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">footer</span>&gt;</span>© Edument 2016 → end of time<span class="hljs-tag">&lt;/<span class="hljs-name">footer</span>&gt;</span>
+</code></pre><p>Effectively functioning as a <strong>master template</strong>!</p>
+</div></section><section class="slide num numE" data-pos="13-2-12">
+<span class="pos">13-2-12</span>
+<div class="slidecontent">
+<p>There are <strong>two ways to navigate</strong>;</p>
+<ul>
+<li>either <strong>programatically</strong> or through</li>
+<li>normal <strong>anchor elements</strong>.</li>
+</ul>
+</div></section><section class="slide" data-pos="13-2-13">
+<span class="pos">13-2-13</span>
+<div class="slidecontent"><p>To <strong>navigate programatically</strong> we <strong>inject the router</strong> and call its <code>navigate</code> method:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> MyComponent {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> router: Router</span>){}
+  someEventHandler(){
+    <span class="hljs-keyword">this</span>.router.navigate([someUrl,scndPartOfUrl]);
+  }
+}
+</code></pre>
+<p>Like earlier, the seemingly <strong>verbose syntax</strong> is there to accomodate a <strong>complex API</strong>!</p>
+</div></section><section class="slide" data-pos="13-2-14">
+<span class="pos">13-2-14</span>
+<div class="slidecontent"><p>We can also <strong>navigate by anchor elements</strong>, but that entails using the <strong><code>routerLink</code> directive instead of the normal <code>href</code> attribute</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">a</span> [<span class="hljs-attr">routerLink</span>]=<span class="hljs-string">"['/heroes/batman']"</span>&gt;</span>Batman<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+</code></pre>
+<p>The directive also contains ways to <strong>add CSS classes to active links</strong>, etc.</p>
+</div></section><section class="slide num numF" data-pos="13-2-15">
+<span class="pos">13-2-15</span>
+<div class="slidecontent">
+<p>Finally, a word about <strong>parameters</strong>! Maybe you spotted them in the <code>routes</code> example earlier?</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> routes = [
+  {path: <span class="hljs-string">''</span>, component: HomeComponent},
+  {path: <span class="hljs-string">'product/:tool'</span>, component: ProductComponent}
+]
+</code></pre>
+<p>As in so many other routing solutions, <strong>parameters are defined by colon prefixes</strong>.</p>
+</div></section><section class="slide" data-pos="13-2-16">
+<span class="pos">13-2-16</span>
+<div class="slidecontent"><p>We <strong>access the current parameters</strong> by injecting the <strong><code>ActivatedRoute</code></strong> service:</p>
+<pre><code><span class="hljs-selector-tag">class</span> <span class="hljs-selector-tag">UserComponent</span> {
+  <span class="hljs-attribute">userId</span>: string
+  <span class="hljs-built_in">constructor</span>(route: ActivatedRoute){
+    this.userId = route.snapshot.params[<span class="hljs-string">'user'</span>]
+  }
+}
+</code></pre></div></section><section class="slide" data-pos="13-2-17">
+<span class="pos">13-2-17</span>
+<div class="slidecontent"><p>We <strong>covered a lot of ground</strong>, but left <strong>many details unsaid</strong>. Still, what you saw is the gist of the gist.</p>
+<p><strong>Try it out</strong> in the <a href="resources/supportsite/demos/router" target="_blank">Router</a> demo, or <strong>read more</strong> in the <a href="https://angular.io/docs/ts/latest/guide/router.html">Router section</a> of the official docs.</p>
+</div></section>
+</section>
+<!--ENDSECTION2-->
+<!--STARTSECTION3--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 3/4</div>
+      <h3>Animations</h3>
+      <p>marquees and blinks?</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="13-3-1">
+<span class="pos">13-3-1</span>
+<div class="slidecontent"><p>In <strong>AngularJS</strong>, animations were done through <strong>framework-generated CSS classes</strong> to which you would hook up <strong>CSS <code>transitions</code> or <code>keyframes</code></strong>.</p>
+<p><strong>Angular</strong>, however, gives you a <strong>completely different setup</strong> where you get <strong>full programmatic control</strong>!</p>
+</div></section><section class="slide" data-pos="13-3-2">
+<span class="pos">13-3-2</span>
+<div class="slidecontent"><p>It builds on the foundation of <strong><a href="https://developer.mozilla.org/en-US/docs/Web/API/Animation">Web Animations</a></strong>, a new API for <strong>controlling animations from JS</strong>.</p>
+<p>Since this is <strong>still experimental</strong>, we need a <strong><a href="https://www.npmjs.com/package/web-animations-js">polyfill</a></strong> to make it work.</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"web-animations.min.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="13-3-3">
+<span class="pos">13-3-3</span>
+<div class="slidecontent"><p>There are two parts to animations; we <strong>tag the elements we want to animate</strong> using the animation-specific <code>@animName</code> syntax, <strong>binding that to an expression</strong>:</p>
+<pre><code>&lt;<span class="hljs-selector-tag">div</span> [@mode]=<span class="hljs-string">"styleMode"</span>&gt;
+</code></pre></div></section><section class="slide" data-pos="13-3-4">
+<span class="pos">13-3-4</span>
+<div class="slidecontent"><p>Then we add a <strong>corresponding animation definition</strong> within the <strong><code>animations</code> array of the metadata</strong>:</p>
+<pre><code class="lang-typescript">animations: [
+  trigger(<span class="hljs-string">'mode'</span>, [
+    state(<span class="hljs-string">'day'</span>, style(objWithStyles)),
+    state(<span class="hljs-string">'night'</span>, style(anotherObjWithStyles)),
+    transition(<span class="hljs-string">'* =&gt; *'</span>, animate(<span class="hljs-string">'100ms ease-in'</span>)),
+  ])
+],
+</code></pre>
+</div></section><section class="slide" data-pos="13-3-5">
+<span class="pos">13-3-5</span>
+<div class="slidecontent"><p>From that we can deduce that...</p>
+<ul>
+<li>we have <strong>one <code>trigger</code> per <code>@animName</code></strong></li>
+<li>the <strong>possibles values of the bound expression</strong> translate to <strong>different animation states</strong></li>
+<li>we <strong>control how to transition between states</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="13-3-6">
+<span class="pos">13-3-6</span>
+<div class="slidecontent"><p>Regarding <strong>transitions</strong>: in the example we used the <strong>wildcard <code>*</code> syntax</strong>...</p>
+<pre><code><span class="hljs-function"><span class="hljs-title">transition</span><span class="hljs-params">(<span class="hljs-string">'* =&gt; *'</span>, animate(<span class="hljs-string">'100ms ease-in'</span>)</span></span>)
+</code></pre><p>...but we can be <strong>more specific</strong>:</p>
+<pre><code><span class="hljs-function"><span class="hljs-title">transition</span><span class="hljs-params">(<span class="hljs-string">'day =&gt; night'</span>, animate(<span class="hljs-string">'100ms ease-in'</span>)</span></span>),
+<span class="hljs-function"><span class="hljs-title">transition</span><span class="hljs-params">(<span class="hljs-string">'night =&gt; day'</span>, animate(<span class="hljs-string">'300ms ease-out'</span>)</span></span>),
+</code></pre></div></section><section class="slide" data-pos="13-3-7">
+<span class="pos">13-3-7</span>
+<div class="slidecontent"><p>You can <strong>see this in action</strong> in the <a href="resources/supportsite/demos/animation" target="_blank">Animation</a> demo!</p>
+</div></section><section class="slide" data-pos="13-3-8">
+<span class="pos">13-3-8</span>
+<div class="slidecontent"><p>Of course, it wouldn&#39;t be called animations if we didn&#39;t have the ability to define <strong>keyframes</strong>.</p>
+<p>That is, <strong>intermediate states</strong> and not just the target state.</p>
+</div></section><section class="slide" data-pos="13-3-9">
+<span class="pos">13-3-9</span>
+<div class="slidecontent"><p>This is done by <strong>passing keyframes to the <code>animate</code> method</strong> instead of just a string:</p>
+<pre><code><span class="hljs-selector-tag">transition</span>(<span class="hljs-string">'* =&gt; day'</span>, animate(<span class="hljs-number">300</span>, keyframes([
+  style({ <span class="hljs-attribute">backgroundColor</span>: <span class="hljs-string">'#F57171'</span>, <span class="hljs-attribute">offset</span>: <span class="hljs-number">0.5</span>}),
+  style({ <span class="hljs-attribute">backgroundColor</span>: <span class="hljs-string">'#DCEDF2'</span>, <span class="hljs-attribute">color</span>: <span class="hljs-string">'black'</span>, <span class="hljs-attribute">offset</span>: <span class="hljs-number">1</span> })
+])))
+</code></pre><p><strong>Try this</strong> in the <a href="resources/supportsite/demos/animation_keyframes" target="_blank">Animation Keyframes</a> demo.</p>
+</div></section><section class="slide" data-pos="13-3-10">
+<span class="pos">13-3-10</span>
+<div class="slidecontent"><p>By the way, <strong>where all the helper methods comings from</strong>? Surprisingly, <code>@angular/core</code>!</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> {
+  Component, trigger, state, style, transition, animate
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+</code></pre>
+</div></section><section class="slide" data-pos="13-3-11">
+<span class="pos">13-3-11</span>
+<div class="slidecontent"><p>The API is <strong>even more powerful</strong> than we&#39;ve showed here - see the <a href="https://angular.io/docs/ts/latest/guide/animations.html">official guide</a> for more details.</p>
+</div></section><section class="slide" data-pos="13-3-12">
+<span class="pos">13-3-12</span>
+<div class="slidecontent"><p>Speaking of power - remember that <strong>most animation needs</strong> can be fulfilled with <strong>dynamic classes and regular CSS</strong>.</p>
+<p>Normally we <strong>don&#39;t need the animation API</strong>.</p>
+</div></section><section class="slide" data-pos="13-3-13">
+<span class="pos">13-3-13</span>
+<div class="slidecontent"><p>But if you want to...</p>
+<ul>
+<li>animate <strong>entering / leaving elements</strong> (by using the magical <strong><code>&quot;void&quot;</code> target state</strong>)</li>
+<li>have <strong>dynamic props</strong> in the animation</li>
+</ul>
+<p>...then the <strong>animate API is your friend</strong>!</p>
+</div></section>
+</section>
+<!--ENDSECTION3-->
+<!--STARTSECTION4--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 4/4</div>
+      <h3>Testing Angular</h3>
+      <p>TDD, BDD, FFS</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="13-4-1">
+<span class="pos">13-4-1</span>
+<div class="slidecontent"><p>We&#39;ll walk you through the basic flow for <strong>unit testing Angular components</strong>.</p>
+<p>If you are not familiar with <strong>unit tests</strong> and <strong>integration tests</strong>, or testing at all, <strong>now is the time to raise your hand and ask</strong>! :)</p>
+</div></section><section class="slide" data-pos="13-4-2">
+<span class="pos">13-4-2</span>
+<div class="slidecontent"><p>Commonly people use <strong><a href="http://jasmine.github.io/">Jasmine</a> to write assertions</strong> in their Angular tests.</p>
+<p>We have however strived to <strong>focus solely on the Angular-specific parts</strong>, so we won&#39;t go into detail on how to write assertions.</p>
+</div></section><section class="slide" data-pos="13-4-3">
+<span class="pos">13-4-3</span>
+<div class="slidecontent"><p>At the heart of Angular testing are the <strong>testing utilities</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> {
+  ComponentFixture, <span class="hljs-comment">// interface for test components</span>
+  TestBed <span class="hljs-comment">// set up mock modules with custom dependencies</span>
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core/testing'</span>;
+<span class="hljs-keyword">import</span> {
+  By <span class="hljs-comment">// helper for querying template output</span>
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> {
+  DebugElement <span class="hljs-comment">// interface for queried element</span>
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+</code></pre>
+</div></section><section class="slide list" data-pos="13-4-4">
+<span class="pos">13-4-4</span>
+<div class="slidecontent">
+<p>We&#39;ll now work through a <strong>common testing flow</strong>:</p>
+<ul>
+<li><span>a</span><strong>unit test setup</strong></li>
+<li><span>b</span><strong>test module creation</strong></li>
+<li><span>c</span><strong>create component instance</strong></li>
+<li><span>d</span><strong>test template output</strong></li>
+<li><span>e</span><strong>manipulate the instance</strong></li>
+</ul>
+</div></section><section class="slide num numA" data-pos="13-4-5">
+<span class="pos">13-4-5</span>
+<div class="slidecontent">
+<p>We start off our test by <strong>creating variables</strong> to hold...</p>
+<ul>
+<li>the <strong>component fixture</strong></li>
+<li>the <strong>component itself</strong></li>
+</ul>
+<pre><code class="lang-typescript"><span class="hljs-keyword">let</span> fixture: ComponentFixture&lt;MyComponent&gt;;
+<span class="hljs-keyword">let</span> comp: MyComponent;
+</code></pre>
+</div></section><section class="slide num numB" data-pos="13-4-6">
+<span class="pos">13-4-6</span>
+<div class="slidecontent">
+<p>Next we <strong>spin up a testing module</strong>:</p>
+<pre><code class="lang-typescript">TestBed.configureTestingModule({
+  declarations: [ MyComponent ]
+});
+</code></pre>
+<p>Here we would also put <strong>mock providers</strong>.</p>
+</div></section><section class="slide num numC" data-pos="13-4-7">
+<span class="pos">13-4-7</span>
+<div class="slidecontent">
+<p>We can now use the module to <strong>instantiate the component</strong>...</p>
+<pre><code class="lang-typescript">fixture = TestBed.createComponent(MyComponent);
+</code></pre>
+</div></section><section class="slide" data-pos="13-4-8">
+<span class="pos">13-4-8</span>
+<div class="slidecontent"><p>...and <strong>access the instance</strong>:</p>
+<pre><code class="lang-typescript">comp = fixture.componentInstance;
+</code></pre>
+<p>With access to the instance we can <strong>manipulate properties</strong> and <strong>call methods</strong>, and do whatever assertions we want!</p>
+</div></section><section class="slide num numD" data-pos="13-4-9">
+<span class="pos">13-4-9</span>
+<div class="slidecontent">
+<p>If we want to <strong>test the template output</strong>, we&#39;d use the <code>By</code> helper:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">let</span> elem:DebugElement = fixture.debugElement.query(
+  By.css(<span class="hljs-string">'.twain'</span>) <span class="hljs-comment">// `By` can query through lots of means</span>
+);
+</code></pre>
+<p>We can now <strong>do assertions on <code>elem.nativeElement</code></strong>.</p>
+</div></section><section class="slide num numE" data-pos="13-4-10">
+<span class="pos">13-4-10</span>
+<div class="slidecontent">
+<p>To <strong>test the component</strong> we <strong>manipulate the instance</strong>. However, you have to <strong>manually trigger the change cycle</strong> after you manipulate something:</p>
+<pre><code class="lang-typescript">comp.someMethod();
+fixture.detectChanges();
+</code></pre>
+<p>Now you can do your assertions.</p>
+</div></section><section class="slide" data-pos="13-4-11">
+<span class="pos">13-4-11</span>
+<div class="slidecontent"><p>Instead, if we want to, we can <strong>configure the test module to detect changes automatically</strong>:</p>
+<pre><code class="lang-typescript">TestBed.configureTestingModule({
+  declarations: [ MyComponent ],
+  providers: [
+    { provide: ComponentFixtureAutoDetect, useValue: <span class="hljs-literal">true</span> }
+  ]
+})
+</code></pre>
+</div></section><section class="slide" data-pos="13-4-12">
+<span class="pos">13-4-12</span>
+<div class="slidecontent"><p>...and that&#39;s pretty much <strong>how you unit test Angular</strong>!</p>
+<p>We need to know about Jasmine (for writing assertions) and Karma (for running the tests) too, but that&#39;s a <strong>story for another time</strong>.</p>
+</div></section><section class="slide" data-pos="13-4-13">
+<span class="pos">13-4-13</span>
+<div class="slidecontent"><p>A final word regarding <strong>E2E-tests</strong> - the primary tool is <strong><a href="https://github.com/angular/protractor">Protractor</a></strong>. Yes, the <strong>same as for AngularJS</strong>!</p>
+<p>However the <strong>current support is flaky</strong>, which is no surprise given how quickly Angular has changed.</p>
+</div></section>
+</section>
+<!--ENDSECTION4--><!--ENDCHAPTERCONTENT-->
+        
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var basehref = window.location.href.replace(/chapter\d.*?$/,'')
+
+      document.addEventListener("keydown",function(e){
+        var code = e.which || e.keyCode;
+        if (code===13){
+          window.location.href = basehref+"index.html?from="+(13-1);
+        } else if (code >= 49 && code <= 4+48) {
+          window.location.hash = "#/" + (code-48+1+1);
+        }
+        if (13 < 13) {
+          if (code===99){ // the letter C for next Chapter
+            window.location.href = basehref+"chapter"+(13+1)+".html"
+          }
+        }
+      });
+    </script>
+    <script src="mc2/scripts/head.js" type="text/javascript"></script>
+    <script src="mc2/scripts/reveal.js" type="text/javascript"></script>
+    <script src="mc2/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    showNotes: false,
+    transition: 'slide',
+    dependencies: [
+      { src: 'mc2/scripts/plugin/notes/notes.js', async: true }
+    ]
+  })
+
+    window.onload = function(){
+
+      var links = document.querySelectorAll("a.link");
+      for(var i=0;i<links.length;i++){
+        var link = links[i];
+        link.innerHTML = link.innerHTML.replace(/ /g,'&nbsp;')
+      }
+      var posElem = document.getElementById('pos')
+      function updateReference(){
+        setTimeout(function(){
+          var currentpos = document.querySelector('section.present[data-pos]')
+          if (currentpos){
+            posElem.innerHTML = currentpos.getAttribute('data-pos')
+          } else {
+            posElem.innerHTML = ''
+          }
+          if (document.querySelector('.present.chaptertitle')){
+            document.body.classList.add('atchaptertitle');
+          } else {
+            document.body.classList.remove('atchaptertitle');
+          }
+        },10)
+      }
+
+      window.addEventListener("hashchange",updateReference);
+
+      updateReference();
+    };
+
+    </script>
+    <!--STARTCOURSESPECIFICSCRIPTS--><script type="text/javascript" src="scripts/streams.js"></script><!--ENDCOURSESPECIFICSCRIPTS-->
+  </body>
+</html>

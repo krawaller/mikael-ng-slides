@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo</title>
+
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+</head>
+
+<body data-demoid="childoutput">
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>Demonstrating receiving output from a child component.</p></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div data-file='main_ts'>main.ts</div><div data-file='app_ts'>app.ts</div><div data-file='child_ts'>child.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule }      <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+<span class="hljs-keyword">import</span> { FormsModule }   <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;
+
+<span class="hljs-keyword">import</span> { AppComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app'</span>;
+<span class="hljs-keyword">import</span> { ChildComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./child'</span>;
+
+<span class="hljs-meta">@NgModule</span>({
+    imports:      [ BrowserModule, FormsModule ],
+    declarations: [ AppComponent, ChildComponent ],
+    bootstrap:    [ AppComponent ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre><pre id='app_ts-source'><code><span class="hljs-keyword">import</span> {Component,ViewChild} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">`
+    {{feedback}} comes after {{count}}?
+    &lt;hr&gt;
+    &lt;child (respond)="hear($event)" [number]="count"&gt;&lt;/child&gt;
+  `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  feedback = <span class="hljs-string">'Let\'s begin! What'</span>
+  count = <span class="hljs-number">1</span>
+  hear(num){
+    <span class="hljs-keyword">if</span> (num === <span class="hljs-keyword">this</span>.count+<span class="hljs-number">1</span>){
+      <span class="hljs-keyword">this</span>.count++;
+      <span class="hljs-keyword">this</span>.feedback = <span class="hljs-string">`<span class="hljs-subst">${num}</span> is correct! And what`</span>;
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">this</span>.feedback = <span class="hljs-string">`Not <span class="hljs-subst">${num}</span>, sorry! Try again - what`</span>;
+    }
+  }
+}
+</code></pre><pre id='child_ts-source'><code><span class="hljs-keyword">import</span> {Component,Input,Output,EventEmitter} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'child'</span>,
+  template: <span class="hljs-string">`
+    &lt;button (click)="guess(number+1)"&gt;Say {{number+1}}&lt;/button&gt;
+    &lt;button (click)="guess(number+2)"&gt;Say {{number+2}}&lt;/button&gt;
+  `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ChildComponent {
+  <span class="hljs-meta">@Input</span>() <span class="hljs-built_in">number</span> = <span class="hljs-number">0</span>
+  guess(num){
+    <span class="hljs-keyword">this</span>.respond.emit(num);
+  }
+  <span class="hljs-meta">@Output</span>() respond = <span class="hljs-keyword">new</span> EventEmitter&lt;<span class="hljs-built_in">number</span>&gt;()
+}
+</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+function select(id){
+  let button = document.querySelector(`[data-file=${id}]`);
+  if (button){
+    document.querySelectorAll('.sources .active').forEach(function(elem){
+      elem.classList.remove('active')
+    });
+    button.classList.add('active');
+    document.getElementById(id + '-source').classList.add('active');
+  } else {
+    console.log("Warning, couldn't find source file", id);
+  }
+}
+
+document.querySelectorAll('.sourcenav > *').forEach(
+  elem => elem.addEventListener('click', function(e){
+    location.hash = '#' + this.getAttribute("data-file");
+    e.preventDefault();
+  })
+);
+
+window.addEventListener("hashchange", function(){
+  select(location.hash.replace('#',''));
+});
+
+select( (location.hash || '').replace('#','') || 'app_ts' );
+
+  </script>
+  <script charset="utf-8" src="../../lib/demos.js"></script>
+</body>
+
+</html>

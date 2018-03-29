@@ -1,0 +1,955 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Appendix: ES2015</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="icon" type="image/x-icon" href="mc2/images/favicon.ico">
+
+    <link rel="stylesheet" href="mc2/styles/reveal.css">
+    <link rel="stylesheet" href="mc2/styles/theme.css" id="theme">
+    <link rel="stylesheet" href="mc2/styles/code.css">
+    <!--STARTCOURSESPECIFICSTYLES--><link rel="stylesheet" href="styles/mystyles.css">
+<link rel="stylesheet" href="styles/streams.css"><!--ENDCOURSESPECIFICSTYLES-->
+  </head>
+
+  <body>
+    <div id="pos"></div>
+    <div class="reveal">
+      <div class="slides">
+        <section class="slide chaptertitle">
+          <div class="slidecontent">
+            <div class="chapternumber"> chapter 10 of 13 </div>
+            <h1>Appendix: ES2015</h1>
+            <span>The new shinies</p>
+</span>
+          </div>
+        </section>
+        <section class="slide">
+
+<div class="slidecontent"><p>In this appendix chapter we will more fully <strong>explore the new features in ES2015</strong>!</p>
+</div></section>
+        <!--STARTSECTIONINDEX--><section class="slide sectionlist">
+  <div class="slidecontent">
+    <h3>Sections in this chapter</h3>
+    <ol>
+    <li><a href="#/3">Versatile&nbsp;object&nbsp;definitions</a></li>
+<li><a href="#/4">Destructuring&nbsp;and&nbsp;rest</a></li>
+<li><a href="#/5">Versatile&nbsp;function&nbsp;definitions</a></li>
+<li><a href="#/6">Spreads</a></li>
+<li><a href="#/7">Modules</a></li>
+<li><a href="#/8">Classes</a></li>
+<li><a href="#/9">Decorators</a></li>
+<li><a href="#/10">Miscellaneous</a></li>
+<li><a href="#/11">Trying&nbsp;it&nbsp;out</a></li>
+    </ol>
+  </div>
+</section>
+<!--ENDSECTIONINDEX-->
+        <!--STARTCHAPTERCONTENT--><!--STARTSECTION1--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 1/9</div>
+      <h3>Versatile object definitions</h3>
+      <p>defining objects like a boss</p>
+</p>
+    </div>
+  </section>
+  <section class="slide list" data-pos="10-1-1">
+<span class="pos">10-1-1</span>
+<div class="slidecontent">
+<p>In ES2015 we got five small but nice features for <strong>defining objects in a smoother way</strong>:</p>
+<ul>
+<li><span>a</span>dynamic keys</li>
+<li><span>b</span>automatic same-key-value</li>
+<li><span>c</span>method shorthand</li>
+<li><span>d</span>getters</li>
+<li><span>e</span>setters</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="10-1-2">
+<span class="pos">10-1-2</span>
+<div class="slidecontent">
+<p>If we wanted to create an <strong>object with a dynamic key</strong> we had to go about it in a roundabout way before:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> obj = {};
+<span class="hljs-keyword">var</span> obj[dynamicKey] = someValue;
+</code></pre>
+</div></section><section class="slide" data-pos="10-1-3">
+<span class="pos">10-1-3</span>
+<div class="slidecontent"><p>Now, instead, we can use the <strong>dynamic key syntax</strong> by wrapping it in brackets:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> obj = {[dynamicKey]: someValue};
+</code></pre>
+</div></section><section class="slide num numB" data-pos="10-1-4">
+<span class="pos">10-1-4</span>
+<div class="slidecontent">
+<p>Also, if our value is in a <strong>variable with the same name as the intended key</strong>, like here:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> person = {
+  <span class="hljs-attr">name</span>: name,
+  <span class="hljs-attr">age</span>: age
+};
+</code></pre>
+</div></section><section class="slide" data-pos="10-1-5">
+<span class="pos">10-1-5</span>
+<div class="slidecontent"><p>...ES2015 introduces a <strong>shorthand syntax</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> person = {name, age};
+</code></pre>
+</div></section><section class="slide num numC" data-pos="10-1-6">
+<span class="pos">10-1-6</span>
+<div class="slidecontent">
+<p>And if we define an <strong>object with a method</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> obj = {
+  <span class="hljs-attr">method</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">arg1,arg2</span>)</span>{
+    <span class="hljs-comment">// do advanced stuff</span>
+  }
+};
+</code></pre>
+</div></section><section class="slide" data-pos="10-1-7">
+<span class="pos">10-1-7</span>
+<div class="slidecontent"><p>...ES2015 lets us be less verbose by using the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions">method shorthand syntax</a>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> obj = {
+  method(arg1,arg2){
+    <span class="hljs-comment">// do advanced stuff</span>
+  }
+};
+</code></pre>
+</div></section><section class="slide" data-pos="10-1-8">
+<span class="pos">10-1-8</span>
+<div class="slidecontent"><p>This can also be <strong>combined with the dynamic key syntax</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> obj = {
+  [methodName](arg1,arg2){
+    <span class="hljs-comment">// do advanced stuff</span>
+  }
+};
+</code></pre>
+</div></section><section class="slide num numD" data-pos="10-1-9">
+<span class="pos">10-1-9</span>
+<div class="slidecontent">
+<p>Finally, ES2015 also introduced <strong>getters and setters</strong>.</p>
+<p>Let&#39;s look at <strong>getters</strong> first. They are very useful for dealing with <strong>computed properties</strong>.</p>
+</div></section><section class="slide" data-pos="10-1-10">
+<span class="pos">10-1-10</span>
+<div class="slidecontent"><p>Say we&#39;re working with <strong>user objects</strong> like this:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> user = {
+  <span class="hljs-attr">firstName</span>: <span class="hljs-string">"John"</span>,
+  <span class="hljs-attr">lastName</span>: <span class="hljs-string">"Doe"</span>
+};
+</code></pre>
+<p>Now we want to implement a <strong>computed property <code>fullName</code></strong>.</p>
+</div></section><section class="slide" data-pos="10-1-11">
+<span class="pos">10-1-11</span>
+<div class="slidecontent"><p>Here&#39;s an <strong>ES3 solution</strong> doing it as a <strong>method</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> user = {
+  <span class="hljs-attr">firstName</span>: <span class="hljs-string">"John"</span>,
+  <span class="hljs-attr">lastName</span>: <span class="hljs-string">"Doe"</span>,
+  <span class="hljs-attr">fullName</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.firstName + <span class="hljs-string">' '</span> + <span class="hljs-keyword">this</span>.lastName;
+  }
+}
+
+user.fullName(); <span class="hljs-comment">// John Doe</span>
+</code></pre>
+</div></section><section class="slide" data-pos="10-1-12">
+<span class="pos">10-1-12</span>
+<div class="slidecontent"><p>By using an <strong>ES2015 getter</strong> we can access the computed property normally instead:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> user = {
+  <span class="hljs-attr">firstName</span>: <span class="hljs-string">"John"</span>,
+  <span class="hljs-attr">lastName</span>: <span class="hljs-string">"Doe"</span>,
+  get fullName() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.firstName + <span class="hljs-string">' '</span> + <span class="hljs-keyword">this</span>.lastName;
+  }
+}
+
+user.fullName; <span class="hljs-comment">// John Doe, without invocation!</span>
+</code></pre>
+<p>Cf. <a href="https://en.wikipedia.org/wiki/Uniform_access_principle">uniform access principle</a>.</p>
+</div></section><section class="slide" data-pos="10-1-13">
+<span class="pos">10-1-13</span>
+<div class="slidecontent"><p>You can <strong>see all three syntaxes</strong> in an Angular context in the <a href="resources/supportsite/demos/methodvsgetter" target="_blank">Getter</a> demo!</p>
+</div></section><section class="slide num numE" data-pos="10-1-14">
+<span class="pos">10-1-14</span>
+<div class="slidecontent">
+<p>A <strong>setter</strong> let&#39;s you <strong>act upon prop mutation</strong>, for example <strong>logging</strong>...</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> user = {
+  set userName(str) {
+    log(<span class="hljs-keyword">this</span>._userName + <span class="hljs-string">" changed name to "</span> + str);
+    <span class="hljs-keyword">this</span>._userName = str;
+  }
+}
+
+user.userName = <span class="hljs-string">"Steve"</span>; <span class="hljs-comment">// Bob changed name to Steve</span>
+</code></pre>
+</div></section><section class="slide" data-pos="10-1-15">
+<span class="pos">10-1-15</span>
+<div class="slidecontent"><p>...or <strong>validation</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> user = {
+  set userName(str) {
+    <span class="hljs-keyword">if</span> (str.match(<span class="hljs-regexp">/[^a-z]/</span>)){
+      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Name can only contain lowercase letters!"</span>;
+    }
+    <span class="hljs-keyword">this</span>._userName = str;
+  }
+}
+
+user.userName = <span class="hljs-string">"Bob the 1 and only"</span>; <span class="hljs-comment">// Name can only contain..</span>
+</code></pre>
+</div></section><section class="slide question" data-pos="10-1-16">
+<span class="pos">10-1-16</span>
+<div class="slidecontent">
+<p>Did you note that we used a <strong>different property name</strong> inside the setter? The setter was for <code>userName</code>, but inside it we instead set <code>_userName</code>.</p>
+<p>Why do you think that is?</p>
+</div></section><section class="slide answer" data-pos="10-1-17">
+<span class="pos">10-1-17</span>
+<div class="slidecontent">
+<p>If we mutated the same property inside the setter then that would trigger the setter to be called, which would mutate the property, which would trigger the setter, etc. We would end up in an <strong>infinite loop</strong>.</p>
+</div></section>
+</section>
+<!--ENDSECTION1-->
+<!--STARTSECTION2--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 2/9</div>
+      <h3>Destructuring and rest</h3>
+      <p>cherry-picking the raisins from the cookie</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="10-2-1">
+<span class="pos">10-2-1</span>
+<div class="slidecontent"><p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment">Destructuring</a> is a way to pick values from nested structures without having to do the manual digging.</p>
+</div></section><section class="slide" data-pos="10-2-2">
+<span class="pos">10-2-2</span>
+<div class="slidecontent"><p>Let&#39;s say we have an <strong>array of <code>contenders</code></strong>, each represented by an object.</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">let</span> contenders = [
+  {<span class="hljs-attr">name</span>: <span class="hljs-string">"David"</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">37</span>},
+  {<span class="hljs-attr">name</span>: <span class="hljs-string">"Carl"</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">38</span>}
+  <span class="hljs-comment">/* and a few others */</span>
+];
+</code></pre>
+<p>They are <strong>sorted by position</strong> so the first contender won, etc.</p>
+</div></section><section class="slide" data-pos="10-2-3">
+<span class="pos">10-2-3</span>
+<div class="slidecontent"><p>If we wanted the <strong>name of the winner</strong> we would do something like this in ES5:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">let</span> winnersName = contenders[<span class="hljs-number">0</span>].name;
+</code></pre>
+</div></section><section class="slide" data-pos="10-2-4">
+<span class="pos">10-2-4</span>
+<div class="slidecontent"><p>With <strong>destructuring</strong>, we can instead do this:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">let</span> [{<span class="hljs-attr">name</span>: winnersName}] = contenders;
+</code></pre>
+<p>Or, combined with the <strong>same-key-value shorthand</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">let</span> [{name}] = contenders;
+</code></pre>
+</div></section><section class="slide" data-pos="10-2-5">
+<span class="pos">10-2-5</span>
+<div class="slidecontent"><p>Destructuring also allows us to use the powerful <strong>rest</strong> element which can <strong>lump up many array elements into one</strong>, making for some very succinct code:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">let</span> [winner, ...losers] = contenders;
+</code></pre>
+</div></section><section class="slide" data-pos="10-2-6">
+<span class="pos">10-2-6</span>
+<div class="slidecontent"><p>Note that the rest element <strong>has to be the last one in the array</strong>, so this wouldn&#39;t work:</p>
+<pre><code><span class="hljs-keyword">let</span> [...others, superloser] = contenders; <span class="hljs-comment">// syntax error</span>
+</code></pre></div></section><section class="slide question" data-pos="10-2-7">
+<span class="pos">10-2-7</span>
+<div class="slidecontent">
+<p>Wait.. Theoretically, <strong>the rest could be placed <em>anywhere</em></strong>, as long as there&#39;s just one. The parser should still be able to figure out what&#39;s what!</p>
+<p>Right?</p>
+</div></section><section class="slide answer" data-pos="10-2-8">
+<span class="pos">10-2-8</span>
+<div class="slidecontent">
+<p>True. But that would <strong>require lookahead</strong>, which is <strong>complex and more taxing</strong>. And so the choice was made to only allow the rest element in the last position.</p>
+</div></section>
+</section>
+<!--ENDSECTION2-->
+<!--STARTSECTION3--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 3/9</div>
+      <h3>Versatile function definitions</h3>
+      <p>defining function like a boss</p>
+</p>
+    </div>
+  </section>
+  <section class="slide list" data-pos="10-3-1">
+<span class="pos">10-3-1</span>
+<div class="slidecontent">
+<p>ES2015 provides <strong>several neat features for defining functions</strong>:</p>
+<ul>
+<li><span>a</span>default parameter values</li>
+<li><span>b</span>rest parameters</li>
+<li><span>c</span>destructuring parameters</li>
+<li><span>d</span>arrow functions</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="10-3-2">
+<span class="pos">10-3-2</span>
+<div class="slidecontent">
+<p><strong>Default parameter values</strong> exist in many languages, and was popularised in JS through <a href="">CoffeeScript</a>.</p>
+<p>The idea is to <strong>handle optional parameters</strong> in a smoother way.</p>
+</div></section><section class="slide" data-pos="10-3-3">
+<span class="pos">10-3-3</span>
+<div class="slidecontent"><p>Creating a <strong>function with an optional parameter</strong> in ES3 meant we had to do a sometimes tedious dance of initialization:</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">makePerson</span>(<span class="hljs-params">name, age</span>) </span>{
+  <span class="hljs-keyword">var</span> age = age || <span class="hljs-string">'unknown'</span>;
+  <span class="hljs-comment">// do complex stuff</span>
+}
+</code></pre>
+<p>This may or may not do what you want. (Hint: is <code>0</code> a reasonable value for <code>age</code>?)</p>
+</div></section><section class="slide" data-pos="10-3-4">
+<span class="pos">10-3-4</span>
+<div class="slidecontent"><p>With <strong>default parameter values</strong> we can instead do this: </p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">makePerson</span>(<span class="hljs-params">name, age = <span class="hljs-string">'unknown'</span></span>) </span>{
+  <span class="hljs-comment">// do complex stuff</span>
+}
+</code></pre>
+</div></section><section class="slide num numB" data-pos="10-3-5">
+<span class="pos">10-3-5</span>
+<div class="slidecontent">
+<p>The second new feature, <strong>rest parameters</strong>, is a way of capturing multiple arguments into a single variable like a rest element in a destructuring.</p>
+<p>This can often save us from having to do awkward stuff with the not-quite-an-array <code>arguments</code> object.</p>
+</div></section><section class="slide" data-pos="10-3-6">
+<span class="pos">10-3-6</span>
+<div class="slidecontent"><p>Imagine a <code>competition</code> function that is called with all contenders one by one:</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">competition</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">var</span> contenders = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>);
+  <span class="hljs-keyword">var</span> winner = contenders[<span class="hljs-number">0</span>];
+  <span class="hljs-keyword">var</span> losers = contenders.slice(<span class="hljs-number">1</span>);
+  <span class="hljs-comment">// do something with winner and losers</span>
+}
+</code></pre>
+</div></section><section class="slide" data-pos="10-3-7">
+<span class="pos">10-3-7</span>
+<div class="slidecontent"><p>Using rest parameters, this function simply becomes:</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">competition</span>(<span class="hljs-params">winner, ...losers</span>) </span>{
+  <span class="hljs-comment">// do something with winner and losers</span>
+}
+</code></pre>
+</div></section><section class="slide" data-pos="10-3-8">
+<span class="pos">10-3-8</span>
+<div class="slidecontent"><p>Note that the rest parameter <strong>has to be the last parameter</strong>, just like the rest element, and for the same reason.</p>
+</div></section><section class="slide num numC" data-pos="10-3-9">
+<span class="pos">10-3-9</span>
+<div class="slidecontent">
+<p>Remember <strong>destructuring</strong>? We can <strong>use that in signatures</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">introduce</span>(<span class="hljs-params">{name, age}</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(name,<span class="hljs-string">"is"</span>,age,<span class="hljs-string">"years old"</span>);
+}
+<span class="hljs-keyword">var</span> me = {<span class="hljs-attr">name</span>: <span class="hljs-string">"David"</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">37</span>};
+introduce(me); <span class="hljs-comment">// David is 37 years old</span>
+</code></pre>
+</div></section><section class="slide num numD" data-pos="10-3-10">
+<span class="pos">10-3-10</span>
+<div class="slidecontent">
+<p>Finally - know how <strong>defining anonymous functions</strong> in JS is rather verbose?</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> mcboatify = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">arg</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-string">"Boaty Mc"</span>+arg+<span class="hljs-string">"Face"</span>;
+};
+</code></pre>
+</div></section><section class="slide" data-pos="10-3-11">
+<span class="pos">10-3-11</span>
+<div class="slidecontent"><p>With <strong>arrow functions</strong> things feel less heavy:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> mcboatify = <span class="hljs-function">(<span class="hljs-params">arg</span>) =&gt;</span> {
+  <span class="hljs-keyword">return</span> <span class="hljs-string">"Boaty Mc"</span> + arg + <span class="hljs-string">"Face"</span>;
+};
+</code></pre>
+</div></section><section class="slide" data-pos="10-3-12">
+<span class="pos">10-3-12</span>
+<div class="slidecontent"><p>They can become smaller still - if we have <strong>exactly one parameter</strong>, we can <strong>omit the parenthesis</strong> in the signature:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> mcboatify = <span class="hljs-function"><span class="hljs-params">arg</span> =&gt;</span> {
+  <span class="hljs-keyword">return</span> <span class="hljs-string">"Boaty Mc"</span> + arg + <span class="hljs-string">"Face"</span>;
+};
+</code></pre>
+</div></section><section class="slide" data-pos="10-3-13">
+<span class="pos">10-3-13</span>
+<div class="slidecontent"><p>Finally, if you <strong>just want to return an expression</strong>, we can <strong>skip brackets and the return keyword</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> mcboatify = <span class="hljs-function"><span class="hljs-params">arg</span> =&gt;</span> <span class="hljs-string">"Boaty Mc"</span> + arg + <span class="hljs-string">"Face"</span>;
+</code></pre>
+<p>Now the function body consists of a single expression, which will be implicitly returned.</p>
+</div></section><section class="slide" data-pos="10-3-14">
+<span class="pos">10-3-14</span>
+<div class="slidecontent"><p>Note however that if you want to use the <strong>single expression form with an object literal</strong>, we have to <strong>wrap it in parenthesis</strong> to distinguish it from a regular function block:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> createUser = <span class="hljs-function">(<span class="hljs-params">name,age</span>)=&gt;</span> ({name,age})
+</code></pre>
+</div></section><section class="slide" data-pos="10-3-15">
+<span class="pos">10-3-15</span>
+<div class="slidecontent"><p>Arrow functions are not only less heavy to write, they are also lighter for the interpreter since they <strong>don&#39;t get an implicit context parameter</strong>.</p>
+</div></section><section class="slide" data-pos="10-3-16">
+<span class="pos">10-3-16</span>
+<div class="slidecontent"><p>Which means that if you refer to <code>this</code> inside an arrow function, it is the <strong>same <code>this</code> as on the outside</strong>.</p>
+<pre><code><span class="hljs-keyword">var</span> me = <span class="hljs-keyword">this</span>;
+setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span> === me); <span class="hljs-comment">// true</span>
+}, <span class="hljs-number">10</span>)
+setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span> === me); <span class="hljs-comment">// false</span>
+}, <span class="hljs-number">10</span>)
+</code></pre></div></section><section class="slide" data-pos="10-3-17">
+<span class="pos">10-3-17</span>
+<div class="slidecontent"><p>As a final note; arrow functions can beautifully describe the flow for <strong>nested higher order callbacks</strong>. Remember the <strong><code>multiplier</code> example</strong> from the functional programming section?</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">multiplier</span>(<span class="hljs-params">func,times</span>)</span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; times; i = i + <span class="hljs-number">1</span>){
+      func();
+    }
+  };
+}
+</code></pre>
+</div></section><section class="slide" data-pos="10-3-18">
+<span class="pos">10-3-18</span>
+<div class="slidecontent"><p>With arrow functions, that becomes:</p>
+<pre><code><span class="hljs-keyword">var</span> multiplier = (<span class="hljs-function"><span class="hljs-keyword">func</span>,<span class="hljs-title">times</span>)=&gt; <span class="hljs-params">()</span></span>=&gt; {
+  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; times; i = i + <span class="hljs-number">1</span>){
+    <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>;
+  }
+}
+</code></pre></div></section>
+</section>
+<!--ENDSECTION3-->
+<!--STARTSECTION4--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 4/9</div>
+      <h3>Spreads</h3>
+      <p>the dark side of rests</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="10-4-1">
+<span class="pos">10-4-1</span>
+<div class="slidecontent"><p>You have already seen how we use <strong>rest</strong> element/parameter to capture several array elements into a single variable:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> [winner, ...losers] = competitors;
+</code></pre>
+</div></section><section class="slide" data-pos="10-4-2">
+<span class="pos">10-4-2</span>
+<div class="slidecontent"><p>Now imagine <strong>the opposite scenario</strong> - we have the <code>winner</code> and <code>losers</code> variables, and want to define <code>competitors</code>. In ES3 this is done like this:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> competitors = [winner].concat(losers);
+</code></pre>
+</div></section><section class="slide" data-pos="10-4-3">
+<span class="pos">10-4-3</span>
+<div class="slidecontent"><p>ES2015 gives us a new options - <strong>spreads</strong>! It looks exactly like rest, but we use it on the <em>right side</em> instead (or when we <em>call</em> a function as opposed to when we define it):</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> competitors = [winner, ...losers];
+</code></pre>
+<p>We say that we <em>spread</em> the contents of the expression into the outer array.</p>
+</div></section><section class="slide" data-pos="10-4-4">
+<span class="pos">10-4-4</span>
+<div class="slidecontent"><p>Spreads gives us a less verbose way to <strong>copy an object and add properties to it</strong>, which is otherwise done like this:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> augmentedObj = <span class="hljs-built_in">Object</span>.assign({}, oldObj, newProps);
+</code></pre>
+</div></section><section class="slide" data-pos="10-4-5">
+<span class="pos">10-4-5</span>
+<div class="slidecontent"><p>With spreads we can instead do this:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> augmentedObj = {...oldObj, ...newProps};
+</code></pre>
+</div></section><section class="slide" data-pos="10-4-6">
+<span class="pos">10-4-6</span>
+<div class="slidecontent"><p>Note that while spreads and rests <em>with arrays</em> are in the spec for ES2015, <strong>object spread is still a Stage 3 proposal</strong> (November 2017).</p>
+<p>It is <strong>expected to be accepted into an upcoming release</strong> of the language, and is already supported by Babel and the like.</p>
+</div></section>
+</section>
+<!--ENDSECTION4-->
+<!--STARTSECTION5--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 5/9</div>
+      <h3>Modules</h3>
+      <p>getting into the import/export business</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="10-5-1">
+<span class="pos">10-5-1</span>
+<div class="slidecontent"><p>As we saw earlier, <strong>Node gave us modules</strong> through the <code>require</code> and <code>module.exports</code> globals it provides.</p>
+<p>But with ES2015, we got <strong>native modules</strong> for the very first time!</p>
+</div></section><section class="slide" data-pos="10-5-2">
+<span class="pos">10-5-2</span>
+<div class="slidecontent"><p>While <strong>Node modules</strong> followed the <strong>CommonJS module standard</strong>, what was implemented in the language follows <strong>another syntax</strong>, named <strong>ES modules</strong>.</p>
+<p>But the <strong>concepts are the same</strong>. While you would do this in <strong>CommonJS</strong>...</p>
+<pre><code>// file1.js
+module.exports = <span class="hljs-meta">{..}</span>;
+
+//file2.js
+<span class="hljs-keyword">var</span> lib = require(<span class="hljs-string">"./file1.js"</span>);
+</code></pre></div></section><section class="slide" data-pos="10-5-3">
+<span class="pos">10-5-3</span>
+<div class="slidecontent"><p>...you would do this with <strong>ES modules</strong>:</p>
+<pre><code>// file1.js
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> lib = <span class="hljs-meta">{..}</span>;
+
+//file2.js
+<span class="hljs-keyword">import</span> lib <span class="hljs-keyword">from</span> './file1.js'
+</code></pre><p>We have to <strong>name our exports</strong> here, otherwise things are <strong>pretty similar</strong>.</p>
+</div></section><section class="slide" data-pos="10-5-4">
+<span class="pos">10-5-4</span>
+<div class="slidecontent"><p>There are <strong>other differences too</strong>, so for the full scope you should <strong>check the MDN docs</strong> for <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import">import</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export">export</a></p>
+</div></section><section class="slide" data-pos="10-5-5">
+<span class="pos">10-5-5</span>
+<div class="slidecontent"><p>Note that even though this is now <strong>part of the language</strong>, there are <strong>no browsers that implement the functionality yet</strong>.</p>
+<p>This is mainly because it <strong>wouldn&#39;t be practical</strong> - we&#39;d get a <strong>gazillion http requests for small files</strong>.</p>
+</div></section><section class="slide" data-pos="10-5-6">
+<span class="pos">10-5-6</span>
+<div class="slidecontent"><p>And since we <strong>likely have a build step anyway</strong> to do minification and transpiling and similar, you can easily <strong>bundle your code into a single file</strong>, too.</p>
+<p>But, with the advent of HTTP2, <strong>who knows what the future will hold</strong>!</p>
+</div></section>
+</section>
+<!--ENDSECTION5-->
+<!--STARTSECTION6--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 6/9</div>
+      <h3>Classes</h3>
+      <p>Waiter, there are classes in my JS!</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="10-6-1">
+<span class="pos">10-6-1</span>
+<div class="slidecontent"><p>Before ES2015, JavaScript used to famously <strong>lack classes</strong>.</p>
+<p>This was <strong>not an oversight</strong>. Consider what <strong>classes are normally used for</strong>:</p>
+<ul>
+<li><strong>resusing functionality</strong> and </li>
+<li>setting up <strong>hierarchies</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="10-6-2">
+<span class="pos">10-6-2</span>
+<div class="slidecontent"><p>In <strong>JavaScript</strong> this is addressed by</p>
+<ul>
+<li>simply <strong>grabbing methods</strong> and/or <strong>mixing objects</strong></li>
+<li><strong>prototypal &quot;inheritance&quot;</strong>, which should really be called delegation</li>
+</ul>
+</div></section><section class="slide" data-pos="10-6-3">
+<span class="pos">10-6-3</span>
+<div class="slidecontent"><p>This means that <strong>classes didn&#39;t really serve a purpose</strong>. Yet they were <strong>still frequently used</strong>, through the weird, bolted-on <strong><code>new</code></strong> syntax which <strong>makes functions behave like constructors</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">"David"</span>, <span class="hljs-number">1979</span>);
+</code></pre>
+</div></section><section class="slide" data-pos="10-6-4">
+<span class="pos">10-6-4</span>
+<div class="slidecontent"><p>But to really make this <strong>behave like normal classes</strong>...</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> lucas = <span class="hljs-keyword">new</span> Dog(<span class="hljs-string">"Lucas"</span>);
+lucas instanceOf Dog; <span class="hljs-comment">// true</span>
+lucas instanceOf Animal; <span class="hljs-comment">// true</span>
+lucas.bark(); <span class="hljs-comment">// Lucas goes woof!</span>
+</code></pre>
+</div></section><section class="slide" data-pos="10-6-5">
+<span class="pos">10-6-5</span>
+<div class="slidecontent"><p>...then lots of <strong>jumping through hoops</strong> had to be done:</p>
+<pre><code class="lang-javascript">Dog.prototype = <span class="hljs-keyword">new</span> Animal();
+Dog.prototype.constructor = Animal;
+Dog.prototype.bark = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.name, <span class="hljs-string">"goes woof!"</span>);
+}
+</code></pre>
+</div></section><section class="slide" data-pos="10-6-6">
+<span class="pos">10-6-6</span>
+<div class="slidecontent"><p>To <strong>facilitate &quot;class&quot; use</strong> in JavaScript, <strong>ES2015 introduced the <code>class</code></strong> syntax:</p>
+<pre><code class="lang-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dog</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Animal</span> </span>{
+  bark() {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.name, <span class="hljs-string">"goes woof!"</span>);
+  }
+}
+</code></pre>
+<p>Note how <strong>method shorthands</strong> are available in class declarations too!</p>
+</div></section><section class="slide" data-pos="10-6-7">
+<span class="pos">10-6-7</span>
+<div class="slidecontent"><p>But it is important to note that this does <strong>not mean that JavaScript has actual classes</strong>.</p>
+<p>Under the hood the same weird <code>prototype</code> and <code>constructor</code> dance happens.</p>
+</div></section><section class="slide list" data-pos="10-6-8">
+<span class="pos">10-6-8</span>
+<div class="slidecontent">
+<p>Still, since the <strong>syntax hides the mismatch</strong>, it can be a <strong>convenient way to package functionality</strong>. And Angular makes heavy use of this construct, so let&#39;s <strong>check out some details</strong>! Specifically:</p>
+<ul>
+<li><span>a</span>constructor</li>
+<li><span>b</span>methods</li>
+<li><span>c</span>properties</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="10-6-9">
+<span class="pos">10-6-9</span>
+<div class="slidecontent">
+<p>First off, what <strong>used to go in the fake constructor</strong>...</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Animal</span>(<span class="hljs-params">name</span>) </span>{
+  <span class="hljs-keyword">this</span>.name = name;
+}
+</code></pre>
+</div></section><section class="slide" data-pos="10-6-10">
+<span class="pos">10-6-10</span>
+<div class="slidecontent"><p>...is now placed in a literal <strong><code>constructor</code> method</strong> in the class declaration:</p>
+<pre><code class="lang-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Animal</span> </span>{
+  <span class="hljs-keyword">constructor</span>(name) {
+    <span class="hljs-keyword">this</span>.name = name;
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="10-6-11">
+<span class="pos">10-6-11</span>
+<div class="slidecontent"><p>If you want <strong>the inherited constructor to be invoked too</strong>, you must <strong>do so yourself</strong> with the new <strong><code>super</code> keyword</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dog</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Animal</span> </span>{
+  <span class="hljs-keyword">constructor</span>(name) {
+    <span class="hljs-keyword">super</span>(name);
+    <span class="hljs-keyword">this</span>.nickname = name + <span class="hljs-string">'y boy'</span>;
+  }
+}
+</code></pre>
+</div></section><section class="slide num numB" data-pos="10-6-12">
+<span class="pos">10-6-12</span>
+<div class="slidecontent">
+<p>And you&#39;ve <strong>already seen methods</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dog</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Animal</span> </span>{
+  <span class="hljs-keyword">constructor</span>() { ... }
+  bark() {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.name,<span class="hljs-string">"goes woof!"</span>);
+  }
+}
+</code></pre>
+<p>Similar to object methods, <strong><code>this</code></strong> (normally) <strong>points to the instance</strong>.</p>
+</div></section><section class="slide num numC" data-pos="10-6-13">
+<span class="pos">10-6-13</span>
+<div class="slidecontent">
+<p>Finally, as you saw, <strong>properties are normally initialised in the constructor</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Animal</span> </span>{
+  <span class="hljs-keyword">constructor</span>(name) {
+    <span class="hljs-keyword">this</span>.name = name;
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="10-6-14">
+<span class="pos">10-6-14</span>
+<div class="slidecontent"><p>...but when we use <strong>TypeScript</strong> we can also <strong>initialise properties directly on the class declaration</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> Dog {
+  numberOfLegs = <span class="hljs-number">4</span>;
+}
+</code></pre>
+<p>This is <strong>likely to become a part of JavaScript syntax</strong> too.</p>
+</div></section><section class="slide" data-pos="10-6-15">
+<span class="pos">10-6-15</span>
+<div class="slidecontent"><p>So, to <strong>recap</strong>:</p>
+<ul>
+<li>classes are just a <strong>light syntactic sugar</strong> introduced in ES2015</li>
+<li>we normally <strong>don&#39;t need them in JavaScript</strong></li>
+<li>but they are a <strong>convenient way to bundle related functionality</strong></li>
+<li>which <strong>Angular makes heavy use of</strong>!</li>
+</ul>
+</div></section>
+</section>
+<!--ENDSECTION6-->
+<!--STARTSECTION7--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 7/9</div>
+      <h3>Decorators</h3>
+      <p>dewhatnow?</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="10-7-1">
+<span class="pos">10-7-1</span>
+<div class="slidecontent"><p>The <strong>situation around decorators is rather confusing</strong>;</p>
+<ul>
+<li>There is a <a href="http://tc39.github.io/proposal-decorators/">proposal</a> to add it as a language feature</li>
+<li>There is a slightly different <a href="https://www.typescriptlang.org/docs/handbook/decorators.html">implementation in TypeScript</a></li>
+<li>There is the parallel idea in <strong><code>Reflect</code></strong></li>
+<li>There is <a href="https://github.com/wycats/javascript-decorators/issues/48">disagreement</a> on whether decorators are a good idea at all</li>
+<li>There is (was?) something called <a href="http://blog.thoughtram.io/angular/2015/05/03/the-difference-between-annotations-and-decorators.html">annotations</a> that is sort of the same... yet not</li>
+</ul>
+</div></section><section class="slide" data-pos="10-7-2">
+<span class="pos">10-7-2</span>
+<div class="slidecontent"><p>Focusing on the <strong>TypeScript implementation</strong>, decorators are a way of decorating a class...</p>
+<ul>
+<li><strong>declaration</strong></li>
+<li><strong>property</strong></li>
+<li><strong>getter</strong> or <strong>setter</strong></li>
+<li><strong>method</strong></li>
+<li><strong>method parameter</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="10-7-3">
+<span class="pos">10-7-3</span>
+<div class="slidecontent"><p>As a simple example, imagine that we have a <strong><code>debounce</code> function</strong> that <strong>throttles other functions</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">debounce</span>(<span class="hljs-params">fn</span>) </span>{
+  <span class="hljs-comment">// ... create a throttled version of `fn`...</span>
+  <span class="hljs-keyword">return</span> throttledFn;
+}
+</code></pre>
+</div></section><section class="slide" data-pos="10-7-4">
+<span class="pos">10-7-4</span>
+<div class="slidecontent"><p>And then we have a class with a <strong>method that is very expensive</strong> to call:</p>
+<pre><code class="lang-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">myClass</span> </span>{
+  myExpensiveMethod: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-comment">// lots of heavy lifting here</span>
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="10-7-5">
+<span class="pos">10-7-5</span>
+<div class="slidecontent"><p><strong>Without decorators</strong> we would do this:</p>
+<pre><code class="lang-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">myClass</span> </span>{
+  myExpensiveMethod: debounce(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-comment">// lots of heavy lifting here</span>
+  })
+}
+</code></pre>
+</div></section><section class="slide" data-pos="10-7-6">
+<span class="pos">10-7-6</span>
+<div class="slidecontent"><p><strong>With decorators</strong>, instead, we use the <code>@</code> syntax:</p>
+<pre><code class="lang-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">myClass</span> </span>{
+  @debounce
+  myExpensiveMethod: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-comment">// lots of heavy lifting here</span>
+  }
+}
+</code></pre>
+<p>The <strong>end result is the same thing</strong>.</p>
+</div></section><section class="slide" data-pos="10-7-7">
+<span class="pos">10-7-7</span>
+<div class="slidecontent"><p>We can also have <strong>decorators that take additional arguments</strong>. For instance <code>debounce</code> could accept a <strong>minimum number of milliseconds</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">myClass</span> </span>{
+  @debounce(<span class="hljs-number">300</span>)
+  myExpensiveMethod: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-comment">// lots of heavy lifting here</span>
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="10-7-8">
+<span class="pos">10-7-8</span>
+<div class="slidecontent"><p>In other words, <strong>decorators are just a light syntax sugar</strong>.</p>
+<p>But since an Angular app consists mainly of <strong>classes with core functionality sprinkled in</strong>, then <strong>decorators make a lot of sense</strong>.</p>
+</div></section><section class="slide" data-pos="10-7-9">
+<span class="pos">10-7-9</span>
+<div class="slidecontent"><p>This is what a <strong>Hello-World component looks like without them</strong>:</p>
+<pre><code class="lang-typescript">AppComponent = Component({
+  selector: <span class="hljs-string">'my-app'</span>,
+  template: <span class="hljs-string">'&lt;h1&gt;My First Angular App&lt;/h1&gt;'</span>
+}).Class({
+  <span class="hljs-keyword">constructor</span>: function(<span class="hljs-params"></span>) {},
+  <span class="hljs-comment">// other model-specific stuff</span>
+});
+</code></pre>
+</div></section><section class="slide" data-pos="10-7-10">
+<span class="pos">10-7-10</span>
+<div class="slidecontent"><p>And here it is in <strong>using decorators</strong> (through TypeScript):</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'my-app'</span>,
+  template: <span class="hljs-string">'&lt;h1&gt;My First Angular App&lt;/h1&gt;'</span>
+})
+<span class="hljs-keyword">class</span> AppComponent {
+  <span class="hljs-comment">// other model-specific stuff</span>
+}
+</code></pre>
+</div></section><section class="slide" data-pos="10-7-11">
+<span class="pos">10-7-11</span>
+<div class="slidecontent"><p>If you want to <strong>dig deeper into decorators</strong>, check out...</p>
+<ul>
+<li>The <a href="https://www.typescriptlang.org/docs/handbook/decorators.html">decorator section</a> of the TypeScript handbook</li>
+<li>This <a href="https://github.com/arolson101/typescript-decorators">concice and clear explanation</a> with examples and interactive links</li>
+</ul>
+</div></section>
+</section>
+<!--ENDSECTION7-->
+<!--STARTSECTION8--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 8/9</div>
+      <h3>Miscellaneous</h3>
+      <p>odds and ends</p>
+</p>
+    </div>
+  </section>
+  <section class="slide list" data-pos="10-8-1">
+<span class="pos">10-8-1</span>
+<div class="slidecontent">
+<p>There&#39;s three more things worth mentioning:</p>
+<ul>
+<li><span>a</span>declaring variables with <strong><code>let</code></strong></li>
+<li><span>b</span>declaring variables with <strong><code>const</code></strong></li>
+<li><span>c</span><strong>template strings</strong></li>
+</ul>
+</div></section><section class="slide num numA" data-pos="10-8-2">
+<span class="pos">10-8-2</span>
+<div class="slidecontent">
+<p>Variables in JavaScript have <strong>functional scope</strong>.</p>
+<p>Even if you declare them inside an <strong>if-block in the middle of a function</strong>, the variable is still <strong>visible throughout the entire function</strong>.</p>
+</div></section><section class="slide" data-pos="10-8-3">
+<span class="pos">10-8-3</span>
+<div class="slidecontent"><p>So when you write this...</p>
+<pre><code>function myFunc(arg,<span class="hljs-class"><span class="hljs-keyword">lib</span>){</span>
+  <span class="hljs-keyword">if</span> (arg === <span class="hljs-number">42</span>){
+    var ret = <span class="hljs-class"><span class="hljs-keyword">lib</span>.<span class="hljs-title">method</span>() + 7;</span>
+    <span class="hljs-keyword">return</span> ret;
+  }
+  /<span class="hljs-regexp">/ do sth else
+}</span>
+</code></pre></div></section><section class="slide" data-pos="10-8-4">
+<span class="pos">10-8-4</span>
+<div class="slidecontent"><p>...this is what (conceptually) happens:</p>
+<pre><code>function myFunc(arg,<span class="hljs-class"><span class="hljs-keyword">lib</span>){</span>
+  var ret;
+  <span class="hljs-keyword">if</span> (arg === <span class="hljs-number">42</span>){
+    ret = <span class="hljs-class"><span class="hljs-keyword">lib</span>.<span class="hljs-title">method</span>() + 7;</span>
+    <span class="hljs-keyword">return</span> ret;
+  }
+  /<span class="hljs-regexp">/ do sth else
+}</span>
+</code></pre><p>In other words, the <strong>declaration is hoisted to the top</strong>.</p>
+</div></section><section class="slide" data-pos="10-8-5">
+<span class="pos">10-8-5</span>
+<div class="slidecontent"><p>This is generally considered a <strong>design mistake</strong>, and can give rise to <strong>weird bugs</strong>.</p>
+<p>ES6 therefore introduces <strong><code>let</code> as an alternative to <code>var</code></strong> for declaring variables, and the <strong>only difference</strong> is that <strong><code>let</code> has block scope</strong>.</p>
+</div></section><section class="slide num numB" data-pos="10-8-6">
+<span class="pos">10-8-6</span>
+<div class="slidecontent">
+<p>In most languages there&#39;s a way to <strong>define constants</strong>, meaning a <strong>variable that cannot change</strong>.</p>
+<p>This is <strong>missing from JavaScript</strong>.</p>
+</div></section><section class="slide" data-pos="10-8-7">
+<span class="pos">10-8-7</span>
+<div class="slidecontent"><p>A common &quot;hack&quot; is to <strong>name constants in all capitals</strong>:</p>
+<pre><code>var SOME_CONST = <span class="hljs-number">42</span><span class="hljs-comment">;</span>
+</code></pre><p>But this has <strong>no technical significance</strong>, it is just a hint.</p>
+</div></section><section class="slide" data-pos="10-8-8">
+<span class="pos">10-8-8</span>
+<div class="slidecontent"><p>ES6 therefore introduces <strong><code>const</code> as another alternative to <code>var</code></strong>, and the <strong>only difference</strong> is that you <strong>cannot reassign the value</strong>.</p>
+<pre><code>const answer = <span class="hljs-number">42</span><span class="hljs-comment">;</span>
+<span class="hljs-attribute">answer</span> = <span class="hljs-number">43</span><span class="hljs-comment">; // throws an error</span>
+</code></pre></div></section><section class="slide num numC" data-pos="10-8-9">
+<span class="pos">10-8-9</span>
+<div class="slidecontent">
+<p>Finally, <strong>template strings</strong>!</p>
+<pre><code><span class="hljs-keyword">let</span> userTempl = <span class="hljs-string">`
+  First name: <span class="hljs-subst">${user.fname}</span>
+  Last name: <span class="hljs-subst">${user.lname}</span>
+`</span>;
+</code></pre></div></section><section class="slide" data-pos="10-8-10">
+<span class="pos">10-8-10</span>
+<div class="slidecontent"><p>As you saw, template strings...</p>
+<ul>
+<li>are <strong>defined inside two backticks</strong></li>
+<li>can <strong>contain linebreaks</strong></li>
+<li>allow <strong>interpolation inside ${}</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="10-8-11">
+<span class="pos">10-8-11</span>
+<div class="slidecontent"><p>There&#39;s also a <strong>semi-secret way to invoke functions with templates</strong>. Here&#39;s an example from <a href="https://github.com/yoshuawuyts/choo">Choo</a>:</p>
+<pre><code><span class="xml">html`
+  <span class="hljs-tag">&lt;<span class="hljs-name">main</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"app"</span>&gt;</span>
+    Count: $</span><span class="hljs-template-variable">{state.counter.count}</span><span class="xml">
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">$</span></span></span><span class="hljs-template-variable">{(e) =&gt; send('counter:increment')}</span><span class="xml"><span class="hljs-tag">&gt;</span>+<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>`</span>
+</code></pre><p>The <strong><code>html</code> function is invoked</strong> with the templates and interpolated values.</p>
+</div></section>
+</section>
+<!--ENDSECTION8-->
+<!--STARTSECTION9--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 9/9</div>
+      <h3>Trying it out</h3>
+      <p>Toe into the water</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="10-9-1">
+<span class="pos">10-9-1</span>
+<div class="slidecontent"><p>As a <strong>light-weight exercise</strong> during the upcoming break, let&#39;s <strong>try some of the ES6 stuff out</strong>!</p>
+</div></section><section class="slide list" data-pos="10-9-2">
+<span class="pos">10-9-2</span>
+<div class="slidecontent">
+<p>We&#39;ll do this in <strong>two different parts</strong>:</p>
+<ul>
+<li><span>a</span>writing and <strong>running ES6 code</strong></li>
+<li><span>b</span>checking <strong>how it translates to ES5</strong></li>
+</ul>
+</div></section><section class="slide num numA" data-pos="10-9-3">
+<span class="pos">10-9-3</span>
+<div class="slidecontent">
+<p>An easy way to <strong>run ES6 code</strong> is by using <a href="http://es6fiddle.net/">es6fiddle.net</a>. Write <strong>ES6 code in the left column</strong>, and see the <strong>output to the right</strong>.</p>
+<p><img src="resources/images/es6fiddle.png" alt=""></p>
+</div></section><section class="slide" data-pos="10-9-4">
+<span class="pos">10-9-4</span>
+<div class="slidecontent"><p>Through a dropdown you can access a number of <strong>ready-made examples</strong> which are a good starting point for experimenting.</p>
+</div></section><section class="slide" data-pos="10-9-5">
+<span class="pos">10-9-5</span>
+<div class="slidecontent"><p>If you have a <strong>modern version of Chrome</strong> you can also <strong>run ES2015 code in the console</strong>!</p>
+<p><img src="resources/images/es2015inconsole.png" alt=""></p>
+</div></section><section class="slide num numB" data-pos="10-9-6">
+<span class="pos">10-9-6</span>
+<div class="slidecontent">
+<p>To see the <strong>ES5 equivalent</strong>, we&#39;ll use <a href="https://babeljs.io/repl">babeljs.io/repl</a>. The right column here shows <strong>ES5 translation instead of output</strong>.</p>
+<p><img src="resources/images/babelrepl.png" alt=""></p>
+</div></section><section class="slide" data-pos="10-9-7">
+<span class="pos">10-9-7</span>
+<div class="slidecontent"><p>A good way to get started is to <strong>copy the ES6fiddle examples</strong> and <strong>see what they translate to</strong>!</p>
+</div></section>
+</section>
+<!--ENDSECTION9--><!--ENDCHAPTERCONTENT-->
+        
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var basehref = window.location.href.replace(/chapter\d.*?$/,'')
+
+      document.addEventListener("keydown",function(e){
+        var code = e.which || e.keyCode;
+        if (code===13){
+          window.location.href = basehref+"index.html?from="+(10-1);
+        } else if (code >= 49 && code <= 9+48) {
+          window.location.hash = "#/" + (code-48+1+1);
+        }
+        if (10 < 13) {
+          if (code===99){ // the letter C for next Chapter
+            window.location.href = basehref+"chapter"+(10+1)+".html"
+          }
+        }
+      });
+    </script>
+    <script src="mc2/scripts/head.js" type="text/javascript"></script>
+    <script src="mc2/scripts/reveal.js" type="text/javascript"></script>
+    <script src="mc2/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    showNotes: false,
+    transition: 'slide',
+    dependencies: [
+      { src: 'mc2/scripts/plugin/notes/notes.js', async: true }
+    ]
+  })
+
+    window.onload = function(){
+
+      var links = document.querySelectorAll("a.link");
+      for(var i=0;i<links.length;i++){
+        var link = links[i];
+        link.innerHTML = link.innerHTML.replace(/ /g,'&nbsp;')
+      }
+      var posElem = document.getElementById('pos')
+      function updateReference(){
+        setTimeout(function(){
+          var currentpos = document.querySelector('section.present[data-pos]')
+          if (currentpos){
+            posElem.innerHTML = currentpos.getAttribute('data-pos')
+          } else {
+            posElem.innerHTML = ''
+          }
+          if (document.querySelector('.present.chaptertitle')){
+            document.body.classList.add('atchaptertitle');
+          } else {
+            document.body.classList.remove('atchaptertitle');
+          }
+        },10)
+      }
+
+      window.addEventListener("hashchange",updateReference);
+
+      updateReference();
+    };
+
+    </script>
+    <!--STARTCOURSESPECIFICSCRIPTS--><script type="text/javascript" src="scripts/streams.js"></script><!--ENDCOURSESPECIFICSCRIPTS-->
+  </body>
+</html>

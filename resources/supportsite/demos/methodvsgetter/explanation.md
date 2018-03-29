@@ -1,0 +1,1 @@
+A getter is some syntactic sugar that allows you to make a method look like a property. Behold:

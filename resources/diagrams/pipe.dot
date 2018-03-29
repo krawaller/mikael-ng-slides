@@ -1,0 +1,7 @@
+digraph {
+  bgcolor = transparent
+  rankdir = LR
+  string -> pipe -> trans
+  trans [label="transformed\nstring"]
+  pipe [shape=box]
+}

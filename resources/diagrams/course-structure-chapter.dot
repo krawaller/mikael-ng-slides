@@ -1,0 +1,19 @@
+digraph {
+  rankdir = TD
+  bgcolor = transparent
+
+  page1_1, page1_2, page1_3,  page2_1, page2_2
+  Title -> Motivation -> Overview -> Section1 -> Section2
+  rest [label="...", style=dashed]
+  Motivation [style=dashed]
+  Section2 -> rest -> End
+  Section1 -> page1_1 -> page1_2
+  Section2 -> page2_1 -> page2_2
+  page2_2 -> page2_3 [style=dashed]
+  page1_2 -> page1_3 [style=dashed]
+  page1_3, page2_3 [style=invis]
+  {rank=same; page1_1, page2_1}
+  {rank=same; page1_2, page2_2}
+  {rank=same; Title, Motivation, Overview, Section1, Section2, rest, End}
+
+}

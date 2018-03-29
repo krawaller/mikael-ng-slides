@@ -1,0 +1,30 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  compound = true
+
+  subgraph cluster_app {
+    label = "AppComponent"
+    player [style=dashed,label="gameState"]
+    bogus1
+  }
+
+  subgraph cluster_scene {
+    label = "NameForm"
+    bogus3
+    bogus2
+  }
+
+  bogus1, bogus2, bogus3 [color=transparent,fontcolor=transparent,label=" "]
+
+  player -> scene [ltail=cluster_app, dir=none]
+  scene -> bogus3 [lhead=cluster_scene]
+
+  bogus2 -> link [ltail=cluster_scene, dir=none, constraint=none]
+  link -> bogus1 [lhead=cluster_app]
+
+  scene [label="current name"]
+  link [label="new name"]
+
+  {rank=same; scene, link}
+}

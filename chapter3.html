@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Components 101</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="icon" type="image/x-icon" href="mc2/images/favicon.ico">
+
+    <link rel="stylesheet" href="mc2/styles/reveal.css">
+    <link rel="stylesheet" href="mc2/styles/theme.css" id="theme">
+    <link rel="stylesheet" href="mc2/styles/code.css">
+    <!--STARTCOURSESPECIFICSTYLES--><link rel="stylesheet" href="styles/mystyles.css">
+<link rel="stylesheet" href="styles/streams.css"><!--ENDCOURSESPECIFICSTYLES-->
+  </head>
+
+  <body>
+    <div id="pos"></div>
+    <div class="reveal">
+      <div class="slides">
+        <section class="slide chaptertitle">
+          <div class="slidecontent">
+            <div class="chapternumber"> chapter 3 of 13 </div>
+            <h1>Components 101</h1>
+            <span>The building blocks</p>
+</span>
+          </div>
+        </section>
+        
+        <!--STARTSECTIONINDEX--><section class="slide sectionlist">
+  <div class="slidecontent">
+    <h3>Sections in this chapter</h3>
+    <ol>
+    <li><a href="#/3">Component&nbsp;basics</a></li>
+<li><a href="#/4">Component&nbsp;styling</a></li>
+<li><a href="#/5">Reading&nbsp;model&nbsp;values</a></li>
+<li><a href="#/6">Template&nbsp;expressions</a></li>
+<li><a href="#/7">Built&#8209;in&nbsp;directives</a></li>
+<li><a href="#/8">Gamebook&nbsp;&#8209;&nbsp;dynamism</a></li>
+    </ol>
+  </div>
+</section>
+<!--ENDSECTIONINDEX-->
+        <!--STARTCHAPTERCONTENT--><!--STARTSECTION1--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 1/6</div>
+      <h3>Component basics</h3>
+      <p>The primary building block</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="3-1-1">
+<span class="pos">3-1-1</span>
+<div class="slidecontent"><p>Unlike its predecessor AngularJS, <strong>Angular is component centric</strong>.</p>
+<p>The vast <strong>majority of your code</strong> is likely to be <strong>made up by components</strong>.</p>
+</div></section><section class="slide" data-pos="3-1-2">
+<span class="pos">3-1-2</span>
+<div class="slidecontent"><p>Much of <strong>what was housed in controllers</strong> in AngularJS has <strong>moved into components</strong> in Angular.</p>
+<p>So, let&#39;s <strong>learn about components</strong>!</p>
+</div></section><section class="slide" data-pos="3-1-3">
+<span class="pos">3-1-3</span>
+<div class="slidecontent"><p>In Angular, components are made up by <strong>two parts</strong>:</p>
+<ul>
+<li>A <strong>model</strong>, represented by a <strong><code>class</code></strong>, to hold <strong>values</strong>, <strong>methods</strong> and <strong>lifecycle hooks</strong>.</li>
+<li>A <strong>view</strong>, represented as <strong>decorated metadata</strong> on the class, to hold <strong>template</strong> and related things.</li>
+</ul>
+</div></section><section class="slide" data-pos="3-1-4">
+<span class="pos">3-1-4</span>
+<div class="slidecontent"><p>This can be translated to the following <strong>structure map</strong>:</p>
+<p><img src="resources/diagrams/component.svg" alt=""></p>
+</div></section><section class="slide" data-pos="3-1-5">
+<span class="pos">3-1-5</span>
+<div class="slidecontent"><p>In the <strong>template</strong> we can <strong>read values from the model</strong>:</p>
+<p><img src="resources/diagrams/component-read.svg" alt=""></p>
+</div></section><section class="slide" data-pos="3-1-6">
+<span class="pos">3-1-6</span>
+<div class="slidecontent"><p>Also we can use <strong>model methods as event handlers</strong> in the template...</p>
+<p><img src="resources/diagrams/component-read-write.svg" alt=""></p>
+</div></section><section class="slide" data-pos="3-1-7">
+<span class="pos">3-1-7</span>
+<div class="slidecontent"><p>...which <strong>causes the values to change</strong> and to be <strong>read again</strong>.</p>
+<p><img src="resources/diagrams/component-read-write-change.svg" alt=""></p>
+<p>Thus we get a <strong>uni-directional dataflow</strong> on a component scale.</p>
+</div></section><section class="slide" data-pos="3-1-8">
+<span class="pos">3-1-8</span>
+<div class="slidecontent"><p>We can <strong>boil the cycle down</strong> to this:</p>
+<p><img src="resources/diagrams/view-model.svg" alt=""></p>
+<p>Understanding this cycle is <strong>absolutely central</strong> in learning about components!</p>
+</div></section>
+</section>
+<!--ENDSECTION1-->
+<!--STARTSECTION2--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 2/6</div>
+      <h3>Component styling</h3>
+      <p>putting on the makeup</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="3-2-1">
+<span class="pos">3-2-1</span>
+<div class="slidecontent"><p>As you&#39;ve already seen flash by, the <strong><code>Component</code> metadata can have a <code>styles</code> property</strong>:</p>
+<pre><code><span class="hljs-string">styles:</span> [<span class="hljs-string">'h1 {text-decoration: none;}'</span>]
+</code></pre><p>It should contain an <strong>array of CSS strings</strong> that will be applied.</p>
+</div></section><section class="slide" data-pos="3-2-2">
+<span class="pos">3-2-2</span>
+<div class="slidecontent"><p>As with the templates (which we just might have forgotten to mention!), we can also <strong>refer to external files</strong>:</p>
+<pre><code><span class="hljs-string">styleUrls:</span> [<span class="hljs-string">'app/css/usersection.css'</span>]
+</code></pre></div></section><section class="slide question" data-pos="3-2-3">
+<span class="pos">3-2-3</span>
+<div class="slidecontent">
+<p>But, wait a minute. If we&#39;re just throwing <strong>regular CSS</strong> at the component, then <strong>how is it scoped</strong>?</p>
+<p>Won&#39;t these styles just <strong>apply to everything</strong>?</p>
+</div></section><section class="slide answer" data-pos="3-2-4">
+<span class="pos">3-2-4</span>
+<div class="slidecontent">
+<p>Excellent question! As usual, <strong>it depends</strong>. :) </p>
+<p>Specifically, it depends on our selected level of <strong>view encapsulation</strong>!</p>
+</div></section><section class="slide" data-pos="3-2-5">
+<span class="pos">3-2-5</span>
+<div class="slidecontent"><p>Angular offers <strong>two approaches</strong> for rendering components:</p>
+<ul>
+<li>as <strong>regular HTML</strong> (meaning no encapsulation)</li>
+<li>as <strong><a href="https://developer.mozilla.org/en-US/docs/Web/Web_Components/Shadow_DOM">Shadow DOM</a></strong> (meaning full encapsulation)</li>
+</ul>
+<p>Shadow DOM, as an elevator pitch, is a way to have <strong>tiny contained documents</strong> within the larger document.</p>
+</div></section><section class="slide question" data-pos="3-2-6">
+<span class="pos">3-2-6</span>
+<div class="slidecontent">
+<p>...you mean <strong>like <code>iframes</code></strong>?</p>
+</div></section><section class="slide answer" data-pos="3-2-7">
+<span class="pos">3-2-7</span>
+<div class="slidecontent">
+<p>No, yuck!</p>
+<p>Well, ok, yes. Sort of. But with <strong>controlled ways to interact with the context</strong>.</p>
+</div></section><section class="slide" data-pos="3-2-8">
+<span class="pos">3-2-8</span>
+<div class="slidecontent"><p>We control encapsulation through the <strong><code>encapsulation</code> metadata property</strong>. It has <strong>three possible values</strong>:</p>
+<table class="deflist">
+  <tr>
+    <td>Native</td>
+    <td>Assume <strong>native shadow DOM</strong> support in the browser (which few have)</td>
+  </tr>
+  <tr>
+    <td>Emulated</td>
+    <td>Use an Angular-included <strong>emulation of shadow DOM</strong>. This is the <strong>default</strong></td>
+  </tr>
+  <tr>
+    <td>None</td>
+    <td>Render component as <strong>regular HTML</strong></td>
+  </tr>
+</table></div></section><section class="slide" data-pos="3-2-9">
+<span class="pos">3-2-9</span>
+<div class="slidecontent"><p>There are <strong>constants for the modes</strong> on the core-provided <code>ViewEncapsulation</code> object, so configuration looks like this:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Component</span>({
+  encapsulation: ViewEncapsulation.None,
+  ...
+</code></pre>
+</div></section><section class="slide" data-pos="3-2-10">
+<span class="pos">3-2-10</span>
+<div class="slidecontent"><p>The shadow DOM has some <strong>useful pseudo selectors</strong>:</p>
+<ul>
+<li><strong><code>:host</code></strong> matching the <strong>containing element</strong></li>
+<li><strong><code>:host-context()</code></strong> which lets us <strong>test the host context</strong> </li>
+</ul>
+<p>Likely you&#39;ll only use <code>:host</code>.</p>
+</div></section><section class="slide" data-pos="3-2-11">
+<span class="pos">3-2-11</span>
+<div class="slidecontent"><p>And likely you&#39;re fine with the <strong><code>Emulated</code> default</strong>, so for normal development you <strong>won&#39;t have to care at all</strong>!</p>
+<p>The <strong>only things to remember</strong> are that...</p>
+<ul>
+<li>you can <strong>style the containing element with <code>:host</code></strong></li>
+<li>styles are <strong>scoped to the component</strong> (by default)</li>
+</ul>
+</div></section>
+</section>
+<!--ENDSECTION2-->
+<!--STARTSECTION3--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 3/6</div>
+      <h3>Reading model values</h3>
+      <p>and he went hither</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="3-3-1">
+<span class="pos">3-3-1</span>
+<div class="slidecontent"><p>Let&#39;s get this show going by looking at how the <strong>view reads values from the model</strong>!</p>
+<p><img src="resources/diagrams/view-model-values.svg" alt=""></p>
+</div></section><section class="slide" data-pos="3-3-2">
+<span class="pos">3-3-2</span>
+<div class="slidecontent"><p>The template can read values from the model by using <strong>interpolation</strong>. Anything <strong>within double braces</strong> is evaluated as a <strong>model property</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">`&lt;p&gt;Hello, {{name}}!&lt;/p&gt;`</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  name = <span class="hljs-string">'world'</span>
+}
+</code></pre>
+<p>See also the <a href="resources/supportsite/demos/hellosomeone" target="_blank">Hello someone</a> demo.</p>
+</div></section><section class="slide question" data-pos="3-3-3">
+<span class="pos">3-3-3</span>
+<div class="slidecontent">
+<p>But <strong>what if the value isn&#39;t static</strong>? Let&#39;s say we <strong>change our model</strong> to update <code>&#39;world&#39;</code> to <code>&#39;WORLD&#39;</code> after 1 second:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> AppComponent {
+  name = <span class="hljs-string">'world'</span>
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span>){
+    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span>=&gt;</span> <span class="hljs-keyword">this</span>.name=<span class="hljs-string">'WORLD'</span>,<span class="hljs-number">1000</span>)
+  }
+}
+</code></pre>
+<p>To handle this, <strong>what do we need to do</strong>?</p>
+</div></section><section class="slide answer" data-pos="3-3-4">
+<span class="pos">3-3-4</span>
+<div class="slidecontent">
+<p><strong>Nothing</strong>! This is the <code>zone</code> thing that we mentioned earlier. Zone enables Angular to <strong>check all bindings at every point in time when something might have changed</strong>, and update references accordingly.</p>
+<p>See for yourself in the <a href="resources/supportsite/demos/hellochanging" target="_blank">Hello Changing</a> demo.</p>
+</div></section><section class="slide" data-pos="3-3-5">
+<span class="pos">3-3-5</span>
+<div class="slidecontent"><p>Interpolation <strong>isn&#39;t just for text nodes</strong> - sometimes we want <strong>model values in element properties</strong> too:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">`&lt;input placeholder="{{helpText}}"&gt;`</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  helpText = <span class="hljs-string">"Enter your name..."</span> 
+}
+</code></pre>
+</div></section><section class="slide" data-pos="3-3-6">
+<span class="pos">3-3-6</span>
+<div class="slidecontent"><p>Side note - remember our earlier look at the <strong>difference between a property and an attribute</strong>!</p>
+<ul>
+<li>an <strong>attribute</strong> is an attribute on the HTML element</li>
+<li>a <strong>property</strong> is a property on the resulting DOM node.</li>
+</ul>
+</div></section><section class="slide" data-pos="3-3-7">
+<span class="pos">3-3-7</span>
+<div class="slidecontent"><p>Since we are writing HTML code you&#39;d <strong>think we&#39;re dealing with attribute</strong>, but as <strong>Angular deals exclusively with properties</strong> (well, almost) we will use that word instead.</p>
+</div></section><section class="slide" data-pos="3-3-8">
+<span class="pos">3-3-8</span>
+<div class="slidecontent"><p>Back to interpolation - those <strong>double brackets in a string really aren&#39;t pretty</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"{{helpText}}"</span>&gt;</span>
+</code></pre>
+<p>But there is an <strong>alternative syntax for properties</strong> which is more explicit, namely the <strong><code>bind-</code> prefix</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">bind-placeholder</span>=<span class="hljs-string">"helpText"</span>&gt;</span>
+</code></pre>
+<p>These two lines are <strong>completely equivalent</strong>.</p>
+</div></section><section class="slide" data-pos="3-3-9">
+<span class="pos">3-3-9</span>
+<div class="slidecontent"><p>The <code>bind-</code> prefix is prettier but still <strong>rather verbose</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">bind-placeholder</span>=<span class="hljs-string">"helpText"</span>&gt;</span>
+</code></pre>
+<p>...so quickly the <strong>bracket shorthand</strong> became popular:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> [<span class="hljs-attr">placeholder</span>]=<span class="hljs-string">"helpText"</span>&gt;</span>
+</code></pre>
+<p>This is still <strong>equivalent to the previous versions</strong>.</p>
+</div></section><section class="slide" data-pos="3-3-10">
+<span class="pos">3-3-10</span>
+<div class="slidecontent"><p>See the <strong>different syntaxes side by side</strong> in the <a href="resources/supportsite/demos/property" target="_blank">Property</a> demo.</p>
+<p>And note again that the <code>bind-</code> and bracket syntaxes are <strong>just for attributes</strong>. Inside a <strong>text node</strong> there is no choice, we must use <strong>double braces</strong>.</p>
+</div></section>
+</section>
+<!--ENDSECTION3-->
+<!--STARTSECTION4--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 4/6</div>
+      <h3>Template expressions</h3>
+      <p>uncovering the lie</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="3-4-1">
+<span class="pos">3-4-1</span>
+<div class="slidecontent"><p>We&#39;ve now seen how to <strong>reference model properties</strong> in the view:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">'&lt;p&gt;Hello {{name}}&lt;/p&gt;'</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  name = <span class="hljs-string">"Batman"</span>
+}
+</code></pre>
+</div></section><section class="slide" data-pos="3-4-2">
+<span class="pos">3-4-2</span>
+<div class="slidecontent"><p>But we are actually <strong>not limited to referencing properties</strong>!</p>
+<p>The code inside the interpolation/binding is called a <strong>template expression</strong>, and it is evaluated much like JavaScript:</p>
+<pre><code class="lang-html">You finished {{place === 1 ? &#39;FIRST!!&#39; : &#39;in &#39;+ place + &#39; place&#39;}}
+</code></pre>
+</div></section><section class="slide" data-pos="3-4-3">
+<span class="pos">3-4-3</span>
+<div class="slidecontent"><p>But <strong>not exactly like JavaScript</strong> expressions. Here are <strong>some important limitations</strong>:</p>
+<ul>
+<li>we <strong>can&#39;t do side effects</strong>, only pure expressions</li>
+<li>we can <strong>only reference model properties and methods</strong>, global variables are out of reach</li>
+</ul>
+</div></section><section class="slide list" data-pos="3-4-4">
+<span class="pos">3-4-4</span>
+<div class="slidecontent">
+<p>There are also <strong>some additions</strong> when compared to JavaScript:</p>
+<ul>
+<li><span>a</span>The <strong>pipe operator</strong> </li>
+<li><span>b</span>The <strong>safe navigation operator</strong></li>
+</ul>
+<p>Let&#39;s briefly touch on these!</p>
+</div></section><section class="slide num numA" data-pos="3-4-5">
+<span class="pos">3-4-5</span>
+<div class="slidecontent">
+<p>The <strong>pipe operator</strong> is familiar to AngularJS developers as a <strong>convenient way to call functions</strong> inside templates:</p>
+<pre><code class="lang-javascript">userName | UpperCase
+</code></pre>
+<p>We&#39;ll dig deeper into pipes later!</p>
+</div></section><section class="slide num numB" data-pos="3-4-6">
+<span class="pos">3-4-6</span>
+<div class="slidecontent">
+<p>The <strong>safe navigation operator</strong> is recognisable from many other languages, for example <a href="http://coffeescript.org/">CoffeeScript</a>. It allows us to <strong>dig into objects without erroring</strong> if some step is undefined:</p>
+<pre><code><span class="hljs-selector-tag">user</span><span class="hljs-selector-class">.address</span>?<span class="hljs-selector-class">.street</span>
+</code></pre></div></section><section class="slide" data-pos="3-4-7">
+<span class="pos">3-4-7</span>
+<div class="slidecontent"><p>Note that this is <strong>in contrast with AngularJS</strong>, where <strong>object navigating was inherently safe</strong> in their version of the template expressions.</p>
+</div></section><section class="slide" data-pos="3-4-8">
+<span class="pos">3-4-8</span>
+<div class="slidecontent"><p>Even though the <strong>template expressions are powerful</strong>, you should <strong>strive to keep them as simple as possible</strong>.</p>
+<p>More <strong>complex logic should be done in the model</strong>.</p>
+</div></section>
+</section>
+<!--ENDSECTION4-->
+<!--STARTSECTION5--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 5/6</div>
+      <h3>Built-in directives</h3>
+      <p>Not made to order</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="3-5-1">
+<span class="pos">3-5-1</span>
+<div class="slidecontent"><p>Although the <strong>subject of conversation is Components</strong>, we still <strong>need to talk about Directives</strong>. And actually, <strong>Components are a sub-group of Directives</strong>.</p>
+<p>A directive, in the broad term, simply means <strong>something we put in the HTML that has special meaning</strong>. It <strong>directs the browser</strong> in how it should behave.</p>
+</div></section><section class="slide" data-pos="3-5-2">
+<span class="pos">3-5-2</span>
+<div class="slidecontent"><p>Like with AngularJS, a big part of learning the framework means <strong>learning what is already there</strong>!</p>
+<p>We&#39;ll know <strong>explore what&#39;s already there in Angular</strong>, but first a <strong>word of warning</strong>: The demos we&#39;ll see will <strong>include concepts we&#39;ve yet to explore</strong>! Don&#39;t let those get you down, we&#39;ll cover them soon enough.</p>
+</div></section><section class="slide list" data-pos="3-5-3">
+<span class="pos">3-5-3</span>
+<div class="slidecontent">
+<p>So! In the case of <strong>Angular and directives</strong>, we get <strong>five of them</strong> to use in everyday templating. There are <strong>three structural directives</strong>...</p>
+<ul>
+<li><span>a</span>ngFor</li>
+<li><span>b</span>ngIf</li>
+<li><span>c</span>ngSwitch</li>
+</ul>
+<p>...and <strong>two helpers</strong>:</p>
+<ul>
+<li><span>d</span>ngClass</li>
+<li><span>e</span>ngStyle</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="3-5-4">
+<span class="pos">3-5-4</span>
+<div class="slidecontent">
+<p>First <strong><code>ngFor</code></strong>, which as the name implies is a helper for <strong>rendering lists</strong>: </p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let msg of messages"</span>&gt;</span>{{ msg }}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+<p>This will <strong>repeat the <code>div</code> for every item in the <code>messages</code> array</strong>.</p>
+</div></section><section class="slide" data-pos="3-5-5">
+<span class="pos">3-5-5</span>
+<div class="slidecontent"><p>Noticed the scary <strong><code>*</code> character</strong> prefixing <code>ngFor</code>? That is a <strong>shorthand</strong>, which expands to this:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> <span class="hljs-attr">ngFor</span> <span class="hljs-attr">let-msg</span> [<span class="hljs-attr">ngForOf</span>]=<span class="hljs-string">"messages"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{{ msg }}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
+</code></pre>
+<p>All <strong>structural directives</strong>, who <strong>change the HTML structure</strong>, uses the <strong>same <code>*</code> syntax</strong>.</p>
+</div></section><section class="slide" data-pos="3-5-6">
+<span class="pos">3-5-6</span>
+<div class="slidecontent"><p>You can <strong>see both variants</strong> of the for loop in the <a href="resources/supportsite/demos/forloop" target="_blank">Forloop</a> demo.</p>
+</div></section><section class="slide num numB" data-pos="3-5-7">
+<span class="pos">3-5-7</span>
+<div class="slidecontent">
+<p>Equally mandatory as <code>ngFor</code> is the <strong><code>ngIf</code></strong> directive, which lets you <strong>optionally display something</strong> given the truthiness of an expression.</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">p</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"flag"</span>&gt;</span>I only show when flag is true!<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+</code></pre>
+<p><strong>See this live</strong> in the <a href="resources/supportsite/demos/if" target="_blank">If</a> demo.</p>
+</div></section><section class="slide" data-pos="3-5-8">
+<span class="pos">3-5-8</span>
+<div class="slidecontent"><p>What if we have an <strong><code>if-else</code></strong> situation? There are two approaches;</p>
+<ul>
+<li>Simply use <strong>two <code>ngIf</code> with inverted clauses</strong> as in the <a href="resources/supportsite/demos/ifelse" target="_blank">IfElse</a> demo.</li>
+<li>Pick a connected <strong><code>ng-template</code></strong> as in the <a href="resources/supportsite/demos/ifelsetemplate" target="_blank">IfElseTemplate</a> demo.</li>
+</ul>
+</div></section><section class="slide num numC" data-pos="3-5-9">
+<span class="pos">3-5-9</span>
+<div class="slidecontent">
+<p>Then <strong><code>ngSwitch</code></strong>, which of course <strong>emulates a switch statement</strong> in the template. </p>
+<p>But! We&#39;re actually <strong>not going to go into detail</strong>, as <code>ngSwitch</code> is <strong>rarely useful</strong>.</p>
+</div></section><section class="slide" data-pos="3-5-10">
+<span class="pos">3-5-10</span>
+<div class="slidecontent"><p>Such logic often <strong>belongs in the model</strong>, a subject we&#39;ll come back to.</p>
+<p>If you&#39;re curious anyway, <strong>check out</strong> the <a href="resources/supportsite/demos/switch" target="_blank">Switch</a> demo.</p>
+</div></section><section class="slide num numD" data-pos="3-5-11">
+<span class="pos">3-5-11</span>
+<div class="slidecontent">
+<p>Now <strong><code>ngClass</code></strong> which can <strong>dynamically set a single style</strong>...</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> [<span class="hljs-attr">class.someClass</span>]=<span class="hljs-string">"someCondition"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+<p>...or <strong>many</strong> (keys are classes, values are conditions) :</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> [<span class="hljs-attr">ngClass</span>]=<span class="hljs-string">"someObject"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+<p><strong>Try it</strong> in the <a href="resources/supportsite/demos/class-single" target="_blank">Class Single</a> and <a href="resources/supportsite/demos/class-many" target="_blank">Class Many</a> demos.</p>
+</div></section><section class="slide num numE" data-pos="3-5-12">
+<span class="pos">3-5-12</span>
+<div class="slidecontent">
+<p>Finally <strong><code>ngStyle</code></strong>! Much like with <code>ngSwitch</code> we <strong>advise against using this directive</strong> for normal usage.</p>
+<p>If you want to dynamically <strong>alter the style for an element</strong> - which is what it lets you do - it is <strong>better to add/remove a CSS class</strong> with <code>ngClass</code>.</p>
+</div></section><section class="slide" data-pos="3-5-13">
+<span class="pos">3-5-13</span>
+<div class="slidecontent"><p>There are however <strong>two good reasons</strong> for using <code>ngStyle</code>:</p>
+<ul>
+<li>The <strong>styles depend on state</strong> (think x- and y coordinates in a game)</li>
+<li>We&#39;re doing full-blown <strong>CSS in JS</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="3-5-14">
+<span class="pos">3-5-14</span>
+<div class="slidecontent"><p>But, if you are curious, <strong>check</strong> the <a href="resources/supportsite/demos/style-single" target="_blank">Style Single</a> and <a href="resources/supportsite/demos/style-many" target="_blank">Style Many</a> demos.</p>
+</div></section><section class="slide" data-pos="3-5-15">
+<span class="pos">3-5-15</span>
+<div class="slidecontent"><p>In this course we&#39;ll be focusing mostly on Components, but there&#39;s definitely <strong>more to say on directives</strong>.</p>
+<p>See the Appendix for more details!</p>
+</div></section>
+</section>
+<!--ENDSECTION5-->
+<!--STARTSECTION6--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 6/6</div>
+      <h3>Gamebook - dynamism</h3>
+      <p>hello someone</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="3-6-1">
+<span class="pos">3-6-1</span>
+<div class="slidecontent"><p>Let&#39;s revisit our Gamebook project! To start off,</p>
+<ol>
+<li><strong>copy the folder for the first version</strong>,</li>
+<li><strong>paste it</strong> right next to the first version, and</li>
+<li>give it the name <strong><code>FF02-dynamic</code></strong>.</li>
+</ol>
+</div></section><section class="slide list" data-pos="3-6-2">
+<span class="pos">3-6-2</span>
+<div class="slidecontent">
+<p>A static gamebook won&#39;t get us very far. Let&#39;s make it <strong>show dynamic cata</strong> instead!</p>
+<p>Here&#39;s the <strong>plan</strong> - we need to:</p>
+<ul>
+<li><span>a</span><strong>package the scene data</strong> somewhere </li>
+<li><span>b</span>make the <strong>component fetch data</strong></li>
+<li><span>c</span>make the template <strong>read data from that prop</strong></li>
+</ul>
+</div></section><section class="slide num numA" data-pos="3-6-3">
+<span class="pos">3-6-3</span>
+<div class="slidecontent">
+<p>Having the <strong>scene data hard-coded in the component</strong> won&#39;t get us very far.</p>
+<p>Let&#39;s <strong>create a new file <code>data.ts</code></strong> for the data to live in!</p>
+</div></section><section class="slide" data-pos="3-6-4">
+<span class="pos">3-6-4</span>
+<div class="slidecontent"><p>The data file should <strong>export a single object</strong> containing our data. But let&#39;s look ahead - we&#39;re <strong>going to need more than one scene</strong>.</p>
+<p>Therefore we should make the data file <strong>contain a full <code>adventure</code></strong>!</p>
+</div></section><section class="slide" data-pos="3-6-5">
+<span class="pos">3-6-5</span>
+<div class="slidecontent"><p>The <strong>adventure object</strong> could look something like this:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> myAdventure = {
+  <span class="hljs-attr">title</span>: <span class="hljs-string">'A strange adventure'</span>,
+  <span class="hljs-attr">scenes</span>: {
+    <span class="hljs-attr">someScene</span>: { ...scene data goes here... }
+    <span class="hljs-comment">// later there'll be more scenes here</span>
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="3-6-6">
+<span class="pos">3-6-6</span>
+<div class="slidecontent"><p>Note that we chose to <strong>store scenes in an object</strong> as opposed to an <strong>array</strong>. If we chose an array instead, a link to scene 7 would break if we later insert a new scene at position 4, leading to a more brittle structure.</p>
+</div></section><section class="slide" data-pos="3-6-7">
+<span class="pos">3-6-7</span>
+<div class="slidecontent"><p>The <strong>scene object</strong> needs to contain...</p>
+<ul>
+<li><strong>title</strong></li>
+<li><strong>img url</strong></li>
+<li><strong>text</strong></li>
+<li><strong>options array</strong> (a list of strings, for now)</li>
+</ul>
+<p>Only <strong>make one single scene</strong> for now, containing what is <strong>currently in the template</strong>.</p>
+</div></section><section class="slide num numB" data-pos="3-6-8">
+<span class="pos">3-6-8</span>
+<div class="slidecontent">
+<p>Now we <strong>adapt the component</strong> in <code>app.ts</code>:</p>
+<ul>
+<li><strong>Import the adventure</strong> into the file</li>
+<li><strong>Add an <code>adventure</code> prop</strong> to the component</li>
+<li><strong>Initialise that prop</strong> to the imported adventure data</li>
+<li><strong>Add a <code>scene</code> property</strong> to the component</li>
+<li><strong>Initialise that prop</strong> to the only scene in <code>this.adventure</code></li>
+</ul>
+</div></section><section class="slide num numC" data-pos="3-6-9">
+<span class="pos">3-6-9</span>
+<div class="slidecontent">
+<p>Having done that, <strong>adapt the <code>template</code></strong> to <strong>read the data from the <code>scene</code> prop</strong> instead! It will end up containing a <strong>bunch of interpolations</strong> referencing <code>scene.title</code>, etc.</p>
+<p>It should <strong>also show <code>adventure.title</code></strong> up top!</p>
+<p>Now, the template is an <strong>actual template</strong>, capable of rendering any scene we throw at it.</p>
+</div></section><section class="slide" data-pos="3-6-10">
+<span class="pos">3-6-10</span>
+<div class="slidecontent"><p><strong>Bundle</strong> your code as before (<code>node build nameoffolder</code> in the root), open <code>index.html</code> and <strong>make sure things still work</strong>!</p>
+<p>There&#39;ll be <strong>no visible difference</strong> from the previous version, we&#39;ve just done some <strong>preparation work</strong> for what is to come.</p>
+</div></section><section class="slide challenge" data-pos="3-6-11">
+<span class="pos">3-6-11</span>
+<div class="slidecontent"><p><strong>Challenge</strong>: If you have time over, let&#39;s employ some <strong>TypeScript power</strong>! </p>
+<p>If you take on this challenge there will be <strong>further TypeScript challenges</strong> building on this one in the following exercises.</p>
+</div></section><section class="slide list" data-pos="3-6-12">
+<span class="pos">3-6-12</span>
+<div class="slidecontent">
+<p>The plan is to make use of <strong>TypeScript interfaces</strong> to get code completion for adventure and scene data!</p>
+<ul>
+<li><span>a</span>Create a <strong>new file</strong> to house the interfaces</li>
+<li><span>b</span>Export an <strong>interface describing the scene object</strong></li>
+<li><span>c</span>Export an <strong>interface describing the adventure object</strong></li>
+<li><span>d</span>Make the <strong>data file use the adventure interface</strong></li>
+</ul>
+</div></section><section class="slide num numA" data-pos="3-6-13">
+<span class="pos">3-6-13</span>
+<div class="slidecontent">
+<p>In a big project you would likely have <strong>one interface per file</strong>, but we can put them all in a single file. </p>
+<p>Create a file for this purpose called <code>interfaces.ts</code>!</p>
+</div></section><section class="slide num numB" data-pos="3-6-14">
+<span class="pos">3-6-14</span>
+<div class="slidecontent">
+<p>In that file we first export the <strong><code>Scene</code> interface</strong>.</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> Scene {
+  <span class="hljs-comment">// definition in here</span>
+}
+</code></pre>
+<p>It should <strong>specify all four properties</strong> that a scene can contain. In the definition the <strong>keys are properties</strong> and the <strong>values are types</strong>!</p>
+</div></section><section class="slide" data-pos="3-6-15">
+<span class="pos">3-6-15</span>
+<div class="slidecontent"><p>To say that a property is an <strong>array of something</strong>, as we need to do with the options, put a <strong>pair of brackets at the end of the type</strong>:</p>
+<pre><code class="lang-typescript">  options: <span class="hljs-built_in">string</span>[]
+</code></pre>
+</div></section><section class="slide num numC" data-pos="3-6-16">
+<span class="pos">3-6-16</span>
+<div class="slidecontent">
+<p>Now also add an <strong><code>Adventure</code> interface</strong> to the same file, describing the two adventure properties!</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> Adventures {
+  <span class="hljs-comment">// definition in here</span>
+}
+</code></pre>
+</div></section><section class="slide" data-pos="3-6-17">
+<span class="pos">3-6-17</span>
+<div class="slidecontent"><p>The definition of <strong>the <code>scenes</code> prop</strong> (or <code>pages</code> or whatever you&#39;ve decided to call it) is a bit special since it is an object with <strong>any number of keys where each value is a scene</strong>! This has the <strong>following special syntax</strong>:</p>
+<pre><code class="lang-typescript">  scenes: {
+    [index: <span class="hljs-built_in">string</span>]: Scene
+  }
+</code></pre>
+</div></section><section class="slide num numD" data-pos="3-6-18">
+<span class="pos">3-6-18</span>
+<div class="slidecontent">
+<p>Now, in <code>data.ts</code>, <strong>add a type annotation to the exported object</strong> saying that it is of type <code>Adventure</code>!</p>
+</div></section><section class="slide" data-pos="3-6-19">
+<span class="pos">3-6-19</span>
+<div class="slidecontent"><p>Not that we really need it yet, but we now have <strong>code completion for our data</strong>!</p>
+<p><img src="resources/images/tscodecompl.png" alt=""></p>
+</div></section>
+</section>
+<!--ENDSECTION6--><!--ENDCHAPTERCONTENT-->
+        
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var basehref = window.location.href.replace(/chapter\d.*?$/,'')
+
+      document.addEventListener("keydown",function(e){
+        var code = e.which || e.keyCode;
+        if (code===13){
+          window.location.href = basehref+"index.html?from="+(3-1);
+        } else if (code >= 49 && code <= 6+48) {
+          window.location.hash = "#/" + (code-48+1+1);
+        }
+        if (3 < 13) {
+          if (code===99){ // the letter C for next Chapter
+            window.location.href = basehref+"chapter"+(3+1)+".html"
+          }
+        }
+      });
+    </script>
+    <script src="mc2/scripts/head.js" type="text/javascript"></script>
+    <script src="mc2/scripts/reveal.js" type="text/javascript"></script>
+    <script src="mc2/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    showNotes: false,
+    transition: 'slide',
+    dependencies: [
+      { src: 'mc2/scripts/plugin/notes/notes.js', async: true }
+    ]
+  })
+
+    window.onload = function(){
+
+      var links = document.querySelectorAll("a.link");
+      for(var i=0;i<links.length;i++){
+        var link = links[i];
+        link.innerHTML = link.innerHTML.replace(/ /g,'&nbsp;')
+      }
+      var posElem = document.getElementById('pos')
+      function updateReference(){
+        setTimeout(function(){
+          var currentpos = document.querySelector('section.present[data-pos]')
+          if (currentpos){
+            posElem.innerHTML = currentpos.getAttribute('data-pos')
+          } else {
+            posElem.innerHTML = ''
+          }
+          if (document.querySelector('.present.chaptertitle')){
+            document.body.classList.add('atchaptertitle');
+          } else {
+            document.body.classList.remove('atchaptertitle');
+          }
+        },10)
+      }
+
+      window.addEventListener("hashchange",updateReference);
+
+      updateReference();
+    };
+
+    </script>
+    <!--STARTCOURSESPECIFICSCRIPTS--><script type="text/javascript" src="scripts/streams.js"></script><!--ENDCOURSESPECIFICSCRIPTS-->
+  </body>
+</html>

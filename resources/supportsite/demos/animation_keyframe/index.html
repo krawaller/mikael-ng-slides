@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo</title>
+
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+</head>
+
+<body data-demoid="animation_keyframe">
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>Adding in a <strong>very dramatic</strong> sunset to show off keyframes in animations.</p></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div data-file='main_ts'>main.ts</div><div data-file='app_ts'>app.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule }      <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+<span class="hljs-keyword">import</span> { BrowserAnimationsModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser/animations'</span>;
+
+<span class="hljs-keyword">import</span> { AppComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app'</span>;
+
+<span class="hljs-meta">@NgModule</span>({
+    imports: [ BrowserModule, BrowserAnimationsModule ],
+    declarations: [ AppComponent ],
+    bootstrap: [ AppComponent ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre><pre id='app_ts-source'><code><span class="hljs-keyword">import</span> { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { trigger, state, style, transition, animate, keyframes } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/animations'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">`
+    &lt;button (click)="toggle()"&gt;Toggle&lt;/button&gt;&lt;br&gt;&lt;br&gt;
+    &lt;div [@mode]="styleMode" class="demo"&gt;
+      ...the passing of time...
+    &lt;/div&gt;
+  `</span>,
+  animations: [
+    trigger(<span class="hljs-string">'mode'</span>, [
+      state(<span class="hljs-string">'day'</span>, style({ backgroundColor: <span class="hljs-string">'#DCEDF2'</span>, color: <span class="hljs-string">'black'</span> })),
+      state(<span class="hljs-string">'night'</span>, style({ backgroundColor: <span class="hljs-string">'#0E617D'</span>, color: <span class="hljs-string">'white'</span> })),
+      transition(<span class="hljs-string">'* =&gt; night'</span>, animate(<span class="hljs-number">300</span>,keyframes([
+        style({ backgroundColor: <span class="hljs-string">'#F57171'</span>, offset: <span class="hljs-number">0.5</span>}),
+        style({ backgroundColor: <span class="hljs-string">'#0E617D'</span>, color: <span class="hljs-string">'white'</span>, offset: <span class="hljs-number">1</span> })
+      ]))),
+      transition(<span class="hljs-string">'* =&gt; day'</span>, animate(<span class="hljs-number">300</span>, keyframes([
+        style({ backgroundColor: <span class="hljs-string">'#F57171'</span>, offset: <span class="hljs-number">0.5</span>}),
+        style({ backgroundColor: <span class="hljs-string">'#DCEDF2'</span>, color: <span class="hljs-string">'black'</span>, offset: <span class="hljs-number">1</span> })
+      ]))),
+    ])
+  ],
+  styles: [<span class="hljs-string">`.demo {
+     display:flex;
+     justify-content: center;
+     align-items: center;
+     border-radius: 15px;
+     width: 200px;
+     height: 100px;
+  }`</span>]
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  styleMode = <span class="hljs-string">'day'</span>
+  toggle(){
+    <span class="hljs-keyword">this</span>.styleMode = (<span class="hljs-keyword">this</span>.styleMode === <span class="hljs-string">'day'</span> ? <span class="hljs-string">'night'</span> : <span class="hljs-string">'day'</span>);
+  }
+}
+</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+function select(id){
+  let button = document.querySelector(`[data-file=${id}]`);
+  if (button){
+    document.querySelectorAll('.sources .active').forEach(function(elem){
+      elem.classList.remove('active')
+    });
+    button.classList.add('active');
+    document.getElementById(id + '-source').classList.add('active');
+  } else {
+    console.log("Warning, couldn't find source file", id);
+  }
+}
+
+document.querySelectorAll('.sourcenav > *').forEach(
+  elem => elem.addEventListener('click', function(e){
+    location.hash = '#' + this.getAttribute("data-file");
+    e.preventDefault();
+  })
+);
+
+window.addEventListener("hashchange", function(){
+  select(location.hash.replace('#',''));
+});
+
+select( (location.hash || '').replace('#','') || 'app_ts' );
+
+  </script>
+  <script charset="utf-8" src="../../lib/demos.js"></script>
+</body>
+
+</html>

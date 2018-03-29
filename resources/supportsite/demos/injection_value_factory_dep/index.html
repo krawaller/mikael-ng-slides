@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo</title>
+
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+</head>
+
+<body data-demoid="injection_value_factory_dep">
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>Showing off dependency injection factory, which in turn has a dependency. </p></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div data-file='main_ts'>main.ts</div><div data-file='app_ts'>app.ts</div><div data-file='dependency_ts'>dependency.ts</div><div data-file='dependency2_ts'>dependency2.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule }      <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-keyword">import</span> { finalAnswerToken, finalAnswerFactory } <span class="hljs-keyword">from</span> <span class="hljs-string">'./dependency'</span>
+<span class="hljs-keyword">import</span> Dependency2 <span class="hljs-keyword">from</span> <span class="hljs-string">'./dependency2'</span>
+
+<span class="hljs-keyword">import</span> { AppComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app'</span>;
+
+<span class="hljs-meta">@NgModule</span>({
+    imports:      [ BrowserModule ],
+    declarations: [ AppComponent ],
+    bootstrap:    [ AppComponent ],
+    providers:    [ Dependency2, {
+      provide: finalAnswerToken, 
+      useFactory: finalAnswerFactory,
+      deps: [Dependency2]
+    } ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre><pre id='app_ts-source'><code>import { Component, Inject } from '@angular/core'
+import { finalAnswerToken } from './dependency'
+
+@Component({
+  selector: 'app',
+  template: `Value from dependency: {{answer}}`,
+})
+export class AppComponent {
+  constructor(@Inject(finalAnswerToken) public answer: number) {}
+}
+</code></pre><pre id='dependency_ts-source'><code><span class="hljs-keyword">import</span> { InjectionToken } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> finalAnswerToken = <span class="hljs-keyword">new</span> InjectionToken(<span class="hljs-string">'answer'</span>)
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> finalAnswerFactory = <span class="hljs-function"><span class="hljs-params">dep</span> =&gt;</span> dep.bar</code></pre><pre id='dependency2_ts-source'><code><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> Dependency2 {
+  bar = <span class="hljs-number">42</span>
+}</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+function select(id){
+  let button = document.querySelector(`[data-file=${id}]`);
+  if (button){
+    document.querySelectorAll('.sources .active').forEach(function(elem){
+      elem.classList.remove('active')
+    });
+    button.classList.add('active');
+    document.getElementById(id + '-source').classList.add('active');
+  } else {
+    console.log("Warning, couldn't find source file", id);
+  }
+}
+
+document.querySelectorAll('.sourcenav > *').forEach(
+  elem => elem.addEventListener('click', function(e){
+    location.hash = '#' + this.getAttribute("data-file");
+    e.preventDefault();
+  })
+);
+
+window.addEventListener("hashchange", function(){
+  select(location.hash.replace('#',''));
+});
+
+select( (location.hash || '').replace('#','') || 'app_ts' );
+
+  </script>
+  <script charset="utf-8" src="../../lib/demos.js"></script>
+</body>
+
+</html>

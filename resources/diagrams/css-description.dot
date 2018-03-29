@@ -1,0 +1,26 @@
+digraph {
+  bgcolor = transparent
+  rankdir = TD
+
+  desc [label="element\ndescription"]
+
+  desc -> type
+  type -> typefoo [dir=none]
+  desc -> class
+  class -> classfoo [dir=none]
+  desc -> id
+  id -> idfoo [dir=none]
+  desc -> attr
+  attr -> attrfoo [dir=none]
+  desc -> pseudo
+  pseudo -> pseudofoo [dir=none]
+
+  attr [label="attribute"]
+
+  typefoo [shape=box, label="ex: div,\nbody, table"]
+  classfoo [shape=box, label="ex: .important"]
+  idfoo [shape=box, label="ex: #sidebar"]
+  attrfoo [shape=box, label="ex: [disabled],\n[href^=http]"]
+  pseudofoo [shape=box, label="ex: :first-child,\n:nth-child(3)"]
+
+}

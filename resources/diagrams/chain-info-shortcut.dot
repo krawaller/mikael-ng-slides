@@ -1,0 +1,44 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  source,transpiler,bundler [style=dashed]
+  source -> transpiler -> bundler -> templateCompiler [style=dashed]
+  templateCompiler -> run
+  templateCompiler [label="compile templates"] 
+
+  source -> sourcefoo [dir=none,style=dashed]
+  {rank=same;source,sourcefoo}
+  sourcefoo [shape=box;label="Your source files\n& npm packages\nwith dependencies",style=dashed]
+
+  transpiler -> transpilerfoo [dir=none,style=dashed]
+  {rank=same;transpiler,transpilerfoo}
+  transpilerfoo [shape=box;label="translating\nfrom typescript/es6",style=dashed]
+
+  bundler -> bundlerfoo [dir=none,style=dashed]
+  {rank=same;bundler,bundlerfoo}
+  bundlerfoo [shape=box;label="walk the tree,\nmerge to 1 file",style=dashed]
+
+  templateCompiler -> templateCompilerfoo [dir=none]
+  {rank=same;templateCompiler,templateCompilerfoo}
+  templateCompilerfoo [shape=box;label="compile the\nAngular templates"]
+
+  run -> runfoo [dir=none]
+  {rank=same;run,runfoo}
+  runfoo [shape=box;label="interact with\nthe application!"]
+
+  source2:e -> templateCompiler [constraint=none,style=normal]
+  {rank=same;source2,bundler}
+
+  source2 [label="source",style=normal]
+  source2 -> source2foo [dir=none,style=normal]
+  {rank=same;source2,source2foo}
+  source2foo [shape=box;label="Single file\nes3/es5 code",style=normal]
+
+  scripts -> templateCompiler [constraint=none,style=normal]
+  {rank=same;scripts,templateCompiler}
+
+  scripts -> scriptsfoo [dir=none,style=normal]
+  {rank=same;scripts,scriptsfoo}
+  scriptsfoo [shape=box;label="Dependencies as\nscript tags",style=normal]
+
+}

@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo</title>
+
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+</head>
+
+<body data-demoid="if">
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>This demo shows how the star is a shorthand for structure directives.</p></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div data-file='main_ts'>main.ts</div><div data-file='app_ts'>app.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-comment">// This is a default main.ts file with no imports beyond the</span>
+<span class="hljs-comment">// bare necessities to kick off an Angular app.</span>
+
+<span class="hljs-keyword">import</span> { NgModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-keyword">import</span> { AppComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app'</span>;
+
+<span class="hljs-meta">@NgModule</span>({
+    imports: [ BrowserModule ],
+    declarations: [ AppComponent ],
+    bootstrap: [ AppComponent ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre><pre id='app_ts-source'><code><span class="hljs-keyword">import</span> {Component} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">`
+    &lt;button (click)="flag=!flag"&gt;Toggle&lt;/button&gt;
+    &lt;p *ngIf="flag"&gt;I only show when flag is true!&lt;/p&gt;
+  `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {}</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+function select(id){
+  let button = document.querySelector(`[data-file=${id}]`);
+  if (button){
+    document.querySelectorAll('.sources .active').forEach(function(elem){
+      elem.classList.remove('active')
+    });
+    button.classList.add('active');
+    document.getElementById(id + '-source').classList.add('active');
+  } else {
+    console.log("Warning, couldn't find source file", id);
+  }
+}
+
+document.querySelectorAll('.sourcenav > *').forEach(
+  elem => elem.addEventListener('click', function(e){
+    location.hash = '#' + this.getAttribute("data-file");
+    e.preventDefault();
+  })
+);
+
+window.addEventListener("hashchange", function(){
+  select(location.hash.replace('#',''));
+});
+
+select( (location.hash || '').replace('#','') || 'app_ts' );
+
+  </script>
+  <script charset="utf-8" src="../../lib/demos.js"></script>
+</body>
+
+</html>

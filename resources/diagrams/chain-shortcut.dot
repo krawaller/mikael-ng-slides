@@ -1,0 +1,7 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  source -> transpiler -> bundler -> templateCompiler -> run
+  source -> templateCompiler [style=dashed,constraint=none,label="ES3"]
+  templateCompiler [label="compile templates"]
+}

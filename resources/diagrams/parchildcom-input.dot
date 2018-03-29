@@ -1,0 +1,13 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  Parent
+  Child
+
+  Child -> Parent [color=transparent,label=" "]
+
+  Child -> Parent [label="output",fontcolor="lightgray",color="lightgray"]
+
+  Parent -> Child [label="input"]
+
+}

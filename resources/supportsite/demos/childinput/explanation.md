@@ -1,0 +1,1 @@
+Demonstrating giving input to a child component.

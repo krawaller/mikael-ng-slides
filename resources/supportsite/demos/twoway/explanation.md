@@ -1,0 +1,1 @@
+This demo tries to explain the two-way databinding shorthand by gradually building its way towards the bananabox syntax

@@ -1,0 +1,24 @@
+digraph {
+  bgcolor = transparent
+  rankdir = TD
+
+  comb [label="description\ncombinators"]
+
+  comb -> descendant
+  descendant -> descfoo [dir=none]
+  comb -> child
+  child -> childfoo [dir=none]
+  comb -> adjsibl
+  adjsibl -> adjsiblfoo [dir=none]
+  comb -> anysibl
+  anysibl -> anysiblfoo [dir=none]
+
+  adjsibl [label="prior\nsibling"]
+  anysibl [label="any earlier\nsibling"]
+
+  descfoo [shape=box; label="div p"]
+  childfoo [shape=box; label="div > p"]
+  adjsiblfoo [shape=box; label="div + p"]
+  anysiblfoo [shape=box; label="div ~ p"]
+
+}

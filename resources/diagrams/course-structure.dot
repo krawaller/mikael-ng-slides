@@ -1,0 +1,8 @@
+digraph {
+  rankdir = TD
+  bgcolor = transparent
+  
+  Chapter1, Chapter2, Chapter3
+  rest [label="..."]
+  Index -> Chapter1, Chapter2, Chapter3, rest 
+}

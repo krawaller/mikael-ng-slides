@@ -1,0 +1,1 @@
+Simple read from the model using interpolation

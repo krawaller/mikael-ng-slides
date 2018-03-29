@@ -1,0 +1,10 @@
+digraph {
+  rankdir = LR;
+  bgcolor = transparent
+
+  ES6 -> transpiler -> ES3
+  transpiler -> ES5
+
+  transpiler [shape=box]
+
+}

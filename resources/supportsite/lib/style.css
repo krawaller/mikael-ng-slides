@@ -1,0 +1,62 @@
+.wrapper {
+	margin: 1em auto;
+	max-width: 900px;
+	display: flex;
+}
+
+/** left column **/
+.wrapper > :first-child {
+	flex: 1;
+	padding-right: 1em;
+	min-width: 300px;
+}
+
+/** explanatory text **/
+.wrapper > :first-child > :first-child {
+
+}
+
+/** app **/
+.wrapper > :first-child > :last-child {
+	display: block;
+	background-color: #F5ECE9;
+	border-radius: 10px;
+	padding: 1em;
+}
+
+/** right column **/
+.wrapper > :last-child {
+	flex: 2;
+}
+
+
+img {
+	max-height: 250px;
+	max-width: 450px;
+}
+
+.sourcefiles > pre {
+	display: none
+}
+
+.sourcefiles > pre.active {
+	display: block;
+}
+
+.sourcenav .active {
+	font-weight: bold;
+}
+
+.sourcenav * {
+	display: inline-block;
+	float: left;
+	margin-right: 5px;
+	padding: 3px;
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+.sourcefiles {
+	clear: both;
+	padding-top: 1em;
+}

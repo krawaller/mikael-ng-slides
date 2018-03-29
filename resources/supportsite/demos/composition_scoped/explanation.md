@@ -1,0 +1,1 @@
+Showing a component composition, three generations, where the components belong to their own modules.

@@ -1,0 +1,1 @@
+This demo shows how to dynamically set many classes at the same time

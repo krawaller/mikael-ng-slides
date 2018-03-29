@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo</title>
+
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+</head>
+
+<body data-demoid="elementmanip">
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>Showing how we can use <code>ElementRef</code> as a <code>@Directive</code> dependency to manipulate the DOM node.</p></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div data-file='main_ts'>main.ts</div><div data-file='app_ts'>app.ts</div><div data-file='swedify_ts'>swedify.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule, Component }      <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { FormsModule }   <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;
+<span class="hljs-keyword">import</span> { AppComponent  } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app'</span>;
+<span class="hljs-keyword">import</span> { SwedifyDirective } <span class="hljs-keyword">from</span> <span class="hljs-string">'./swedify'</span>
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-meta">@NgModule</span>({
+    imports:      [ BrowserModule ],
+    declarations: [ AppComponent, SwedifyDirective ],
+    bootstrap:    [ AppComponent ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre><pre id='app_ts-source'><code><span class="hljs-keyword">import</span> {Component,ElementRef} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">`
+    &lt;p swedify&gt;I am Swedish!&lt;/p&gt;
+    `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {}
+</code></pre><pre id='swedify_ts-source'><code><span class="hljs-keyword">import</span> {Directive,ElementRef} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
+
+<span class="hljs-comment">/*
+Insanely complex (...) jQuery plugin that we can't be
+bothered to convert to Angular
+*/</span>
+$.fn.swedify = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+  <span class="hljs-keyword">this</span>.css({
+    backgroundColor: <span class="hljs-string">'yellow'</span>,
+    border: <span class="hljs-string">'5px solid blue'</span>
+  })
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>
+}
+
+
+<span class="hljs-meta">@Directive</span>({
+  selector: <span class="hljs-string">'[swedify]'</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> SwedifyDirective {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> el:ElementRef</span>){
+    $(el.nativeElement).swedify()
+  }
+}
+</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+function select(id){
+  let button = document.querySelector(`[data-file=${id}]`);
+  if (button){
+    document.querySelectorAll('.sources .active').forEach(function(elem){
+      elem.classList.remove('active')
+    });
+    button.classList.add('active');
+    document.getElementById(id + '-source').classList.add('active');
+  } else {
+    console.log("Warning, couldn't find source file", id);
+  }
+}
+
+document.querySelectorAll('.sourcenav > *').forEach(
+  elem => elem.addEventListener('click', function(e){
+    location.hash = '#' + this.getAttribute("data-file");
+    e.preventDefault();
+  })
+);
+
+window.addEventListener("hashchange", function(){
+  select(location.hash.replace('#',''));
+});
+
+select( (location.hash || '').replace('#','') || 'app_ts' );
+
+  </script>
+  <script charset="utf-8" src="../../lib/demos.js"></script>
+</body>
+
+</html>

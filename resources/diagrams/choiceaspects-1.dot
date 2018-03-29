@@ -1,0 +1,25 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  
+  col0, col1, col2, col3, col4, col5, col6 [color=transparent; fontcolor=transparent, label=" "]
+  row1start, row2start, row3start, row4start, row5start, row6start [label="low"]
+  row1start -> row2start -> row3start -> row4start -> row5start -> row6start [color=transparent]
+  row1end, row2end, row3end, row4end, row5end, row6end [label="high"]
+  row1end -> row2end -> row3end -> row4end -> row5end -> row6end [color=transparent]
+  col0 -> col1 -> col2 -> col3 -> col4 -> col5 -> col6 [color=transparent]
+  {rank=same; row1start, row2start, row3start, row4start, row5start, row6start, col0}
+  {rank=same; row1end, row2end, row3end, row4end, row5end, row6end, col6}
+
+  simplicity, maturity, sexiness, adaptability, correspondence, security [shape=box]
+
+  simplicity [label="ease of use"]
+
+  row1start -> simplicity -> row1end [arrowhead=none]
+  row2start -> maturity -> row2end [arrowhead=none]
+  row3start -> sexiness -> row3end [arrowhead=none]
+  row4start -> adaptability -> row4end [arrowhead=none]
+  row5start -> correspondence -> row5end [arrowhead=none]
+  row6start -> security -> row6end [arrowhead=none]
+
+}

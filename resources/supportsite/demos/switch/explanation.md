@@ -1,0 +1,1 @@
+Demonstrating the `switch` directive.

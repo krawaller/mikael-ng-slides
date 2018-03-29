@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo</title>
+
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+</head>
+
+<body data-demoid="router">
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>Demonstrating simple routes usage</p></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div data-file='main_ts'>main.ts</div><div data-file='app_ts'>app.ts</div><div data-file='home_ts'>home.ts</div><div data-file='product_ts'>product.ts</div><div data-file='routing_ts'>routing.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { LocationStrategy, HashLocationStrategy } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/common'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-keyword">import</span> { AppComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app'</span>;
+<span class="hljs-keyword">import</span> { HomeComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./home'</span>;
+<span class="hljs-keyword">import</span> { ProductComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./product'</span>;
+
+<span class="hljs-keyword">import</span> { routing } <span class="hljs-keyword">from</span> <span class="hljs-string">'./routing'</span>
+
+<span class="hljs-meta">@NgModule</span>({
+    imports:      [ BrowserModule, routing ],
+    declarations: [ AppComponent, HomeComponent, ProductComponent ],
+    bootstrap:    [ AppComponent ],
+    providers:    [ {provide: LocationStrategy, useClass: HashLocationStrategy}]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre><pre id='app_ts-source'><code><span class="hljs-keyword">import</span> {Component,ViewChild} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">`
+    &lt;h1&gt;Harry's hardware store&lt;/h1&gt;
+    &lt;router-outlet&gt;&lt;/router-outlet&gt;
+  `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {}
+</code></pre><pre id='home_ts-source'><code><span class="hljs-keyword">import</span> {Component} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>
+<span class="hljs-keyword">import</span> {Router} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/router'</span>
+
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'home'</span>,
+  template: <span class="hljs-string">`
+    Welcome to my store! What do you want to buy?
+    &lt;a [routerLink]="['/product/shovel']"&gt;Shovel&lt;/a&gt;
+    &lt;a [routerLink]="['/product/hammer']"&gt;Hammer&lt;/a&gt;
+    &lt;button (click)="random()"&gt;Random product&lt;/button&gt;
+  `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> HomeComponent {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> router: Router</span>){}
+  random(){
+    <span class="hljs-keyword">let</span> tool = [<span class="hljs-string">'shovel'</span>,<span class="hljs-string">'hammer'</span>][<span class="hljs-built_in">Math</span>.round(<span class="hljs-built_in">Math</span>.random())]
+    <span class="hljs-keyword">this</span>.router.navigate([<span class="hljs-string">'/product'</span>,tool]);
+  }
+}
+</code></pre><pre id='product_ts-source'><code><span class="hljs-keyword">import</span> {Component} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>
+<span class="hljs-keyword">import</span> {ActivatedRoute} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/router'</span>
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'home'</span>,
+  template: <span class="hljs-string">`
+    Sorry, sold my last {{productName}} just minutes ago. &lt;br&gt;
+    &lt;a [routerLink]="['/']"&gt;Okay then.&lt;/a&gt;
+  `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ProductComponent {
+  productName: <span class="hljs-built_in">string</span>
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params">route: ActivatedRoute</span>){
+    <span class="hljs-keyword">this</span>.productName = route.snapshot.params[<span class="hljs-string">'tool'</span>]
+  }
+}
+</code></pre><pre id='routing_ts-source'><code><span class="hljs-keyword">import</span> { RouterModule }   <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/router'</span>;
+<span class="hljs-keyword">import</span> { HomeComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./home'</span>;
+<span class="hljs-keyword">import</span> { ProductComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./product'</span>;
+
+<span class="hljs-keyword">const</span> routes = [
+  {path: <span class="hljs-string">''</span>, component: HomeComponent},
+  {path: <span class="hljs-string">'product/:tool'</span>, component: ProductComponent}
+]
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> routing = RouterModule.forRoot(routes)</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+function select(id){
+  let button = document.querySelector(`[data-file=${id}]`);
+  if (button){
+    document.querySelectorAll('.sources .active').forEach(function(elem){
+      elem.classList.remove('active')
+    });
+    button.classList.add('active');
+    document.getElementById(id + '-source').classList.add('active');
+  } else {
+    console.log("Warning, couldn't find source file", id);
+  }
+}
+
+document.querySelectorAll('.sourcenav > *').forEach(
+  elem => elem.addEventListener('click', function(e){
+    location.hash = '#' + this.getAttribute("data-file");
+    e.preventDefault();
+  })
+);
+
+window.addEventListener("hashchange", function(){
+  select(location.hash.replace('#',''));
+});
+
+select( (location.hash || '').replace('#','') || 'app_ts' );
+
+  </script>
+  <script charset="utf-8" src="../../lib/demos.js"></script>
+</body>
+
+</html>

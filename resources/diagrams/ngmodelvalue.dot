@@ -1,0 +1,20 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+
+  subgraph cluster_view {
+    label="view"
+    input
+    otherElem [style=dashed]
+  }
+
+  subgraph cluster_model {
+    label="model"
+    value
+    otherVal [style=dashed]
+  }
+
+  input -> ngModel [dir=back]
+  ngModel -> value
+  ngModel
+}

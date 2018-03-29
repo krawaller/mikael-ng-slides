@@ -1,0 +1,9 @@
+digraph {
+  rankdir = TD
+  bgcolor = transparent
+
+  arg1 -> someFunction -> result
+  arg2 -> someFunction
+
+  someFunction [shape=box]
+}

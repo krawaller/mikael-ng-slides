@@ -1,0 +1,27 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  source -> transpiler -> bundler -> templateCompiler -> run
+  templateCompiler [label="compile templates"]
+
+  source -> sourcefoo [dir=none]
+  {rank=same;source,sourcefoo}
+  sourcefoo [shape=box;label="Your source files\n& npm packages\nwith dependencies"]
+
+  transpiler -> transpilerfoo [dir=none]
+  {rank=same;transpiler,transpilerfoo}
+  transpilerfoo [shape=box;label="translating\nfrom typescript/es6"]
+
+  bundler -> bundlerfoo [dir=none]
+  {rank=same;bundler,bundlerfoo}
+  bundlerfoo [shape=box;label="walk the tree,\nmerge to 1 file"]
+
+  templateCompiler -> templateCompilerfoo [dir=none]
+  {rank=same;templateCompiler,templateCompilerfoo}
+  templateCompilerfoo [shape=box;label="compile the\nAngular templates"]
+
+  run -> runfoo [dir=none]
+  {rank=same;run,runfoo}
+  runfoo [shape=box;label="interact with\nthe application!"]
+
+}

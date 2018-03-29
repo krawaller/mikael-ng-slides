@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo</title>
+
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+</head>
+
+<body data-demoid="switch">
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>Demonstrating the <code>switch</code> directive.</p></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div data-file='main_ts'>main.ts</div><div data-file='app_ts'>app.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-comment">// This is a default main.ts file with no imports beyond the</span>
+<span class="hljs-comment">// bare necessities to kick off an Angular app.</span>
+
+<span class="hljs-keyword">import</span> { NgModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-keyword">import</span> { AppComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app'</span>;
+
+<span class="hljs-meta">@NgModule</span>({
+    imports: [ BrowserModule ],
+    declarations: [ AppComponent ],
+    bootstrap: [ AppComponent ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre><pre id='app_ts-source'><code><span class="hljs-keyword">import</span> {Component} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">`
+    &lt;button (click)='toggle()'&gt;Toggle&lt;/button&gt;
+    &lt;h4&gt;{{hero}}&lt;/h4&gt;
+    &lt;div [ngSwitch]='hero'&gt;
+      &lt;span *ngSwitchCase="'Batman'"&gt;The caped crusader&lt;/span&gt;
+      &lt;span *ngSwitchCase="'Superman'"&gt;The man of steel&lt;/span&gt;
+      &lt;span *ngSwitchDefault&gt;Some other boring person&lt;/span&gt;
+    &lt;/div&gt;
+  `</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  current = <span class="hljs-number">0</span>
+  heroes = [<span class="hljs-string">"Batman"</span>,<span class="hljs-string">"Superman"</span>,<span class="hljs-string">"Spiderman"</span>]
+  hero = <span class="hljs-keyword">this</span>.heroes[<span class="hljs-number">0</span>]
+  toggle() {
+    <span class="hljs-keyword">this</span>.current = (<span class="hljs-keyword">this</span>.current === <span class="hljs-keyword">this</span>.heroes.length <span class="hljs-number">-1</span> ? <span class="hljs-number">0</span> : <span class="hljs-keyword">this</span>.current+<span class="hljs-number">1</span>)
+    <span class="hljs-keyword">this</span>.hero = <span class="hljs-keyword">this</span>.heroes[<span class="hljs-keyword">this</span>.current]
+  }
+}
+</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+function select(id){
+  let button = document.querySelector(`[data-file=${id}]`);
+  if (button){
+    document.querySelectorAll('.sources .active').forEach(function(elem){
+      elem.classList.remove('active')
+    });
+    button.classList.add('active');
+    document.getElementById(id + '-source').classList.add('active');
+  } else {
+    console.log("Warning, couldn't find source file", id);
+  }
+}
+
+document.querySelectorAll('.sourcenav > *').forEach(
+  elem => elem.addEventListener('click', function(e){
+    location.hash = '#' + this.getAttribute("data-file");
+    e.preventDefault();
+  })
+);
+
+window.addEventListener("hashchange", function(){
+  select(location.hash.replace('#',''));
+});
+
+select( (location.hash || '').replace('#','') || 'app_ts' );
+
+  </script>
+  <script charset="utf-8" src="../../lib/demos.js"></script>
+</body>
+
+</html>

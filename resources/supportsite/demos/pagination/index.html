@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo</title>
+
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+</head>
+
+<body data-demoid="pagination">
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div data-file='main_ts'>main.ts</div><div data-file='app_ts'>app.ts</div><div data-file='pagination_ts'>pagination.ts</div><div data-file='quote_ts'>quote.ts</div><div data-file='quoteform_ts'>quoteform.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule, Component }      <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { FormsModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-keyword">import</span> { AppComponent  } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app'</span>;
+<span class="hljs-keyword">import</span> Pagination <span class="hljs-keyword">from</span> <span class="hljs-string">'./pagination'</span>
+<span class="hljs-keyword">import</span> QuoteForm <span class="hljs-keyword">from</span> <span class="hljs-string">'./quoteform'</span>
+<span class="hljs-keyword">import</span> Quote <span class="hljs-keyword">from</span> <span class="hljs-string">'./quote'</span>
+
+<span class="hljs-meta">@NgModule</span>({
+    imports:      [ BrowserModule, FormsModule ],
+    declarations: [ AppComponent, Pagination, Quote, QuoteForm ],
+    bootstrap:    [ AppComponent ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);</code></pre><pre id='app_ts-source'><code><span class="hljs-keyword">import</span> { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">`
+    Items per page: &lt;input type="range" min="1" [max]="quotes.length" [(ngModel)]="quotesPerPage"/&gt; (1-{{quotes.length}}) {{quotesPerPage}} &lt;br/&gt;
+    Current page: &lt;input type="range" min="1" [max]="lastPage" [(ngModel)]="currentPage"/&gt; (1-{{lastPage}}) {{currentPage}} &lt;br/&gt;
+    Add quote: &lt;quoteform (submission)="addQuote($event)"&gt;&lt;/quoteform&gt;
+    &lt;div *ngFor="let quote of (quotes | pagination : quotesPerPage : currentPage)"&gt;
+      &lt;quote [quote]="quote"&gt;&lt;/quote&gt;
+    &lt;/div&gt;
+  `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  quotes = [<span class="hljs-string">'Carpe Noctem'</span>,<span class="hljs-string">'Alea Jacta Est'</span>,<span class="hljs-string">'Sic Itur Ad Astra'</span>]
+  quotesPerPage: <span class="hljs-built_in">number</span> = <span class="hljs-number">3</span>
+  _currentPage: <span class="hljs-built_in">number</span> = <span class="hljs-number">1</span>
+  <span class="hljs-keyword">get</span> currentPage() { <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.min(<span class="hljs-keyword">this</span>._currentPage,<span class="hljs-keyword">this</span>.lastPage); }
+  <span class="hljs-keyword">set</span> currentPage(num:<span class="hljs-built_in">number</span>) { <span class="hljs-keyword">this</span>._currentPage = num; }
+  <span class="hljs-keyword">get</span> lastPage() { <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.ceil(<span class="hljs-keyword">this</span>.quotes.length/<span class="hljs-keyword">this</span>.quotesPerPage) }
+  addQuote(q:<span class="hljs-built_in">string</span>){
+    <span class="hljs-keyword">this</span>.quotes.push(q)
+    <span class="hljs-keyword">this</span>.currentPage = <span class="hljs-keyword">this</span>.lastPage
+  }
+}</code></pre><pre id='pagination_ts-source'><code><span class="hljs-keyword">import</span> {Pipe, PipeTransform} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>
+
+<span class="hljs-meta">@Pipe</span>({
+  name: <span class="hljs-string">"pagination"</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> Pagination <span class="hljs-keyword">implements</span> PipeTransform {
+  transform(list,perPage,currentPage){
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Paginating"</span>,list,perPage,currentPage)
+    <span class="hljs-keyword">return</span> list.slice((currentPage<span class="hljs-number">-1</span>)*perPage,(currentPage)*perPage)
+  }
+}</code></pre><pre id='quote_ts-source'><code><span class="hljs-keyword">import</span> { Component, Input, Output, EventEmitter } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+
+<span class="hljs-keyword">import</span> QuoteForm <span class="hljs-keyword">from</span> <span class="hljs-string">'./quoteform'</span>
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'quote'</span>,
+  template: <span class="hljs-string">`
+    &lt;quoteform *ngIf="editing" [quote]="quote" (submission)="update($event)"&gt;&lt;/quoteform&gt;
+    &lt;div *ngIf="!editing"&gt;
+       {{quote}}
+       &lt;button (click)="edit()"&gt;edit&lt;/button&gt;
+    &lt;/div&gt;
+  `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> Quote {
+  <span class="hljs-meta">@Input</span>() quote = <span class="hljs-string">''</span>
+  editing = <span class="hljs-literal">false</span>
+  edit(){ <span class="hljs-keyword">this</span>.editing = <span class="hljs-literal">true</span> }
+  update(newText:<span class="hljs-built_in">string</span>){ <span class="hljs-keyword">this</span>.quote = newText; <span class="hljs-keyword">this</span>.editing = <span class="hljs-literal">false</span>}
+}</code></pre><pre id='quoteform_ts-source'><code><span class="hljs-keyword">import</span> { Component, Input, Output, EventEmitter } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'quoteform'</span>,
+  template: <span class="hljs-string">`
+    &lt;input type="text" (keyup.enter)="submission.emit(quote)" [(ngModel)]="quote" /&gt;
+  `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> QuoteForm {
+  <span class="hljs-meta">@Input</span>() quote = <span class="hljs-string">''</span>
+  <span class="hljs-meta">@Output</span>() submission = <span class="hljs-keyword">new</span> EventEmitter&lt;<span class="hljs-built_in">string</span>&gt;()
+}</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+function select(id){
+  let button = document.querySelector(`[data-file=${id}]`);
+  if (button){
+    document.querySelectorAll('.sources .active').forEach(function(elem){
+      elem.classList.remove('active')
+    });
+    button.classList.add('active');
+    document.getElementById(id + '-source').classList.add('active');
+  } else {
+    console.log("Warning, couldn't find source file", id);
+  }
+}
+
+document.querySelectorAll('.sourcenav > *').forEach(
+  elem => elem.addEventListener('click', function(e){
+    location.hash = '#' + this.getAttribute("data-file");
+    e.preventDefault();
+  })
+);
+
+window.addEventListener("hashchange", function(){
+  select(location.hash.replace('#',''));
+});
+
+select( (location.hash || '').replace('#','') || 'app_ts' );
+
+  </script>
+  <script charset="utf-8" src="../../lib/demos.js"></script>
+</body>
+
+</html>

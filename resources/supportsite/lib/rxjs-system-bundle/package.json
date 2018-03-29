@@ -1,0 +1,98 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "rxjs-system-bundle@5.5.3",
+        "scope": null,
+        "escapedName": "rxjs-system-bundle",
+        "name": "rxjs-system-bundle",
+        "rawSpec": "5.5.3",
+        "spec": "5.5.3",
+        "type": "version"
+      },
+      "/Users/davidwaller/gitreps/edument/newangular/supportsitedef"
+    ]
+  ],
+  "_from": "rxjs-system-bundle@5.5.3",
+  "_id": "rxjs-system-bundle@5.5.3",
+  "_inCache": true,
+  "_location": "/rxjs-system-bundle",
+  "_nodeVersion": "8.9.1",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/rxjs-system-bundle-5.5.3.tgz_1512226632652_0.35370115260593593"
+  },
+  "_npmUser": {
+    "name": "kylecordes",
+    "email": "kyle.cordes@oasisdigital.com"
+  },
+  "_npmVersion": "5.5.1",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "rxjs-system-bundle@5.5.3",
+    "scope": null,
+    "escapedName": "rxjs-system-bundle",
+    "name": "rxjs-system-bundle",
+    "rawSpec": "5.5.3",
+    "spec": "5.5.3",
+    "type": "version"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "http://registry.npmjs.org/rxjs-system-bundle/-/rxjs-system-bundle-5.5.3.tgz",
+  "_shasum": "e74180eb6a4393593e0b9f0edcb1e123a14611b2",
+  "_shrinkwrap": null,
+  "_spec": "rxjs-system-bundle@5.5.3",
+  "_where": "/Users/davidwaller/gitreps/edument/newangular/supportsitedef",
+  "author": {
+    "name": "Kyle Cordes",
+    "email": "kyle.cordes@oasisdigital.com"
+  },
+  "bugs": {
+    "url": "https://github.com/OasisDigital/rxjs-system-bundle/issues"
+  },
+  "dependencies": {},
+  "description": "This package provides a System bundle of RxJS. This is only a convenience package, it does **not** add or change any functionality.",
+  "devDependencies": {
+    "api-npm": "^1.0.0",
+    "del-cli": "^1.1.0",
+    "rxjs": "5.5.3",
+    "symbol-observable": "^1.1.0",
+    "systemjs": "^0.19.41",
+    "systemjs-builder": "^0.15.34"
+  },
+  "directories": {},
+  "dist": {
+    "integrity": "sha512-JFjDTazYZHiFXu2ehZYkMW87UNOwGRfpAi/nj5zt/DN8F9IUkCqnWFAvj04M2l4V3Zma8Fkoum0OU9xCxb2OBA==",
+    "shasum": "e74180eb6a4393593e0b9f0edcb1e123a14611b2",
+    "tarball": "https://registry.npmjs.org/rxjs-system-bundle/-/rxjs-system-bundle-5.5.3.tgz"
+  },
+  "engines": {
+    "npm": ">=4.0.5"
+  },
+  "gitHead": "314b94411c563e03ea9a9df1be66c81f08cc2481",
+  "homepage": "https://github.com/OasisDigital/rxjs-system-bundle#readme",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "kylecordes",
+      "email": "kyle.cordes@oasisdigital.com"
+    }
+  ],
+  "name": "rxjs-system-bundle",
+  "optionalDependencies": {},
+  "readme": "# RxJS System Bundle\n\nThis package provides a System bundle of RxJS. This is only a convenience\npackage, it does **not** add or change any functionality.\n\nRxJS itself is found here:\n\nhttps://github.com/ReactiveX/rxjs\n\nThe official NPM package provided by the RxJS project provide only source files\nand a UMD bundle. For reasons discussed in the RxJS issue tracker, the project\nno longer provides its own System bundles.\n\n##  Where is this useful?\n\nAn NPM-published System bundle is very convenient for use in a Plunkr or other\ncontexts where a local build process is avoided. All of this probably makes a\nlot of sense to you if you are familiar with Angular 2+ (which depends on RxJS)\nand SystemJS. However, neither RxJS nor this repackaging are specific to\nAngular.\n\n## Versions\n\nI will attempt to update this package for each new version of RxJS, from 5.0.1\nonward. Each version of this bundle package exactly matching each underlying\nRxJS version. Sometime there is -N added to the end of the version, for tweaks\nto this bundling mechanism/repo which don't affect the RxJS version.\n\nTo list all available versions, use npm:\n\n```\nnpm show rxjs-system-bundle@* version\n```\n\n## CDN\n\nConveniently, the Unpkg service provides a CDN for NPM package contents.\nTherefore the System bundle is available at a URL like this:\n\nhttps://unpkg.com/rxjs-system-bundle@VERSIONHERE/Rx.system.min.js\n\n(Change VERSIONHERE to the RxJS version).\n\nBoth minified and plain variations are published, both including source maps. To\nsee the exact filenames available, install the package locally:\n\n```\nnpm install rxjs-system-bundle\n```\n\nand look in node_modules/rxjs-system-bundle, or look at:\n\nhttps://unpkg.com/rxjs-system-bundle@VERSIONHERE/\n\n(The set of files is the same for each version.)\n\n## See it in action\n\nThe following Plunkr illustrates use of this package. Of course there are many\nother practical uses, but this one can be seen with one click. Unlike a default\nAngular 2+ plunker, this one uses only a single request for all of RxJS.\n\nhttps://plnkr.co/edit/Fy0jvu?p=preview\n\nTo see how to configure System to use this RxJS System bundle, see the Plunkr or\nthe configuration snippet below.\n\n```\nSystem.config({\n  transpiler: 'typescript',\n  typescriptOptions: {\n    emitDecoratorMetadata: true\n  },\n  paths: {\n    'npm:': 'https://unpkg.com/'\n  },\n  bundles: {\n    \"npm:rxjs-system-bundle@5.3.1/Rx.system.js\": [\n      \"rxjs\",\n      \"rxjs/*\",\n      \"rxjs/operator/*\",\n      \"rxjs/observable/*\",\n      \"rxjs/scheduler/*\",\n      \"rxjs/symbol/*\",\n      \"rxjs/add/operator/*\",\n      \"rxjs/add/observable/*\",\n      \"rxjs/util/*\"\n    ]\n  },\n  map: {\n    'app': './src',\n\n    '@angular/core': 'npm:@angular/core/bundles/core.umd.js',\n    '@angular/common': 'npm:@angular/common/bundles/common.umd.js',\n    '@angular/compiler': 'npm:@angular/compiler/bundles/compiler.umd.js',\n    '@angular/platform-browser': 'npm:@angular/platform-browser/bundles/platform-browser.umd.js',\n    '@angular/platform-browser-dynamic': 'npm:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',\n    '@angular/http': 'npm:@angular/http/bundles/http.umd.js',\n    '@angular/router': 'npm:@angular/router/bundles/router.umd.js',\n    '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',\n\n    '@angular/core/testing': 'npm:@angular/core/bundles/core-testing.umd.js',\n    '@angular/common/testing': 'npm:@angular/common/bundles/common-testing.umd.js',\n    '@angular/compiler/testing': 'npm:@angular/compiler/bundles/compiler-testing.umd.js',\n    '@angular/platform-browser/testing': 'npm:@angular/platform-browser/bundles/platform-browser-testing.umd.js',\n    '@angular/platform-browser-dynamic/testing': 'npm:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic-testing.umd.js',\n    '@angular/http/testing': 'npm:@angular/http/bundles/http-testing.umd.js',\n    '@angular/router/testing': 'npm:@angular/router/bundles/router-testing.umd.js',\n\n    'typescript': 'npm:typescript@2.0.2/lib/typescript.js'\n  },\n  packages: {\n    app: {\n      main: './main.ts',\n      defaultExtension: 'ts'\n    },\n    rxjs: {\n      defaultExtension: false\n    }\n  }\n});\n```\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OasisDigital/rxjs-system-bundle.git"
+  },
+  "scripts": {
+    "clean": "del Rx.* *.tgz",
+    "next": "node bin/inc_version.js",
+    "test": "echo \"Test of bundle validity not (yet?) implemented\""
+  },
+  "version": "5.5.3"
+}

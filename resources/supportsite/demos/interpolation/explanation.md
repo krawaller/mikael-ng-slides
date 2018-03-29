@@ -1,0 +1,1 @@
+Demonstrating how interpolation and binding is the same thing

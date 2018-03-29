@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Appendix: Web stuff</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="icon" type="image/x-icon" href="mc2/images/favicon.ico">
+
+    <link rel="stylesheet" href="mc2/styles/reveal.css">
+    <link rel="stylesheet" href="mc2/styles/theme.css" id="theme">
+    <link rel="stylesheet" href="mc2/styles/code.css">
+    <!--STARTCOURSESPECIFICSTYLES--><link rel="stylesheet" href="styles/mystyles.css">
+<link rel="stylesheet" href="styles/streams.css"><!--ENDCOURSESPECIFICSTYLES-->
+  </head>
+
+  <body>
+    <div id="pos"></div>
+    <div class="reveal">
+      <div class="slides">
+        <section class="slide chaptertitle">
+          <div class="slidecontent">
+            <div class="chapternumber"> chapter 9 of 13 </div>
+            <h1>Appendix: Web stuff</h1>
+            <span>Laying out the tools</p>
+</span>
+          </div>
+        </section>
+        <section class="slide">
+
+<div class="slidecontent"><p>This appendix chapter gathers a <strong>bunch of different good-to-knows</strong> regarding the web in general and JavaScript in particular, that might benefit you while working with Angular.</p>
+</div></section>
+        <!--STARTSECTIONINDEX--><section class="slide sectionlist">
+  <div class="slidecontent">
+    <h3>Sections in this chapter</h3>
+    <ol>
+    <li><a href="#/3">The&nbsp;JavaScript&nbsp;language</a></li>
+<li><a href="#/4">The&nbsp;web&nbsp;as&nbsp;a&nbsp;platform</a></li>
+<li><a href="#/5">Node&nbsp;and&nbsp;NPM</a></li>
+<li><a href="#/6">CSS&nbsp;Selectors</a></li>
+<li><a href="#/7">Object&nbsp;references</a></li>
+<li><a href="#/8">Attributes&nbsp;vs&nbsp;Properties</a></li>
+<li><a href="#/9">Functional&nbsp;programming</a></li>
+<li><a href="#/10">Statements&nbsp;vs&nbsp;Expressions</a></li>
+    </ol>
+  </div>
+</section>
+<!--ENDSECTIONINDEX-->
+        <!--STARTCHAPTERCONTENT--><!--STARTSECTION1--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 1/8</div>
+      <h3>The JavaScript language</h3>
+      <p>lingua franca of the web</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="9-1-1">
+<span class="pos">9-1-1</span>
+<div class="slidecontent"><p>So - <strong>JavaScript</strong>! Let&#39;s kick things off with a <strong>chopper view of the language</strong>.</p>
+</div></section><section class="slide" data-pos="9-1-2">
+<span class="pos">9-1-2</span>
+<div class="slidecontent"><p>First, here is an overview of the <strong>different JavaScript versions</strong>:</p>
+<p><img src="resources/diagrams/js-versions.svg" alt="versions"></p>
+<p>We will be using <strong>the very latest features</strong>, which we will <strong>walk through later</strong>.</p>
+</div></section><section class="slide" data-pos="9-1-3">
+<span class="pos">9-1-3</span>
+<div class="slidecontent"><p>...as well as some <strong>more stuff beyond the borders of JavaScript</strong>, but <strong>that comes later too</strong>!</p>
+</div></section><section class="slide list" data-pos="9-1-4">
+<span class="pos">9-1-4</span>
+<div class="slidecontent">
+<p>Since we <strong>can&#39;t trust all browsers to know the latest JS</strong>, we must <strong>convert our code</strong>. We do this either by...</p>
+<ul>
+<li><span>a</span><strong>polyfilling</strong></li>
+<li><span>b</span><strong>transpiling</strong></li>
+</ul>
+</div></section><section class="slide num numA" data-pos="9-1-5">
+<span class="pos">9-1-5</span>
+<div class="slidecontent">
+<p><strong>Polyfilling</strong> means <strong>adding a homebrew version</strong> of a method if a native one isn&#39;t available. This <strong>can be done programmatically</strong>, like this:</p>
+<pre><code class="lang-javascript"><span class="hljs-built_in">Array</span>.isArray = <span class="hljs-built_in">Array</span>.isArray || <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a</span>)</span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-string">''</span> + a !== a &amp;&amp; {}.toString.call(a) == <span class="hljs-string">'[object Array]'</span>;
+});
+</code></pre>
+</div></section><section class="slide num numB" data-pos="9-1-6">
+<span class="pos">9-1-6</span>
+<div class="slidecontent">
+<p>But <strong>syntax changes</strong> requires a <strong>transpilation step</strong> that must be done <strong>prior to running the code</strong>. We <strong>cannot do this programmatically</strong>.</p>
+</div></section><section class="slide" data-pos="9-1-7">
+<span class="pos">9-1-7</span>
+<div class="slidecontent"><p>Speaking of JavaScript&#39;s character - are you familiar with the <strong>3 levels of programming</strong>?</p>
+<p><img src="resources/diagrams/programmerlevels.svg" alt=""></p>
+</div></section><section class="slide question" data-pos="9-1-8">
+<span class="pos">9-1-8</span>
+<div class="slidecontent">
+<p>They were interesting, but <strong>what do they have to do with JavaScript</strong>?</p>
+</div></section><section class="slide answer" data-pos="9-1-9">
+<span class="pos">9-1-9</span>
+<div class="slidecontent">
+<p>JavaScript&#39;s flexible nature <strong>encourages and empowers level 2 behaviour</strong>.</p>
+<p>So <strong>take care</strong>, and remember:</p>
+<blockquote>
+<p>With great power comes great responsibility</p>
+</blockquote>
+</div></section><section class="slide" data-pos="9-1-10">
+<span class="pos">9-1-10</span>
+<div class="slidecontent"><p>Wielding of that power requires you to <strong>have a grasp JS&#39;s quirks</strong>, of which there are many. </p>
+<p>These ones are <strong>especially important</strong>:</p>
+<ul>
+<li><strong>Loose typing</strong> and <strong>truthiness</strong></li>
+<li>The <strong>implicit <code>this</code> parameter</strong></li>
+<li><strong>Lexical scoping</strong></li>
+<li><strong>closures</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="9-1-11">
+<span class="pos">9-1-11</span>
+<div class="slidecontent"><p>A very <strong>good resources for these quirks</strong> is <a href="http://bonsaiden.github.io/JavaScript-Garden/">JavaScript Garden</a>.</p>
+<p>For more <strong>general JS references</strong> we recommend <a href="https://developer.mozilla.org/en-US/">MDN</a> (and <strong>not W3Schools</strong>).</p>
+</div></section>
+</section>
+<!--ENDSECTION1-->
+<!--STARTSECTION2--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 2/8</div>
+      <h3>The web as a platform</h3>
+      <p>this or this or this or</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="9-2-1">
+<span class="pos">9-2-1</span>
+<div class="slidecontent"><p>Zooming out from JS, we also need to realise a few things regarding <strong>the web as a platform</strong>.</p>
+<p>By that we mean building applications with <strong>JavaScript, HTML and CSS</strong>.</p>
+</div></section><section class="slide" data-pos="9-2-2">
+<span class="pos">9-2-2</span>
+<div class="slidecontent"><p>Something that is often <strong>overwhelming to newcomers</strong> is that there is an <strong>abundance of choices</strong> to make, for many different aspects;</p>
+<ul>
+<li>what <strong>framework</strong> to use</li>
+<li>what <strong>build chain</strong> to use</li>
+<li>which <strong>JS language flavour</strong> to use</li>
+<li>what <strong>CSS preprocessor</strong> to use</li>
+<li>what <strong>style rules</strong> to enforce</li>
+<li><strong>how to enforce</strong> those rules</li>
+</ul>
+<p>...and many more.</p>
+</div></section><section class="slide" data-pos="9-2-3">
+<span class="pos">9-2-3</span>
+<div class="slidecontent"><p>And for <strong>each of those choices</strong>, you must consider;</p>
+<p><img src="resources/diagrams/choiceaspects-1.svg" alt=""></p>
+</div></section><section class="slide" data-pos="9-2-4">
+<span class="pos">9-2-4</span>
+<div class="slidecontent"><p>...and <strong>also</strong>:</p>
+<p><img src="resources/diagrams/choiceaspects-2.svg" alt=""></p>
+<p>...and likely a few more that we&#39;ve forgotten.</p>
+</div></section><section class="slide" data-pos="9-2-5">
+<span class="pos">9-2-5</span>
+<div class="slidecontent"><p>Regarding the <strong>choice of framework</strong>, the <strong>most important aspect</strong> is perhaps that of <strong>complexity</strong>:</p>
+<p><img src="resources/diagrams/frameworkcomplexity.svg" alt=""></p>
+</div></section><section class="slide" data-pos="9-2-6">
+<span class="pos">9-2-6</span>
+<div class="slidecontent"><p>The one we&#39;ve chosen here, Angular, is of <strong>medium- to heavy weight</strong>.</p>
+<p>Which means that it <strong>offers us all we need</strong>, but still <strong>leaves some room to make choices</strong>!</p>
+</div></section><section class="slide" data-pos="9-2-7">
+<span class="pos">9-2-7</span>
+<div class="slidecontent"><p>Observe that there is <strong>no right or wrong</strong> in the complexity choice.</p>
+<p>The important thing is to <strong>be aware of where on the scale you are</strong>, and <strong>understand the consequences of that</strong>.</p>
+</div></section>
+</section>
+<!--ENDSECTION2-->
+<!--STARTSECTION3--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 3/8</div>
+      <h3>Node and NPM</h3>
+      <p>workbench and pantry</p>
+</p>
+    </div>
+  </section>
+  <section class="slide list" data-pos="9-3-1">
+<span class="pos">9-3-1</span>
+<div class="slidecontent">
+<p>In the course we&#39;ll rely heavily on</p>
+<ul>
+<li><span>a</span>the <strong>JavaScript runtime Node</strong> and </li>
+<li><span>b</span>the <strong>package manager npm</strong></li>
+</ul>
+<p>...so let&#39;s touch briefly on both!</p>
+</div></section><section class="slide num numA" data-pos="9-3-2">
+<span class="pos">9-3-2</span>
+<div class="slidecontent">
+<p><a href="https://nodejs.org/en/">Node</a> is mostly associated with <strong>running JavaScript on the server</strong>, but in actuality it is a <strong>JavaScript runtime that can be run anywhere</strong>. Some <strong>differences versus the in-browser runtime</strong> is that</p>
+<ul>
+<li>Node has <strong>no DOM</strong></li>
+<li>Node can <strong>read and write files</strong></li>
+<li>Node has <strong>its own module system</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="9-3-3">
+<span class="pos">9-3-3</span>
+<div class="slidecontent"><p>There are <strong>two ways to execute JS</strong> with Node. We can enter the <strong>REPL</strong> by typing <code>node</code> in a node terminal...</p>
+<p><img src="resources/images/noderepl.png" alt=""></p>
+</div></section><section class="slide" data-pos="9-3-4">
+<span class="pos">9-3-4</span>
+<div class="slidecontent"><p>...or we can <strong>execute JavaScript files</strong> by typing <code>node myfile.js</code> which executes the JS code in <code>myfile.js</code>.</p>
+<p>This of course is the <strong>most common usage</strong> of Node.</p>
+<p>JS developers frequently use Node to <strong>run code as part of their build chain</strong>.</p>
+</div></section><section class="slide num numB" data-pos="9-3-5">
+<span class="pos">9-3-5</span>
+<div class="slidecontent">
+<p>However, Node is also used for <strong>running <code>npm</code></strong>, through which we can <strong>download packages from the online repository</strong> at <a href="https://www.npmjs.com/">https://www.npmjs.com/</a>.</p>
+</div></section><section class="slide" data-pos="9-3-6">
+<span class="pos">9-3-6</span>
+<div class="slidecontent"><p>Allegedly npm is an <strong>acronym for Node Package Manager</strong>, but <strong>npm themselves deny that</strong> through <strong>consistently using lower-case characters</strong>, and through the <strong>top-left corner of their homepage</strong>: </p>
+<p><img src="resources/images/npmmeaning.png" alt=""></p>
+</div></section><section class="slide" data-pos="9-3-7">
+<span class="pos">9-3-7</span>
+<div class="slidecontent"><p>We download packages by</p>
+<ul>
+<li><strong>turning our own code into a package</strong> through adding a <strong><code>package.json</code> file</strong></li>
+<li><strong>listing the packages we depend on</strong> in that file</li>
+<li>typing <code>npm install</code> to <strong>download all listed dependencies</strong> to <code>node_modules</code></li>
+<li><strong>using those modules</strong> in our code!</li>
+</ul>
+</div></section><section class="slide" data-pos="9-3-8">
+<span class="pos">9-3-8</span>
+<div class="slidecontent"><p>By having <strong><code>package.json</code> as part of the project</strong>, but <strong>excluding <code>node_modules</code></strong>, we get a <strong>small code repository</strong> which can still be <strong>easily inflated with dependencies</strong>.</p>
+<p>And we can still be sure that <strong>everyone has the same dependcies</strong>.</p>
+<p>(...at least if we&#39;re careful...)</p>
+</div></section><section class="slide" data-pos="9-3-9">
+<span class="pos">9-3-9</span>
+<div class="slidecontent"><p>A <strong>downloaded published module</strong> will normally <strong>look like this</strong>:</p>
+<p><img src="resources/diagrams/modulecontent.svg" alt=""></p>
+<p>The <code>package.json</code> file will specify <strong>where in the source the entry point is</strong>.</p>
+</div></section><section class="slide" data-pos="9-3-10">
+<span class="pos">9-3-10</span>
+<div class="slidecontent"><p>So! <strong>Node&#39;s module system</strong> that we mentioned earlier lets us</p>
+<ul>
+<li><strong>import stuff from other files</strong> by using <code>require</code></li>
+<li><strong>export stuff from files</strong> by assigning to <code>module.exports</code></li>
+</ul>
+</div></section><section class="slide" data-pos="9-3-11">
+<span class="pos">9-3-11</span>
+<div class="slidecontent"><p>But <strong>now for the beautiful part</strong> - we can <strong>also require packages</strong> from <code>node_modules</code>!</p>
+<p>Thus Node and npm together solve both the <strong>code modularisation problem</strong> along with <strong>3rd party code import problem</strong>.</p>
+</div></section><section class="slide" data-pos="9-3-12">
+<span class="pos">9-3-12</span>
+<div class="slidecontent"><p>Here&#39;s the <strong>full truth</strong> about <strong>how we require stuff</strong>:</p>
+<p><img src="resources/diagrams/loadmodule.svg" alt=""></p>
+</div></section><section class="slide" data-pos="9-3-13">
+<span class="pos">9-3-13</span>
+<div class="slidecontent"><p>The important part is to realise that there is <strong>no magic involved</strong>, and that Node provides us with a <strong>convenient way to load</strong>...</p>
+<ul>
+<li><strong>core modules</strong> (like <code>fs</code>, <code>http</code>, etc)</li>
+<li><strong>3rd party code</strong> (like <code>angular</code>)</li>
+<li><strong>own local modules</strong> (like <code>./src/mycomponent</code>)</li>
+</ul>
+</div></section>
+</section>
+<!--ENDSECTION3-->
+<!--STARTSECTION4--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 4/8</div>
+      <h3>CSS Selectors</h3>
+      <p>You know of them, but do you know them?</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="9-4-1">
+<span class="pos">9-4-1</span>
+<div class="slidecontent"><p>When we say <strong>CSS</strong>, we are actually talking about <strong>two different syntaxes</strong>:</p>
+<pre><code class="lang-css"><span class="hljs-selector-tag">div</span> &gt; <span class="hljs-selector-tag">h1</span><span class="hljs-selector-pseudo">:first-child</span> {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#CCC</span>;
+  <span class="hljs-attribute">font-style</span>: italic;
+}
+</code></pre>
+<ul>
+<li>The line preceeding the brackets is a <strong>selector</strong></li>
+<li>The stuff inside the brackets are <strong>style rules</strong> which will be applied to all nodes matching the selector</li>
+</ul>
+</div></section><section class="slide" data-pos="9-4-2">
+<span class="pos">9-4-2</span>
+<div class="slidecontent"><p>They are used for two <strong>very different things</strong>:</p>
+<ul>
+<li><strong>Selectors</strong> allow you to <strong>reference a set of DOM nodes</strong></li>
+<li>With <strong>style rules</strong> you <strong>describe what the nodes look like</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="9-4-3">
+<span class="pos">9-4-3</span>
+<div class="slidecontent"><p>The <strong>DOM has its own API</strong> for selecting nodes, but it is <strong>really limited and verbose</strong>.</p>
+<p>Therefore <strong>jQuery imported CSS selectors to JS</strong>:</p>
+<pre><code class="lang-javascript">jQuery(<span class="hljs-string">'div &gt; h1:first-child'</span>).doSomethingWithTheseNodes();
+</code></pre>
+</div></section><section class="slide" data-pos="9-4-4">
+<span class="pos">9-4-4</span>
+<div class="slidecontent"><p>This turned out to be a <strong>really good idea</strong>, and the biggest reason behind why <strong>jQuery is now used by half of the internet</strong>.</p>
+</div></section><section class="slide" data-pos="9-4-5">
+<span class="pos">9-4-5</span>
+<div class="slidecontent"><p>Because this was such a good idea, it has now been made into a <strong>native DOM method</strong>:</p>
+<pre><code><span class="hljs-built_in">document</span>.<span class="hljs-built_in">querySelectorAll</span>(<span class="hljs-string">'h1:first-child'</span>).doSomething();
+</code></pre><p>There is also a <strong><code>document.querySelector</code></strong> variant that <strong>always returns just 1 node</strong> (or none).</p>
+</div></section><section class="slide" data-pos="9-4-6">
+<span class="pos">9-4-6</span>
+<div class="slidecontent"><p>And, as we will soon see, <strong>CSS selectors are also used in Angular</strong>!</p>
+<p>All this make for a very good reason to <strong>brush up on your CSS selector knowledge</strong>, so let&#39;s do that now!</p>
+</div></section><section class="slide" data-pos="9-4-7">
+<span class="pos">9-4-7</span>
+<div class="slidecontent"><p>CSS selectors are <strong>made up by two parts</strong>:</p>
+<p><img src="resources/diagrams/css-selector-dissection.svg" alt=""></p>
+</div></section><section class="slide" data-pos="9-4-8">
+<span class="pos">9-4-8</span>
+<div class="slidecontent"><p>Starting with <strong>element descriptions</strong>, they describe elements in <strong>one or more of five different ways</strong>:</p>
+<p><img src="resources/diagrams/css-description.svg" alt=""></p>
+</div></section><section class="slide" data-pos="9-4-9">
+<span class="pos">9-4-9</span>
+<div class="slidecontent"><p>These <strong>can be combined</strong> however you see fit. Here is an (exaggerated) example using all of them:</p>
+<pre><code><span class="hljs-selector-tag">button</span>[disabled]<span class="hljs-selector-id">#deletemsg</span><span class="hljs-selector-class">.big</span>:first-child
+</code></pre><p>This would match all </p>
+<ul>
+<li>nodes of <strong>type</strong> buttons</li>
+<li>that has a disabled <strong>attribute</strong></li>
+<li>and <strong>id</strong> is <code>deletemsg</code></li>
+<li>and <strong>class</strong> attribute contains &#39;big&#39;</li>
+<li>and it is the <strong>first child</strong> of its parent</li>
+</ul>
+</div></section><section class="slide" data-pos="9-4-10">
+<span class="pos">9-4-10</span>
+<div class="slidecontent"><p>Now for the <strong>combinators</strong>! There are <strong>4 different different ways</strong> that descriptions can be combined.</p>
+<p><img src="resources/diagrams/css-combinators.svg" alt=""></p>
+</div></section><section class="slide list" data-pos="9-4-11">
+<span class="pos">9-4-11</span>
+<div class="slidecontent">
+<p>We&#39;ll now <strong>look closer</strong> at one at a time!</p>
+<ul>
+<li><span>a</span><strong>descendant</strong> combinator</li>
+<li><span>b</span><strong>child</strong> combinator</li>
+<li><span>c</span><strong>sibling</strong> combinator</li>
+<li><span>d</span><strong>adjacent sibling</strong> combinator</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="9-4-12">
+<span class="pos">9-4-12</span>
+<div class="slidecontent">
+<p>The perhaps most common one is the <strong>descendant combinator</strong>. By having <strong>two descriptions with a space between</strong>...</p>
+<pre><code><span class="hljs-selector-tag">div</span> p
+</code></pre></div></section><section class="slide" data-pos="9-4-13">
+<span class="pos">9-4-13</span>
+<div class="slidecontent"><pre><code><span class="hljs-selector-tag">div</span> p
+</code></pre><p>...we match all elements that</p>
+<ul>
+<li><strong>match the last description</strong></li>
+<li>have an <strong>ancestor matching the first description</strong>. This can be <strong>any number of generations</strong> up the tree.</li>
+</ul>
+</div></section><section class="slide" data-pos="9-4-14">
+<span class="pos">9-4-14</span>
+<div class="slidecontent"><p>It is <strong>unfortunate that the descendant combinators doesn&#39;t have a non-space symbol</strong>, something like this:</p>
+<pre><code><span class="hljs-selector-tag">div</span> _ p
+</code></pre><p>Whitespace elsewhere in CSS doesn&#39;t have meaning, but here it suddenly does. To help with this, <strong>think of descendant combinators as invisible symbols</strong>!</p>
+</div></section><section class="slide num numB" data-pos="9-4-15">
+<span class="pos">9-4-15</span>
+<div class="slidecontent">
+<pre><code><span class="hljs-selector-tag">div</span> &gt; p
+</code></pre><p>The <strong>child combinator</strong> is very similar to descendant selector, but here the first selector must match the <strong>parent</strong> and not just any ancestor.</p>
+</div></section><section class="slide" data-pos="9-4-16">
+<span class="pos">9-4-16</span>
+<div class="slidecontent"><p>Thus the child combinator is <strong>smaller in scope</strong> than the descendant combinator.</p>
+</div></section><section class="slide num numC" data-pos="9-4-17">
+<span class="pos">9-4-17</span>
+<div class="slidecontent">
+<pre><code><span class="hljs-selector-tag">div</span> ~ p
+</code></pre><p>The <strong>sibling combinator</strong> is similar to the descendant combinator, but <strong>works horisontally</strong> instead.</p>
+</div></section><section class="slide" data-pos="9-4-18">
+<span class="pos">9-4-18</span>
+<div class="slidecontent"><pre><code><span class="hljs-selector-tag">div</span> ~ p
+</code></pre><p>This means it matches elements that...</p>
+<ul>
+<li><strong>match the last description</strong></li>
+<li>have an <strong>older sibling that matches the first description</strong></li>
+</ul>
+</div></section><section class="slide num numD" data-pos="9-4-19">
+<span class="pos">9-4-19</span>
+<div class="slidecontent">
+<pre><code><span class="hljs-selector-tag">div</span> + p
+</code></pre><p>Finally the <strong>adjacent sibling combinator</strong> works in the exact same way, but requires the <strong>neighbouring older sibling to match the first description</strong>.</p>
+</div></section><section class="slide" data-pos="9-4-20">
+<span class="pos">9-4-20</span>
+<div class="slidecontent"><p>The two <strong>sibling combinators are not often used</strong>, but they are <strong>good at what they do</strong>.</p>
+<p>Solving that problem with other means would require <strong>brittle workarounds</strong>, something you often see from web developers who don&#39;t know about them.</p>
+</div></section>
+</section>
+<!--ENDSECTION4-->
+<!--STARTSECTION5--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 5/8</div>
+      <h3>Object references</h3>
+      <p>Any strings attached?</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="9-5-1">
+<span class="pos">9-5-1</span>
+<div class="slidecontent"><p>In JavaScript, <strong>objects (and therefore also arrays) are references</strong>.</p>
+<p>This means that...</p>
+<ul>
+<li>passing around references <strong>is dangerous</strong></li>
+<li>you must be <strong>careful with mutation</strong></li>
+<li>know if APIs <strong>copy or mutate</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="9-5-2">
+<span class="pos">9-5-2</span>
+<div class="slidecontent"><p>As a <strong>cautionary tale</strong>, have a look at this app:</p>
+<p><img src="resources/images/jsonexample-screen.png" alt=""></p>
+<p>Clicking a team <strong>gives it a point</strong>, and the headline shows the <strong>current leader</strong>.</p>
+</div></section><section class="slide" data-pos="9-5-3">
+<span class="pos">9-5-3</span>
+<div class="slidecontent"><p>However, in an early version, a <strong>bug</strong> caused the <strong>buttons to change order when the leader changed</strong>.</p>
+<p>This was <strong>not the intened behaviour</strong>.</p>
+</div></section><section class="slide question" data-pos="9-5-4">
+<span class="pos">9-5-4</span>
+<div class="slidecontent">
+<p>Can you <strong>spot the cause of the bug</strong>?</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> PokemonGoComponent {
+  votes = {mystic:<span class="hljs-number">0</span>, instinct: <span class="hljs-number">0</span>, valor: <span class="hljs-number">0</span>}
+  list = <span class="hljs-built_in">Object</span>.keys(<span class="hljs-keyword">this</span>.votes).sort()
+  <span class="hljs-keyword">get</span> best() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.list.sort(
+      <span class="hljs-function">(<span class="hljs-params">a,b</span>)=&gt;</span> <span class="hljs-keyword">this</span>.votes[a] &lt; <span class="hljs-keyword">this</span>.votes[b] ? <span class="hljs-number">1</span> : <span class="hljs-number">-1</span>
+    )[<span class="hljs-number">0</span>] <span class="hljs-comment">// best is 1st element in sorted list</span>
+  }
+  vote(team) {
+    <span class="hljs-keyword">this</span>.votes[team]++
+  }
+}
+</code></pre>
+</div></section><section class="slide answer" data-pos="9-5-5">
+<span class="pos">9-5-5</span>
+<div class="slidecontent">
+<p>The <strong>offence</strong> is in the <strong><code>best</code> getter</strong>:</p>
+<pre><code><span class="hljs-keyword">get</span> best() {
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.list.sort(
+    (a,b)=&gt; <span class="hljs-keyword">this</span>.votes[a] &lt; <span class="hljs-keyword">this</span>.votes[b] ? <span class="hljs-number">1</span> : <span class="hljs-number">-1</span>
+  )[<span class="hljs-number">0</span>] <span class="hljs-comment">// best is 1st element in sorted list</span>
+}
+</code></pre><p>The <strong><code>.sort</code> method mutates</strong> <code>this.list</code>, which means that the <strong>buttons would change order</strong>!</p>
+</div></section><section class="slide" data-pos="9-5-6">
+<span class="pos">9-5-6</span>
+<div class="slidecontent"><p>The <strong>problem was fixed</strong> by first <strong>copying the array</strong> using the <strong>non-mutating <code>slice</code> method</strong>:</p>
+<pre><code><span class="hljs-keyword">get</span> best() {
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.list.slice().sort(
+    (a,b)=&gt; <span class="hljs-keyword">this</span>.votes[a] &lt; <span class="hljs-keyword">this</span>.votes[b] ? <span class="hljs-number">1</span> : <span class="hljs-number">-1</span>
+  )[<span class="hljs-number">0</span>] <span class="hljs-comment">// best is 1st element in sorted list</span>
+}
+</code></pre></div></section>
+</section>
+<!--ENDSECTION5-->
+<!--STARTSECTION6--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 6/8</div>
+      <h3>Attributes vs Properties</h3>
+      <p>You say potato</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="9-6-1">
+<span class="pos">9-6-1</span>
+<div class="slidecontent"><p>HTML elements have <strong>attributes</strong> but DOM nodes have <strong>properties</strong>.</p>
+<p>Usually, but not always, the <strong>former initializes the latter</strong>:</p>
+<p><img src="resources/diagrams/htmlvsdom.svg" alt=""></p>
+</div></section><section class="slide" data-pos="9-6-2">
+<span class="pos">9-6-2</span>
+<div class="slidecontent"><p>We will now <strong>showcase the difference</strong> using this simple page:</p>
+<p><img src="resources/images/inputfield.png" alt=""></p>
+<p>It is published at <a href="http://blog.krawaller.se/attrvsprops/">http://blog.krawaller.se/attrvsprops</a>.</p>
+</div></section><section class="slide" data-pos="9-6-3">
+<span class="pos">9-6-3</span>
+<div class="slidecontent"><p>If you <strong><code>view source</code></strong> you&#39;ll see this:</p>
+<pre><code><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"John Doe"</span>&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-name">button</span>&gt;</span>Submit<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</code></pre><p>Note that the <strong><code>input</code></strong> has the <strong>initial value <code>&quot;John Doe&quot;</code></strong>.</p>
+</div></section><section class="slide" data-pos="9-6-4">
+<span class="pos">9-6-4</span>
+<div class="slidecontent"><p>In the console we can <strong>get a reference to the input field node</strong> like this:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> field = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">"input"</span>);
+</code></pre>
+</div></section><section class="slide" data-pos="9-6-5">
+<span class="pos">9-6-5</span>
+<div class="slidecontent"><p>Using that reference we can <strong>confirm the value of the <code>value</code> attribute</strong>:</p>
+<pre><code class="lang-javascript">field.getAttribute(<span class="hljs-string">"value"</span>) <span class="hljs-comment">// "John Doe";</span>
+</code></pre>
+</div></section><section class="slide" data-pos="9-6-6">
+<span class="pos">9-6-6</span>
+<div class="slidecontent"><p>And we can also <strong>read the <code>value</code> property</strong>:</p>
+<pre><code class="lang-javascript">field.value <span class="hljs-comment">// "John Doe";</span>
+</code></pre>
+</div></section><section class="slide" data-pos="9-6-7">
+<span class="pos">9-6-7</span>
+<div class="slidecontent"><p>Now <strong>type in the field</strong> to say something else:</p>
+<p><img src="resources/images/inputfield2.png" alt=""></p>
+</div></section><section class="slide" data-pos="9-6-8">
+<span class="pos">9-6-8</span>
+<div class="slidecontent"><p>If we <strong>query the attribute again</strong>, we see that it is still <code>John Doe</code>:</p>
+<pre><code class="lang-javascript">field.getAttribute(<span class="hljs-string">"value"</span>) <span class="hljs-comment">// "John Doe";</span>
+</code></pre>
+</div></section><section class="slide" data-pos="9-6-9">
+<span class="pos">9-6-9</span>
+<div class="slidecontent"><p>But the <strong>property is updated</strong>:</p>
+<pre><code class="lang-javascript">field.value <span class="hljs-comment">// "My real name";</span>
+</code></pre>
+</div></section><section class="slide" data-pos="9-6-10">
+<span class="pos">9-6-10</span>
+<div class="slidecontent"><p>This reflects the fact that <strong>attributes are characteristics of the original HTML elements</strong>, while <strong>properties belong to the live DOM nodes</strong>.</p>
+</div></section><section class="slide" data-pos="9-6-11">
+<span class="pos">9-6-11</span>
+<div class="slidecontent"><p>To wit:</p>
+<ul>
+<li><strong>HTML elements have attributes</strong>, and <strong>DOM nodes have properties</strong>.</li>
+<li><strong>Attributes often initialize properties</strong> (but not always)</li>
+<li><strong>Attributes never change</strong>, but <strong>properties can change</strong>.</li>
+</ul>
+</div></section><section class="slide question" data-pos="9-6-12">
+<span class="pos">9-6-12</span>
+<div class="slidecontent">
+<p>Ok, this is all very interesting, but <strong>what does this have to do with Angular</strong>?</p>
+</div></section><section class="slide answer" data-pos="9-6-13">
+<span class="pos">9-6-13</span>
+<div class="slidecontent">
+<p>Nothing directly, except it is <strong>even easier to mix things up in Angular</strong> because of its use of templates.</p>
+</div></section><section class="slide" data-pos="9-6-14">
+<span class="pos">9-6-14</span>
+<div class="slidecontent"><p>Take this <strong>Angular template bit</strong>:</p>
+<pre><code>&lt;<span class="hljs-selector-tag">button</span> [disabled]=<span class="hljs-string">"someFlag"</span>&gt;
+</code></pre><ul>
+<li>Here <code>disabled</code> is given the value of <code>someFlag</code>.</li>
+<li>Whenever <code>someFlag</code> changes, so will <code>disabled</code>.</li>
+</ul>
+</div></section><section class="slide" data-pos="9-6-15">
+<span class="pos">9-6-15</span>
+<div class="slidecontent"><p>In essence: when writing Angular templates it <strong>looks like we&#39;re dealing with attributes</strong>.</p>
+<p>But we are <strong>actually dealing with properties</strong> (with some exceptions).</p>
+</div></section>
+</section>
+<!--ENDSECTION6-->
+<!--STARTSECTION7--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 7/8</div>
+      <h3>Functional programming</h3>
+      <p>Jumping down the rabbit hole</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="9-7-1">
+<span class="pos">9-7-1</span>
+<div class="slidecontent"><p>JavaScript is a <strong>functional language</strong>, which Angular makes good use of.</p>
+<p>We&#39;ll now <strong>walk through a quick example</strong> to make sure we <strong>understand the power of this paradigm</strong>!</p>
+</div></section><section class="slide" data-pos="9-7-2">
+<span class="pos">9-7-2</span>
+<div class="slidecontent"><p>So - since <strong>functions are first class citizens</strong>, we can <strong>send them around just like any value</strong>.</p>
+<p>Which also means that <strong>a function can take, and/or return, other functions</strong>! Such a function is called a <strong>higher order function</strong>.</p>
+</div></section><section class="slide" data-pos="9-7-3">
+<span class="pos">9-7-3</span>
+<div class="slidecontent"><p>As a contrived <strong>example</strong>, say we have this function:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> spam = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"SPAM!"</span>);
+}
+</code></pre>
+</div></section><section class="slide" data-pos="9-7-4">
+<span class="pos">9-7-4</span>
+<div class="slidecontent"><p>And then we have this <strong>higher order function</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">repeater</span>(<span class="hljs-params">func,times</span>)</span>{
+  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; times; i = i + <span class="hljs-number">1</span>){
+    func();
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="9-7-5">
+<span class="pos">9-7-5</span>
+<div class="slidecontent"><p>If we <strong>invoke <code>repeater</code></strong> like this:</p>
+<pre><code class="lang-javascript">repeater(spam,<span class="hljs-number">3</span>);
+</code></pre>
+<p>We would <strong>see this in the console</strong>:</p>
+<pre><code><span class="hljs-string">"SPAM!"</span>
+<span class="hljs-string">"SPAM!"</span>
+<span class="hljs-string">"SPAM!"</span>
+</code></pre></div></section><section class="slide" data-pos="9-7-6">
+<span class="pos">9-7-6</span>
+<div class="slidecontent"><p>To show we can also <strong>return new functions</strong>, take a look at this beauty:</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">multiplier</span>(<span class="hljs-params">func,times</span>)</span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; times; i = i + <span class="hljs-number">1</span>){
+      func();
+    }
+  };
+}
+</code></pre>
+</div></section><section class="slide" data-pos="9-7-7">
+<span class="pos">9-7-7</span>
+<div class="slidecontent"><p>Did you see the difference? <code>multiplier</code> doesn&#39;t execute the parameter function, but <strong>returns a new function</strong>!</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> tripleSpam = multiplier(spam,<span class="hljs-number">3</span>);
+</code></pre>
+<p>If we <strong>execute the returned function</strong> we get the triple spam:</p>
+<pre><code class="lang-javascript">tripleSpam(); <span class="hljs-comment">// SPAM! SPAM! SPAM!</span>
+</code></pre>
+</div></section><section class="slide" data-pos="9-7-8">
+<span class="pos">9-7-8</span>
+<div class="slidecontent"><p>Functional programming is a <strong>really powerful tool</strong>, and something that is likely to <strong>get you hooked once you have learned it</strong>. We warmly encourage you to explore the subject!</p>
+</div></section>
+</section>
+<!--ENDSECTION7-->
+<!--STARTSECTION8--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 8/8</div>
+      <h3>Statements vs Expressions</h3>
+      <p>I say tomato</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="9-8-1">
+<span class="pos">9-8-1</span>
+<div class="slidecontent"><p>The code we write is made up by <strong>statements</strong> and <strong>expressions</strong>. So what is the difference?</p>
+<p><img src="resources/diagrams/stmntvsexpr.svg" alt=""></p>
+</div></section><section class="slide" data-pos="9-8-2">
+<span class="pos">9-8-2</span>
+<div class="slidecontent"><p>For example, consider this line of code:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> cost = quantity * price;
+</code></pre>
+<ul>
+<li>The line <strong>is a statement</strong>, declaring a variable and assigning a value</li>
+<li>It <strong>contains an expression</strong> <code>quantity * price</code>, and whatever that evaluates to will be assigned to <code>cost</code>.</li>
+<li>Does the whole expression have a value? Yes, but it happens to be <code>undefined</code>. So, not really.</li>
+</ul>
+</div></section><section class="slide" data-pos="9-8-3">
+<span class="pos">9-8-3</span>
+<div class="slidecontent"><p>The fact that <strong>assignment forms part of a valid expression</strong> in JavaScript is why this code isn&#39;t a syntax error:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">if</span> (count = <span class="hljs-number">12</span>) {
+  output(<span class="hljs-string">"That's right, a dozen means 12!"</span>);
+}
+</code></pre>
+</div></section><section class="slide" data-pos="9-8-4">
+<span class="pos">9-8-4</span>
+<div class="slidecontent"><p>Then there are things in JS which <strong>aren&#39;t expressions but could be</strong>. This is a syntax error:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> suffix = <span class="hljs-keyword">switch</span> (quoty % <span class="hljs-number">10</span>) {
+  <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>: <span class="hljs-string">'st'</span>
+  <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>: <span class="hljs-string">'nd'</span>
+  <span class="hljs-keyword">case</span> <span class="hljs-number">3</span>: <span class="hljs-string">'rd'</span>
+  <span class="hljs-keyword">default</span>: <span class="hljs-string">'th'</span>
+}
+</code></pre>
+</div></section><section class="slide" data-pos="9-8-5">
+<span class="pos">9-8-5</span>
+<div class="slidecontent"><p>Instead we have to do this:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> suffix;
+
+<span class="hljs-keyword">switch</span> (quoty % <span class="hljs-number">10</span>) {
+  <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>: suffix = <span class="hljs-string">'st'</span>; <span class="hljs-keyword">break</span>;
+  <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>: suffix = <span class="hljs-string">'nd'</span>; <span class="hljs-keyword">break</span>;
+  <span class="hljs-keyword">case</span> <span class="hljs-number">3</span>: suffix = <span class="hljs-string">'rd'</span>; <span class="hljs-keyword">break</span>;
+  <span class="hljs-keyword">default</span>: suffix = <span class="hljs-string">'th'</span>; <span class="hljs-keyword">break</span>;
+}
+</code></pre>
+<p>Granted, it is probably because JS has fall-through that switches aren&#39;t expressions (which is considered a flaw too).</p>
+</div></section><section class="slide" data-pos="9-8-6">
+<span class="pos">9-8-6</span>
+<div class="slidecontent"><p>Perhaps weirdly, <strong>any expression is a valid statement</strong>. (It&#39;s an &quot;expression statement&quot;.) Consider this line:</p>
+<pre><code class="lang-javascript"><span class="hljs-number">2</span>+<span class="hljs-number">3</span>;
+</code></pre>
+<p>It will be evaluated to 5, but nothing uses that value and there are no side effects. On the Chrome Console you can see the 5.</p>
+<p>A famous example of clever usage of this is the strict mode opt-in &quot;magical string&quot;:</p>
+<pre><code class="lang-javascript"><span class="hljs-meta">"use strict"</span>;
+</code></pre>
+</div></section><section class="slide" data-pos="9-8-7">
+<span class="pos">9-8-7</span>
+<div class="slidecontent"><p>Sometimes JavaScript even taunts us with the statement/expression distinction. There&#39;s both a <strong>function statement</strong> and a <strong>function expression</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">luke</span>(<span class="hljs-params"></span>) </span>{           <span class="hljs-comment">// function statement</span>
+}
+
+<span class="hljs-keyword">var</span> leia = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ };  <span class="hljs-comment">// function expression</span>
+</code></pre>
+<p>Function statements <em>require</em> the function name, which gets installed in the current scope. Function expressions do no such thing.</p>
+</div></section><section class="slide" data-pos="9-8-8">
+<span class="pos">9-8-8</span>
+<div class="slidecontent"><p>Have you thought about the fact that <code>{ }</code> gets used for two completely different things in JavaScript?</p>
+<pre><code class="lang-javascript">{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"This is a block!"</span>);
+}
+
+<span class="hljs-keyword">var</span> however = {
+    <span class="hljs-attr">here</span>: <span class="hljs-string">"these braces denote"</span>,
+    <span class="hljs-attr">an</span>: <span class="hljs-string">"object literal!"</span>
+};
+</code></pre>
+<p>How does JavaScript know when it&#39;s supposed to be one or the other? Well, that&#39;s also a statement/expression distinction. See the recurring theme here?</p>
+</div></section><section class="slide question" data-pos="9-8-9">
+<span class="pos">9-8-9</span>
+<div class="slidecontent">
+<p>Ok, got it, there are <strong>many nuances</strong> to the difference between statements and expressions.</p>
+<p>But isn&#39;t this just <strong>theoretical academics</strong> with <strong>no practical value</strong>?</p>
+</div></section><section class="slide answer" data-pos="9-8-10">
+<span class="pos">9-8-10</span>
+<div class="slidecontent">
+<p>No! <strong>Don&#39;t dismiss this</strong>!</p>
+<p><strong>Understanding the difference</strong> will give you a <strong>better understanding</strong> of, and <strong>perspective</strong> on, your code!</p>
+<p>Also, as we will see soon enough, the <strong>distinction comes into play in Angular</strong>.</p>
+</div></section>
+</section>
+<!--ENDSECTION8--><!--ENDCHAPTERCONTENT-->
+        
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var basehref = window.location.href.replace(/chapter\d.*?$/,'')
+
+      document.addEventListener("keydown",function(e){
+        var code = e.which || e.keyCode;
+        if (code===13){
+          window.location.href = basehref+"index.html?from="+(9-1);
+        } else if (code >= 49 && code <= 8+48) {
+          window.location.hash = "#/" + (code-48+1+1);
+        }
+        if (9 < 13) {
+          if (code===99){ // the letter C for next Chapter
+            window.location.href = basehref+"chapter"+(9+1)+".html"
+          }
+        }
+      });
+    </script>
+    <script src="mc2/scripts/head.js" type="text/javascript"></script>
+    <script src="mc2/scripts/reveal.js" type="text/javascript"></script>
+    <script src="mc2/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    showNotes: false,
+    transition: 'slide',
+    dependencies: [
+      { src: 'mc2/scripts/plugin/notes/notes.js', async: true }
+    ]
+  })
+
+    window.onload = function(){
+
+      var links = document.querySelectorAll("a.link");
+      for(var i=0;i<links.length;i++){
+        var link = links[i];
+        link.innerHTML = link.innerHTML.replace(/ /g,'&nbsp;')
+      }
+      var posElem = document.getElementById('pos')
+      function updateReference(){
+        setTimeout(function(){
+          var currentpos = document.querySelector('section.present[data-pos]')
+          if (currentpos){
+            posElem.innerHTML = currentpos.getAttribute('data-pos')
+          } else {
+            posElem.innerHTML = ''
+          }
+          if (document.querySelector('.present.chaptertitle')){
+            document.body.classList.add('atchaptertitle');
+          } else {
+            document.body.classList.remove('atchaptertitle');
+          }
+        },10)
+      }
+
+      window.addEventListener("hashchange",updateReference);
+
+      updateReference();
+    };
+
+    </script>
+    <!--STARTCOURSESPECIFICSCRIPTS--><script type="text/javascript" src="scripts/streams.js"></script><!--ENDCOURSESPECIFICSCRIPTS-->
+  </body>
+</html>

@@ -1,0 +1,28 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  subgraph cluster_buildstep {
+    label="build step"
+    subgraph cluster_transpiler {
+      label="typescript/babel/.."
+      transpiler
+    }
+    subgraph cluster_bundler {
+      label="webpack/rollup/.."
+      bundler
+    }
+    perf [label="shrink", style=dashed]
+  }
+  subgraph cluster_browser {
+    label="browser"
+    subgraph cluster_angular {
+      label="angular bootstrap"
+      templateCompiler
+    }
+    run
+  }
+  source -> transpiler -> bundler
+  templateCompiler -> run
+  bundler  -> perf -> templateCompiler [style=dashed]
+  templateCompiler [label="compile templates"]
+}

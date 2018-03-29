@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo</title>
+
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+</head>
+
+<body data-demoid="composition_scoped">
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>Showing a component composition, three generations, where the components belong to their own modules.</p></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div data-file='main_ts'>main.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule, Component }      <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  template: <span class="hljs-string">`&lt;span&gt;Detail&lt;/span&gt;`</span>,
+  selector: <span class="hljs-string">'detail'</span>
+})
+<span class="hljs-keyword">class</span> Detail {}
+
+<span class="hljs-meta">@Component</span>({
+  template: <span class="hljs-string">`&lt;span&gt;Complex &lt;detail&gt;&lt;/detail&gt;&lt;/span&gt;`</span>,
+  selector: <span class="hljs-string">'complex'</span>,
+})
+<span class="hljs-keyword">class</span> Complex {}
+
+<span class="hljs-meta">@NgModule</span>({
+  declarations: [Complex,Detail],
+  exports: [Complex]
+})
+<span class="hljs-keyword">class</span> GenModule {}
+
+<span class="hljs-meta">@Component</span>({
+  template: <span class="hljs-string">`&lt;span&gt;Root &lt;complex&gt;&lt;/complex&gt;&lt;/span&gt;`</span>,
+  selector: <span class="hljs-string">'app'</span>,
+  styles: [<span class="hljs-string">':host /deep/ span { display: inline-block; border: 1px solid black; padding: 3px; }'</span>]
+})
+<span class="hljs-keyword">class</span> Root {}
+
+<span class="hljs-meta">@NgModule</span>({
+    imports:      [ BrowserModule, GenModule ],
+    declarations: [ Root ],
+    bootstrap:    [ Root ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+function select(id){
+  let button = document.querySelector(`[data-file=${id}]`);
+  if (button){
+    document.querySelectorAll('.sources .active').forEach(function(elem){
+      elem.classList.remove('active')
+    });
+    button.classList.add('active');
+    document.getElementById(id + '-source').classList.add('active');
+  } else {
+    console.log("Warning, couldn't find source file", id);
+  }
+}
+
+document.querySelectorAll('.sourcenav > *').forEach(
+  elem => elem.addEventListener('click', function(e){
+    location.hash = '#' + this.getAttribute("data-file");
+    e.preventDefault();
+  })
+);
+
+window.addEventListener("hashchange", function(){
+  select(location.hash.replace('#',''));
+});
+
+select( (location.hash || '').replace('#','') || 'app_ts' );
+
+  </script>
+  <script charset="utf-8" src="../../lib/demos.js"></script>
+</body>
+
+</html>

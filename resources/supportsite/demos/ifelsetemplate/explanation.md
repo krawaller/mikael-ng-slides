@@ -1,0 +1,1 @@
+Showing how we can do if-else using `ng-template`.

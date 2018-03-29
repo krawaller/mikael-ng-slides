@@ -1,0 +1,1 @@
+Showing a simple component composition, three generations.

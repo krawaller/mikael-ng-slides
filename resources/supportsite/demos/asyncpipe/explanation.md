@@ -1,0 +1,1 @@
+Here we can see the built-in `AsyncPipe` in action

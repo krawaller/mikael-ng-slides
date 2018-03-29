@@ -1,0 +1,22 @@
+digraph {
+  rankdir = TD
+  bgcolor = transparent
+
+  subgraph cluster_input {
+    label="inputs"
+    style=dotted
+    arg2, arg1
+  }
+
+  subgraph cluster_deps {
+    label="dependencies"
+    style=dotted
+    complexLib
+  }
+
+  arg2 -> someFunction
+  arg1 -> someFunction -> result
+  complexLib -> someFunction
+
+  someFunction [shape=box]
+}

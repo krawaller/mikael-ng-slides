@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo</title>
+
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+</head>
+
+<body data-demoid="twoway">
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>This demo tries to explain the two-way databinding shorthand by gradually building its way towards the bananabox syntax</p></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div data-file='main_ts'>main.ts</div><div data-file='app_ts'>app.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule }      <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { FormsModule }   <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-keyword">import</span> { AppComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app'</span>;
+
+<span class="hljs-meta">@NgModule</span>({
+    imports: [ BrowserModule, FormsModule ],
+    declarations: [ AppComponent ],
+    bootstrap: [ AppComponent ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre><pre id='app_ts-source'><code><span class="hljs-keyword">import</span> {Component} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">`
+    &lt;input bind-value="name1" on-input="name1 = $event.target.value"&gt; Hello {{name1}} &lt;br&gt;
+    &lt;input [value]="name2" (input)="name2 = $event.target.value"&gt; Hello {{name2}} &lt;br&gt;
+    &lt;input bind-ngModel="name3" on-ngModelChange="name3 = $event"&gt; Hello {{name3}} &lt;br&gt;
+    &lt;input [ngModel]="name4" (ngModelChange)="name4 = $event"&gt; Hello {{name4}} &lt;br&gt;
+    &lt;input bindon-ngModel="name5"&gt; Hello {{name5}} &lt;br&gt;
+    &lt;input [(ngModel)]="name6"&gt; Hello {{name6}} &lt;br&gt;
+    &lt;hr&gt;
+    &lt;button (click)="reset()"&gt;Reset&lt;/button&gt;
+    `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  name1: <span class="hljs-built_in">string</span>
+  name2: <span class="hljs-built_in">string</span>
+  name3: <span class="hljs-built_in">string</span>
+  name4: <span class="hljs-built_in">string</span>
+  name5: <span class="hljs-built_in">string</span>
+  name6: <span class="hljs-built_in">string</span>
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span>){
+    <span class="hljs-keyword">this</span>.reset()
+  }
+  reset() {
+    <span class="hljs-keyword">this</span>.name1 = <span class="hljs-string">'David'</span>
+    <span class="hljs-keyword">this</span>.name2 = <span class="hljs-string">'Martin'</span>
+    <span class="hljs-keyword">this</span>.name3 = <span class="hljs-string">'Klas'</span>
+    <span class="hljs-keyword">this</span>.name4 = <span class="hljs-string">'Carl'</span>
+    <span class="hljs-keyword">this</span>.name5 = <span class="hljs-string">'Sven'</span>
+    <span class="hljs-keyword">this</span>.name6 = <span class="hljs-string">'Rupert'</span>
+  }
+}
+</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+function select(id){
+  let button = document.querySelector(`[data-file=${id}]`);
+  if (button){
+    document.querySelectorAll('.sources .active').forEach(function(elem){
+      elem.classList.remove('active')
+    });
+    button.classList.add('active');
+    document.getElementById(id + '-source').classList.add('active');
+  } else {
+    console.log("Warning, couldn't find source file", id);
+  }
+}
+
+document.querySelectorAll('.sourcenav > *').forEach(
+  elem => elem.addEventListener('click', function(e){
+    location.hash = '#' + this.getAttribute("data-file");
+    e.preventDefault();
+  })
+);
+
+window.addEventListener("hashchange", function(){
+  select(location.hash.replace('#',''));
+});
+
+select( (location.hash || '').replace('#','') || 'app_ts' );
+
+  </script>
+  <script charset="utf-8" src="../../lib/demos.js"></script>
+</body>
+
+</html>

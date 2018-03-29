@@ -1,0 +1,35 @@
+.wrapper {
+  width: 500px;
+  margin: 1em auto;
+  text-align: center;
+}
+#list {
+  list-style-type: none;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+#list li a {
+  color: black;
+  text-decoration: none;
+  font-family: monospace;
+  user-select: none;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  padding: 3px;
+  border: 1px solid #999;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+#list li a:hover {
+  background-color: #DDD;
+}
+
+#list li a:active {
+  background-color: #777;
+  border-color: black;
+  color: white;
+}

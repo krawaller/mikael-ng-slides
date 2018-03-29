@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo</title>
+
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+</head>
+
+<body data-demoid="todo">
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>This is Google&#39;s ToDo example app from the Angular homepage.</p>
+
+<blockquote><p>Copyright 2016 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that
+can be found in the LICENSE file at http://angular.io/license</p></blockquote></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div data-file='main_ts'>main.ts</div><div data-file='app_html'>app.html</div><div data-file='app_ts'>app.ts</div><div data-file='todo_ts'>todo.ts</div><div data-file='todo_form_html'>todo_form.html</div><div data-file='todo_form_ts'>todo_form.ts</div><div data-file='todo_list_html'>todo_list.html</div><div data-file='todo_list_ts'>todo_list.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule }      <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { FormsModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-keyword">import</span> { AppComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app'</span>;
+<span class="hljs-keyword">import</span> { TodoList } <span class="hljs-keyword">from</span> <span class="hljs-string">'./todo_list'</span>;
+<span class="hljs-keyword">import</span> { TodoForm } <span class="hljs-keyword">from</span> <span class="hljs-string">'./todo_form'</span>;
+
+<span class="hljs-meta">@NgModule</span>({
+    imports:      [ BrowserModule, FormsModule ],
+    declarations: [ AppComponent, TodoList, TodoForm ],
+    bootstrap:    [ AppComponent ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre><pre id='app_html-source'><code><span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Todo<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{{remaining}} of {{todos.length}} remaining<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+
+[ <span class="hljs-tag">&lt;<span class="hljs-name">a</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"archive()"</span>&gt;</span>archive<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span> ]
+
+<span class="hljs-tag">&lt;<span class="hljs-name">todo-list</span> [<span class="hljs-attr">todos</span>]=<span class="hljs-string">"todos"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">todo-list</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">todo-form</span> (<span class="hljs-attr">newTask</span>)=<span class="hljs-string">"addTask($event)"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">todo-form</span>&gt;</span></code></pre><pre id='app_ts-source'><code><span class="hljs-keyword">import</span> {Component} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> {Todo} <span class="hljs-keyword">from</span> <span class="hljs-string">'./todo'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  templateUrl: <span class="hljs-string">'./app.html'</span>,
+  styles: [<span class="hljs-string">'a { cursor: pointer; cursor: hand; }'</span>]
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  todos: Todo[] = [
+    { text: <span class="hljs-string">'learn angular'</span>, done: <span class="hljs-literal">true</span> },
+    { text: <span class="hljs-string">'build an angular app'</span>, done: <span class="hljs-literal">false</span> }
+  ];
+
+  <span class="hljs-keyword">get</span> remaining() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.todos.reduce(<span class="hljs-function">(<span class="hljs-params">count: <span class="hljs-built_in">number</span>, todo: Todo</span>) =&gt;</span> count + +!todo.done, <span class="hljs-number">0</span>);
+  }
+
+  archive(): <span class="hljs-built_in">void</span> {
+    <span class="hljs-keyword">this</span>.todos = <span class="hljs-keyword">this</span>.todos.filter(<span class="hljs-function">(<span class="hljs-params">todo: Todo</span>)=&gt;</span> !todo.done)
+  }
+
+  addTask(task: Todo) {
+    <span class="hljs-keyword">this</span>.todos.push(task);
+  }
+}</code></pre><pre id='todo_ts-source'><code><span class="hljs-comment">// Declare an interaface for type safety</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> Todo {
+	text: <span class="hljs-built_in">string</span>,
+	done: <span class="hljs-built_in">boolean</span>
+}</code></pre><pre id='todo_form_html-source'><code><span class="hljs-tag">&lt;<span class="hljs-name">form</span> (<span class="hljs-attr">ngSubmit</span>)=<span class="hljs-string">"addTodo()"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> [(<span class="hljs-attr">ngModel</span>)]=<span class="hljs-string">"task"</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"30"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"add new todo here"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"newTodo"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"btn-primary"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"add"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></code></pre><pre id='todo_form_ts-source'><code><span class="hljs-keyword">import</span> {Component, Output, EventEmitter} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> {Todo} <span class="hljs-keyword">from</span> <span class="hljs-string">'./todo'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'todo-form'</span>,
+  templateUrl: <span class="hljs-string">'./todo_form.html'</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> TodoForm {
+  <span class="hljs-meta">@Output</span>() newTask = <span class="hljs-keyword">new</span> EventEmitter&lt;Todo&gt;();
+  task = <span class="hljs-string">''</span>;
+
+  addTodo() {
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.task) {
+      <span class="hljs-keyword">this</span>.newTask.next({ text: <span class="hljs-keyword">this</span>.task, done: <span class="hljs-literal">false</span> });
+    }
+    <span class="hljs-keyword">this</span>.task = <span class="hljs-string">''</span>;
+  }
+}
+
+<span class="hljs-comment">/*
+Note that these are the same thing:
+
+@Output() newTask: EventEmitter&lt;Todo&gt; =  new EventEmitter()
+@Output() newTask = new EventEmitter&lt;Todo&gt;()
+*/</span></code></pre><pre id='todo_list_html-source'><code><span class="hljs-tag">&lt;<span class="hljs-name">ul</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"unstyled"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let todo of todos"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"checkbox"</span> [(<span class="hljs-attr">ngModel</span>)]=<span class="hljs-string">"todo.done"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"done-{{todo.done}}"</span>&gt;</span>{{todo.text}}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></code></pre><pre id='todo_list_ts-source'><code><span class="hljs-keyword">import</span> {Component, Input} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> {Todo} <span class="hljs-keyword">from</span> <span class="hljs-string">'./todo'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'todo-list'</span>,
+  styles: [<span class="hljs-string">`
+    .done-true {
+      text-decoration: line-through;
+      color: grey;
+    }`</span>
+  ],
+  templateUrl: <span class="hljs-string">'./todo_list.html'</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> TodoList {
+  <span class="hljs-meta">@Input</span>() todos: Todo[];
+}</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+function select(id){
+  let button = document.querySelector(`[data-file=${id}]`);
+  if (button){
+    document.querySelectorAll('.sources .active').forEach(function(elem){
+      elem.classList.remove('active')
+    });
+    button.classList.add('active');
+    document.getElementById(id + '-source').classList.add('active');
+  } else {
+    console.log("Warning, couldn't find source file", id);
+  }
+}
+
+document.querySelectorAll('.sourcenav > *').forEach(
+  elem => elem.addEventListener('click', function(e){
+    location.hash = '#' + this.getAttribute("data-file");
+    e.preventDefault();
+  })
+);
+
+window.addEventListener("hashchange", function(){
+  select(location.hash.replace('#',''));
+});
+
+select( (location.hash || '').replace('#','') || 'app_ts' );
+
+  </script>
+  <script charset="utf-8" src="../../lib/demos.js"></script>
+</body>
+
+</html>

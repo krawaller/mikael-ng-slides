@@ -1,0 +1,35 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  
+  col0, col1, col2, col3, col4, col5, col6 [color=transparent; fontcolor=transparent, label=" "]
+  row1start, row2start, row3start, row4start, row5start, row6start, row7start, row8start, row9start, row10start, row11start [label="low"]
+  row1start -> row2start -> row3start -> row4start -> row5start -> row6start -> row7start -> row8start -> row9start -> row10start -> row11start [color=transparent]
+  row1end, row2end, row3end, row4end, row5end, row6end, row7end, row8end, row9end, row10end, row11end [label="high"]
+  row1end -> row2end -> row3end -> row4end -> row5end -> row6end -> row7end -> row8end -> row9end -> row10end -> row11end [color=transparent]
+  col0 -> col1 -> col2 -> col3 -> col4 -> col5 -> col6 [color=transparent]
+  {rank=same; row1start, row2start, row3start, row4start, row5start, row6start, row7start, row8start, row9start, row10start, row11start col0}
+  {rank=same; row1end, row2end, row3end, row4end, row5end, row6end, row7end, row8end, row9end, row10end, row11end, col6}
+
+  simplicity, maturity, sexiness, adaptability, correspondence, security, price, autonomy, maintenance, knowledge, performance [shape=box]
+
+  simplicity [label="ease of use"]
+  maintenance [label="life\nexpectancy"]
+  knowledge [label="existing\nknowledge"]
+
+  row1start -> simplicity -> row1end [arrowhead=none]
+  row2start -> maturity -> row2end [arrowhead=none]
+  row3start -> sexiness -> row3end [arrowhead=none]
+  row4start -> adaptability -> row4end [arrowhead=none]
+  row5start -> correspondence -> row5end [arrowhead=none]
+  row6start -> security -> row6end [arrowhead=none]
+  row7start -> price -> row7end [arrowhead=none]
+  row8start -> autonomy -> row8end [arrowhead=none]
+  row9start -> maintenance -> row9end [arrowhead=none]
+  row10start -> knowledge -> row10end [arrowhead=none]
+  row11start -> performance -> row11end [arrowhead=none]
+
+
+  {rank=same; knowledge, col4}
+  {rank=same; performance, col3}
+}

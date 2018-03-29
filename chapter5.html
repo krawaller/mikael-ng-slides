@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Composition</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="icon" type="image/x-icon" href="mc2/images/favicon.ico">
+
+    <link rel="stylesheet" href="mc2/styles/reveal.css">
+    <link rel="stylesheet" href="mc2/styles/theme.css" id="theme">
+    <link rel="stylesheet" href="mc2/styles/code.css">
+    <!--STARTCOURSESPECIFICSTYLES--><link rel="stylesheet" href="styles/mystyles.css">
+<link rel="stylesheet" href="styles/streams.css"><!--ENDCOURSESPECIFICSTYLES-->
+  </head>
+
+  <body>
+    <div id="pos"></div>
+    <div class="reveal">
+      <div class="slides">
+        <section class="slide chaptertitle">
+          <div class="slidecontent">
+            <div class="chapternumber"> chapter 5 of 13 </div>
+            <h1>Composition</h1>
+            <span>Combining components</p>
+</span>
+          </div>
+        </section>
+        
+        <!--STARTSECTIONINDEX--><section class="slide sectionlist">
+  <div class="slidecontent">
+    <h3>Sections in this chapter</h3>
+    <ol>
+    <li><a href="#/2">Child&nbsp;components</a></li>
+<li><a href="#/3">Passing&nbsp;data</a></li>
+<li><a href="#/4">Receiving&nbsp;data</a></li>
+<li><a href="#/5">Passing&nbsp;elements</a></li>
+<li><a href="#/6">A&nbsp;composition&nbsp;case&nbsp;study</a></li>
+<li><a href="#/7">Gamebook&nbsp;&#8209;&nbsp;composition</a></li>
+    </ol>
+  </div>
+</section>
+<!--ENDSECTIONINDEX-->
+        <!--STARTCHAPTERCONTENT--><!--STARTSECTION1--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 1/6</div>
+      <h3>Child components</h3>
+      <p>Spawning children</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="5-1-1">
+<span class="pos">5-1-1</span>
+<div class="slidecontent"><p>So, finally - how do we <strong>render one component from another</strong> in Angular? The answer has <strong>two parts</strong>:</p>
+<ul>
+<li>make sure the <strong>child component is visible to the parent</strong> from an <code>NgModule</code> perspective</li>
+<li>include <strong>markup in the parent template</strong> that <strong>matches the child selector</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="5-1-2">
+<span class="pos">5-1-2</span>
+<div class="slidecontent"><p><strong>Component selectors</strong> are mostly <strong>element types</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'myCustomComp'</span>,
+  template: <span class="hljs-string">'...'</span>
+})
+</code></pre>
+<p>To use this component, our <strong>markup must contain</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">myCustomComp</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">myCustomComp</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="5-1-3">
+<span class="pos">5-1-3</span>
+<div class="slidecontent"><p>But technically we can use <strong>any CSS selector</strong>, including <strong>targetting attributes</strong> like the built-in directives:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'[myCustomComp]'</span>,
+  template: <span class="hljs-string">'...'</span>
+})
+</code></pre>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">myCustomComp</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="5-1-4">
+<span class="pos">5-1-4</span>
+<div class="slidecontent"><p>But, as stated, <strong>element types are the most common</strong>.</p>
+<p>Which incidentally means that <strong>usage of Angular components</strong> is <strong>identical to <a href="https://developer.mozilla.org/en-US/docs/Web/Web_Components">Web Components</a></strong>.</p>
+<p>This <strong>opens some interesting possibilities</strong>, but we <strong>won&#39;t explore that further in this course</strong>.</p>
+</div></section><section class="slide" data-pos="5-1-5">
+<span class="pos">5-1-5</span>
+<div class="slidecontent"><p>It is <strong>also identical</strong> to the relation between the <strong>root component and the main index page</strong>! Our root components have <strong>all used this selector</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">'...'</span>
+})
+</code></pre>
+<p>...and in the main <code>index.html</code> files you find this:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">app</span>&gt;</span>loading...<span class="hljs-tag">&lt;/<span class="hljs-name">app</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="5-1-6">
+<span class="pos">5-1-6</span>
+<div class="slidecontent"><p>Again, composition works in the <strong>exact same way</strong>.</p>
+<p><strong>See it in action</strong> in the <a href="resources/supportsite/demos/composition" target="_blank">Composition</a> demo, or the <a href="resources/supportsite/demos/composition_scoped" target="_blank">Composition Scoped</a> which uses components from different <code>NgModules</code>.</p>
+</div></section><section class="slide" data-pos="5-1-7">
+<span class="pos">5-1-7</span>
+<div class="slidecontent"><p>Btw, did you notice the <strong>style definition in the root</strong> in the demo?</p>
+<pre><code class="lang-css">:host /deep/ span {
+  border: 1px solid black; padding: 3px;
+}
+</code></pre>
+<p>As you might guess, the <strong><code>/deep/</code> selector</strong> means we <strong>dig into the encapsulation of our children</strong> to be able to style them too.</p>
+</div></section>
+</section>
+<!--ENDSECTION1-->
+<!--STARTSECTION2--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 2/6</div>
+      <h3>Passing data</h3>
+      <p>pouring down</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="5-2-1">
+<span class="pos">5-2-1</span>
+<div class="slidecontent"><p>Time to start exploring <strong>parent-child communication</strong>, and specifically, how <strong>parents give input to their children</strong>!</p>
+<p><img src="resources/diagrams/parchildcom-input.svg" alt=""></p>
+</div></section><section class="slide" data-pos="5-2-2">
+<span class="pos">5-2-2</span>
+<div class="slidecontent"><p>The syntax is actually rather ingenious - with an <strong><code>@Input</code> decorator</strong> we can <strong>mark a property as an input</strong>:</p>
+<pre><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Child</span> </span>{
+  <span class="hljs-meta">@Input()</span> someProp
+  aPrivateProp
+}
+</code></pre></div></section><section class="slide" data-pos="5-2-3">
+<span class="pos">5-2-3</span>
+<div class="slidecontent"><p>After having done so, the <code>someProp</code> property can be <strong>bound to in the parent template</strong>:</p>
+<pre><code><span class="hljs-tag">&lt;<span class="hljs-name">child</span> [<span class="hljs-attr">someProp</span>]=<span class="hljs-string">"myVariable"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">child</span>&gt;</span>
+</code></pre></div></section><section class="slide" data-pos="5-2-4">
+<span class="pos">5-2-4</span>
+<div class="slidecontent"><p>We can also <strong>alias the property name</strong> if we for some reason want to have the input named differently:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> Child {
+  <span class="hljs-meta">@Input</span>(<span class="hljs-string">'aliasedProp'</span>) someProp
+}
+</code></pre>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">child</span> [<span class="hljs-attr">aliasedProp</span>]=<span class="hljs-string">"myVariable"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">child</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="5-2-5">
+<span class="pos">5-2-5</span>
+<div class="slidecontent"><p>And as the <strong>bound property is a normal class property</strong>, we can also <strong>use a setter</strong>:</p>
+<pre><code><span class="hljs-selector-tag">class</span> <span class="hljs-selector-tag">Child</span> {
+  <span class="hljs-attribute">aPrivateProp</span>: string
+  @<span class="hljs-built_in">Input</span>() set <span class="hljs-built_in">exposedProp</span>(fromMum){
+    this.aPrivateProp = fromMum
+  }
+}
+</code></pre><p>It looks exactly the <strong>same as before</strong> from the outside:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">child</span> [<span class="hljs-attr">exposedProp</span>]=<span class="hljs-string">"cleanYourRoom"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">child</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="5-2-6">
+<span class="pos">5-2-6</span>
+<div class="slidecontent"><p>You can see <strong>all three variants</strong> in action in the <a href="resources/supportsite/demos/childinput" target="_blank">Child input</a> demo.</p>
+</div></section><section class="slide" data-pos="5-2-7">
+<span class="pos">5-2-7</span>
+<div class="slidecontent"><p>If we <strong>tried to bind to <code>aPrivateProp</code></strong> which hasn&#39;t been exposed via <code>@Input</code>, or a non-existent property, <strong>Angular would throw an error</strong>:</p>
+<p><img src="resources/images/inputerror.png" alt=""></p>
+<p>Notice how it <strong>points out the offending input</strong> with an <code>[ERROR-&gt;]</code> marker.</p>
+</div></section><section class="slide" data-pos="5-2-8">
+<span class="pos">5-2-8</span>
+<div class="slidecontent"><p>Interestingly, this is the <strong>exact same error</strong> we&#39;d see for <code>ngModel</code> if we <strong>forgot the <code>FormsModule</code></strong>!</p>
+<p><img src="resources/images/inputnoformerror.png" alt=""></p>
+</div></section><section class="slide" data-pos="5-2-9">
+<span class="pos">5-2-9</span>
+<div class="slidecontent"><p>That makes sense since <strong>native <code>input</code> elements have no <code>ngModel</code> prop</strong>. </p>
+<p>But it also <strong>reveals some interesting facts</strong>:</p>
+<ul>
+<li><strong>directives can have inputs too</strong></li>
+<li>we have <strong>already been using inputs</strong> without knowing it!</li>
+</ul>
+</div></section><section class="slide" data-pos="5-2-10">
+<span class="pos">5-2-10</span>
+<div class="slidecontent"><p>For example, we <strong>use <code>ngIf</code> by feeding it an expression</strong>:</p>
+<pre><code>&lt;<span class="hljs-keyword">div</span> *ngIf=<span class="hljs-string">"someFlag"</span>&gt;
+  shown only <span class="hljs-keyword">if</span> `someFlag` <span class="hljs-keyword">is</span> truthy!
+&lt;/<span class="hljs-keyword">div</span>&gt;
+</code></pre><p>Obviously <strong><code>ngIf</code> uses <code>[ngIf]</code> as selector</strong>, but if what we saw earlier is true, it must <strong>also define <code>ngIf</code> as an input</strong>!</p>
+</div></section><section class="slide" data-pos="5-2-11">
+<span class="pos">5-2-11</span>
+<div class="slidecontent"><p>And <strong>sure enough</strong>, in the <a href="https://github.com/angular/angular/blob/2.0.2/modules/%40angular/common/src/directives/ng_if.ts#L9-L51">source code</a> we see this:</p>
+<pre><code><span class="hljs-meta">@Directive</span>({selector: <span class="hljs-string">'[ngIf]'</span>})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> NgIf {
+  <span class="hljs-keyword">private</span> _hasView: <span class="hljs-built_in">boolean</span> = <span class="hljs-literal">false</span>;
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params">...</span>) {}
+  <span class="hljs-meta">@Input</span>()
+  <span class="hljs-keyword">set</span> ngIf(condition: <span class="hljs-built_in">any</span>) {
+    ...
+  }
+}
+</code></pre></div></section><section class="slide" data-pos="5-2-12">
+<span class="pos">5-2-12</span>
+<div class="slidecontent"><p>So the <strong>old AngularJS cliché still holds true</strong>;</p>
+<blockquote>
+<p>Angular is built with Angular</p>
+</blockquote>
+<p>Like in AngularJS, Angular defines a <strong>central infrastructure</strong>, and then uses that both to <strong>create built-in helpers</strong> and <strong>allow developer-made building blocks</strong>.</p>
+</div></section><section class="slide" data-pos="5-2-13">
+<span class="pos">5-2-13</span>
+<div class="slidecontent"><p>Btw, wanna now how to <strong>easily find the source code</strong> for some part of Angular? Easy:</p>
+<ul>
+<li>Go to the <strong><a href="https://angular.io/docs/ts/latest/api/">official API docs</a></strong></li>
+<li>Type in the <strong>name of the part in the search field</strong></li>
+<li>Click to <strong>get to the dedicated page</strong></li>
+<li>Find the <strong>source link in the bottom-right corner</strong></li>
+</ul>
+</div></section>
+</section>
+<!--ENDSECTION2-->
+<!--STARTSECTION3--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 3/6</div>
+      <h3>Receiving data</h3>
+      <p>here you go</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="5-3-1">
+<span class="pos">5-3-1</span>
+<div class="slidecontent"><p>Time to explore the other side of parenthood - <strong>children output</strong>!</p>
+<p><img src="resources/diagrams/parchildcom-output.svg" alt=""></p>
+</div></section><section class="slide question" data-pos="5-3-2">
+<span class="pos">5-3-2</span>
+<div class="slidecontent">
+<p>Let me guess -  we <strong>mark child properties with an <code>@Output</code> decorator</strong>?</p>
+</div></section><section class="slide answer" data-pos="5-3-3">
+<span class="pos">5-3-3</span>
+<div class="slidecontent">
+<p>You&#39;ve got it! :)</p>
+<p>But still, there&#39;s <strong>far more to the story</strong>...</p>
+</div></section><section class="slide" data-pos="5-3-4">
+<span class="pos">5-3-4</span>
+<div class="slidecontent"><p>Because if we were just to <strong>expose a regular property</strong>...</p>
+<pre><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Child</span> </span>{
+  <span class="hljs-meta">@Output()</span> someProp = <span class="hljs-string">'foo'</span>
+}
+</code></pre><p>...how would we <strong>connect to that in the parent</strong>?</p>
+</div></section><section class="slide" data-pos="5-3-5">
+<span class="pos">5-3-5</span>
+<div class="slidecontent"><p>A naïve approach could be a <strong>simple two-way data binding</strong> through simply <strong>binding to a prop in the parent</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">child</span> (<span class="hljs-attr">someProp</span>)=<span class="hljs-string">'parentProp'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">child</span>&gt;</span>
+</code></pre>
+<p>But this would <strong>fall apart quickly</strong>. What if I <strong>don&#39;t want to store the value</strong> but simply <strong>act when something happens</strong>?</p>
+<p>And <strong>how would I know when the value changes</strong>?</p>
+</div></section><section class="slide" data-pos="5-3-6">
+<span class="pos">5-3-6</span>
+<div class="slidecontent"><p>We&#39;ve actually <strong>already seen output from a parent perspective</strong> when we learned about <strong>event handling</strong>!</p>
+<p>There we were taught that for outputs we <strong>don&#39;t use template expressions</strong> but <strong>template statements</strong>!</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">child</span> (<span class="hljs-attr">someProp</span>)=<span class="hljs-string">'catchOutput($event);'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">child</span>&gt;</span>
+</code></pre>
+<p>We also saw that <strong>in this statement we can access <code>$event</code></strong> which <strong>contains the message from the child</strong>.</p>
+</div></section><section class="slide" data-pos="5-3-7">
+<span class="pos">5-3-7</span>
+<div class="slidecontent"><p>This makes sense - now I have <strong>code that triggers upon receiving the message</strong>, and I can <strong>do what I want</strong>.</p>
+<p>And as you&#39;ve already figured out, there&#39;s <strong>no difference to child component output</strong> and <strong>outputs from input elements</strong>.</p>
+</div></section><section class="slide" data-pos="5-3-8">
+<span class="pos">5-3-8</span>
+<div class="slidecontent"><p>Because the <strong>inputs are clad with the <code>ngModel</code> directive</strong>, who apparently are using <code>@Output</code>s under the hood.</p>
+<p>Again,</p>
+<blockquote>
+<p>Angular is built with Angular</p>
+</blockquote>
+</div></section><section class="slide question" data-pos="5-3-9">
+<span class="pos">5-3-9</span>
+<div class="slidecontent">
+<p>So, can you <strong>guess what <code>@Output</code>s look like</strong> in children?</p>
+<p>You&#39;ve already seen the answer, <strong>way back in the beginning of the course</strong>...</p>
+</div></section><section class="slide answer" data-pos="5-3-10">
+<span class="pos">5-3-10</span>
+<div class="slidecontent">
+<p>Now we finally get to see the main reason <strong>why Angular needs RxJS</strong> - you see, <strong>outputs are implemented through streams</strong>!</p>
+</div></section><section class="slide" data-pos="5-3-11">
+<span class="pos">5-3-11</span>
+<div class="slidecontent"><p>Thinking about it this makes a whole lot of sense - <strong>streams are an asynchronous chain of events</strong>, which is <strong>exactly what child outputs are</strong> too!</p>
+</div></section><section class="slide" data-pos="5-3-12">
+<span class="pos">5-3-12</span>
+<div class="slidecontent"><p>In <strong>Angular</strong> this means that <strong>output properties are <code>EventEmitter</code>s</strong>, which are <strong>streams that emit events of a given type</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Output</span>() whine = <span class="hljs-keyword">new</span> EventEmitter&lt;<span class="hljs-built_in">string</span>&gt;()
+</code></pre>
+<p>Using this the <strong>child will emit events</strong> to the parent:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">this</span>.whine.emit(<span class="hljs-keyword">this</span>.msg);
+</code></pre>
+<p><strong>See this in action</strong> in the <a href="resources/supportsite/demos/childoutput" target="_blank">Child output</a> demo.</p>
+</div></section><section class="slide" data-pos="5-3-13">
+<span class="pos">5-3-13</span>
+<div class="slidecontent"><p>And, speaking on <code>ngModel</code> - if we were to peek at that source, <strong>what could we expect</strong>?</p>
+<ul>
+<li>it should have an <strong><code>@Input</code> named <code>ngModel</code></strong></li>
+<li>it should have an <strong><code>@Output</code> named <code>ngModelChange</code></strong> (because of what the banana box syntax actually means)</li>
+<li>it is likely <strong>very complex</strong> :P</li>
+</ul>
+</div></section><section class="slide" data-pos="5-3-14">
+<span class="pos">5-3-14</span>
+<div class="slidecontent"><p>And indeed, if we <a href="https://github.com/angular/angular/blob/2.0.2/modules/%40angular/forms/src/directives/ng_model.ts#L108">go look</a>, that is <strong>exactly what we find</strong>!</p>
+</div></section><section class="slide" data-pos="5-3-15">
+<span class="pos">5-3-15</span>
+<div class="slidecontent"><p>Speaking of <strong>streams</strong> - we should also add that you <strong>can use them more heavily in your own code</strong> too.</p>
+<p>For an example, check out the <a href="resources/supportsite/demos/submitname_streams" target="_blank">Submitname with Streams</a> demo!</p>
+</div></section>
+</section>
+<!--ENDSECTION3-->
+<!--STARTSECTION4--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 4/6</div>
+      <h3>Passing elements</h3>
+      <p>Here you go, my child</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="5-4-1">
+<span class="pos">5-4-1</span>
+<div class="slidecontent"><p>When we looked at <strong>composition</strong>, we noted <strong>how parents and children communicate</strong>.</p>
+<p>But there is a scenario we haven&#39;t covered yet - what happens when we <strong>pass elements to a child</strong>?</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">child</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>What will happen to me?<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">child</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="5-4-2">
+<span class="pos">5-4-2</span>
+<div class="slidecontent"><p>Unless the child actively captures those elements, <strong>they will just disappear</strong>.</p>
+<p>However the child <strong>can capture the elements</strong> by including this in its template:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">ng-content</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">ng-content</span>&gt;</span>
+</code></pre>
+<p>See this in action in the <a href="resources/supportsite/demos/passingelements" target="_blank">Passing elements</a> demo.</p>
+</div></section><section class="slide" data-pos="5-4-3">
+<span class="pos">5-4-3</span>
+<div class="slidecontent"><p>The child can also <strong>split the elements up</strong> and show them in <strong>different places</strong> using the <code>select</code> attribute on <code>ng-content</code>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">ng-content</span> <span class="hljs-attr">select</span>=<span class="hljs-string">'header'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">ng-content</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ng-content</span> <span class="hljs-attr">select</span>=<span class="hljs-string">'footer'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">ng-content</span>&gt;</span>
+</code></pre>
+<p>See this in action in the <a href="resources/supportsite/demos/passingelements_split" target="_blank">Passing split elements</a> demo.</p>
+</div></section>
+</section>
+<!--ENDSECTION4-->
+<!--STARTSECTION5--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 5/6</div>
+      <h3>A composition case study</h3>
+      <p>Building a sharable component</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="5-5-1">
+<span class="pos">5-5-1</span>
+<div class="slidecontent"><p>In an Angular application <strong>components are your primary building block</strong>. It therefore stands to reason that you should <strong>consider each component API carefully</strong>:</p>
+<ul>
+<li>what <strong><code>@Input</code>s</strong> does it need?</li>
+<li>what <strong><code>@Output</code>s</strong> does it provide?</li>
+</ul>
+</div></section><section class="slide" data-pos="5-5-2">
+<span class="pos">5-5-2</span>
+<div class="slidecontent"><p>To wrap our brains around this, let&#39;s do a <strong>small case study</strong> where we <strong>implement a stand-alone UI component</strong> meant to be <strong>integrated into other apps</strong>.</p>
+<p>We&#39;ll be making a <strong>confirmation button</strong>!</p>
+</div></section><section class="slide" data-pos="5-5-3">
+<span class="pos">5-5-3</span>
+<div class="slidecontent"><p>It is meant to be <strong>used as a confirmation button in a form</strong>:</p>
+<p><img src="resources/images/confirm-standby.png" alt=""></p>
+</div></section><section class="slide" data-pos="5-5-4">
+<span class="pos">5-5-4</span>
+<div class="slidecontent"><p>But of course it is not just a regular button: when the <strong>user clicks the button</strong> it should <strong>allow confirmation and cancel</strong>:</p>
+<p><img src="resources/images/confirm-really.png" alt=""></p>
+<p>Only if the <strong>user chooses <code>confirm</code></strong> should the <strong>parent be notified</strong>, otherwise it just <strong>reverts to the previous standby mode</strong>.</p>
+</div></section><section class="slide" data-pos="5-5-5">
+<span class="pos">5-5-5</span>
+<div class="slidecontent"><p>Additionally we should <strong>allow the parent to disable the button</strong> if whatever data we&#39;re confirming is invalid, for instance if the field is empty:</p>
+<p><img src="resources/images/confirm-disabled.png" alt=""></p>
+</div></section><section class="slide" data-pos="5-5-6">
+<span class="pos">5-5-6</span>
+<div class="slidecontent"><p>So let&#39;s <strong>consider the API</strong> for this! We&#39;ll need...</p>
+<ul>
+<li>an <strong><code>@Output</code></strong> to emit <strong>confirmations</strong> to</li>
+<li>an <strong><code>@Input</code></strong> for <strong>whether or not we&#39;re disabled</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="5-5-7">
+<span class="pos">5-5-7</span>
+<div class="slidecontent"><p>Internally we&#39;ll also need to <strong>track our current <code>mode</code></strong>, which can be</p>
+<ul>
+<li><strong>standby</strong> - showing submit button</li>
+<li><strong>disabled</strong> - button should be greyed out</li>
+<li><strong>confirm</strong> - showing confirm and cancel</li>
+</ul>
+</div></section><section class="slide" data-pos="5-5-8">
+<span class="pos">5-5-8</span>
+<div class="slidecontent"><p>So the <strong>map for the component</strong> would be something like this:</p>
+<p><img src="resources/diagrams/confirmcomp.svg" alt=""></p>
+</div></section><section class="slide" data-pos="5-5-9">
+<span class="pos">5-5-9</span>
+<div class="slidecontent"><p>With our <strong>three modes in mind</strong>, we could <strong>implement the template</strong> like so:</p>
+<pre><code><span class="hljs-tag">&lt;<span class="hljs-name">span</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"mode !== 'confirm'"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"maybe()"</span> [<span class="hljs-attr">disabled</span>]=<span class="hljs-string">"mode === 'disabled'"</span>&gt;</span>
+    Submit
+  <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">span</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"mode === 'confirm'"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"changedmymind()"</span>&gt;</span>Cancel<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"yesimsure()"</span>&gt;</span>Confirm<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+</code></pre></div></section><section class="slide" data-pos="5-5-10">
+<span class="pos">5-5-10</span>
+<div class="slidecontent"><p>And here&#39;s the <strong>model to match</strong> that:</p>
+<pre><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConfirmComponent</span> </span>{
+  mode: <span class="hljs-string">'standby'</span> | <span class="hljs-string">'disabled'</span> | <span class="hljs-string">'confirm'</span> = <span class="hljs-string">'standby'</span>
+  <span class="hljs-meta">@Output()</span> confirm = new EventEmitter&lt;void&gt;()
+  <span class="hljs-meta">@Input()</span> <span class="hljs-keyword">set</span> disabled(bool: boolean){
+    <span class="hljs-keyword">this</span>.mode = bool ? <span class="hljs-string">'disabled'</span> : <span class="hljs-string">'standby'</span>
+  }
+  maybe() { <span class="hljs-keyword">this</span>.mode = <span class="hljs-string">'confirm'</span> }
+  changedmymind() { <span class="hljs-keyword">this</span>.mode = <span class="hljs-string">'standby'</span> }
+  yesimsure() { <span class="hljs-keyword">this</span>.confirm.emit(); <span class="hljs-keyword">this</span>.mode = <span class="hljs-string">'standby'</span> }
+}
+</code></pre></div></section><section class="slide" data-pos="5-5-11">
+<span class="pos">5-5-11</span>
+<div class="slidecontent"><p>Note how we&#39;re <strong>not explicitly tracking disabled</strong>, instead <strong>that input is a setter</strong> which manipulates <code>mode</code> accordingly:</p>
+<pre><code>@Input() <span class="hljs-function"><span class="hljs-keyword">set</span> <span class="hljs-title">disabled</span>(<span class="hljs-params"><span class="hljs-keyword">bool</span>: boolean</span>)</span>{
+  <span class="hljs-keyword">this</span>.mode = <span class="hljs-keyword">bool</span> ? <span class="hljs-string">'disabled'</span> : <span class="hljs-string">'standby'</span>
+}
+</code></pre><p>This pattern is <strong>somewhat common</strong> - an input <strong>doesn&#39;t have to be something we store</strong>, but can be <strong>used as a signal from the outside world</strong>.</p>
+</div></section><section class="slide" data-pos="5-5-12">
+<span class="pos">5-5-12</span>
+<div class="slidecontent"><p>You can <strong>try the component out</strong> in the <a href="resources/supportsite/demos/confirm" target="_blank">Confirm</a> demo.</p>
+<p>And again, the point of this little case study was to <strong>highlight the component perspective</strong>. Think of your app in terms of components, and think carefully about <strong>how they interact</strong>.</p>
+</div></section><section class="slide" data-pos="5-5-13">
+<span class="pos">5-5-13</span>
+<div class="slidecontent"><p>There is an <strong>alternative solution</strong> using a <strong>lifecycle hook</strong> instead of a getter here: <a href="resources/supportsite/demos/confirm_hook" target="_blank">Confirm-Hook</a></p>
+</div></section>
+</section>
+<!--ENDSECTION5-->
+<!--STARTSECTION6--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 6/6</div>
+      <h3>Gamebook - composition</h3>
+      <p>Matryoshka time</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="5-6-1">
+<span class="pos">5-6-1</span>
+<div class="slidecontent"><p>As before;</p>
+<ol>
+<li><strong>copy the folder of the previous version</strong>,</li>
+<li><strong>paste it</strong> right next to that version, and</li>
+<li>give it the name <strong><code>FF05-components</code></strong>.</li>
+</ol>
+</div></section><section class="slide" data-pos="5-6-2">
+<span class="pos">5-6-2</span>
+<div class="slidecontent"><p>Let&#39;s <strong>clean up our code</strong> a bit by using the <strong>component composition techniques</strong> we just learned about!</p>
+</div></section><section class="slide" data-pos="5-6-3">
+<span class="pos">5-6-3</span>
+<div class="slidecontent"><p>Specifically, we&#39;re going to <strong>abstract out a <code>SceneComponent</code></strong> from the <code>AppComponent</code>:</p>
+<p><img src="resources/diagrams/scenecomp.svg" alt=""></p>
+<p><code>SceneComponent</code> is <strong>given a <code>scene</code> object</strong> to render as input, and will <strong>output <code>option</code> objects</strong> when they are clicked.</p>
+</div></section><section class="slide list" data-pos="5-6-4">
+<span class="pos">5-6-4</span>
+<div class="slidecontent">
+<p>In other words, we need to...</p>
+<ul>
+<li><span>a</span>Create a <strong>new <code>scene.ts</code> file</strong> for <code>SceneComponent</code></li>
+<li><span>b</span><strong>Update <code>AppComponent</code></strong> to use the new component</li>
+<li><span>c</span><strong>Update the <code>NgModule</code> in main.ts</strong> to expose the new component</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="5-6-5">
+<span class="pos">5-6-5</span>
+<div class="slidecontent">
+<p>Since <strong><code>scene.ts</code> will contain much of what is now in <code>app.ts</code></strong>, let&#39;s <strong>make a copy of <code>app.ts</code></strong> and call it <code>scene.ts</code>!</p>
+</div></section><section class="slide" data-pos="5-6-6">
+<span class="pos">5-6-6</span>
+<div class="slidecontent"><p>In <strong><code>scene.ts</code></strong> we then need to...</p>
+<ul>
+<li><strong>Change the selector to something else</strong></li>
+<li><strong>Change the component name</strong> to <code>SceneComponent</code></li>
+<li><strong>Remove game status</strong>, that will reside in <code>AppComponent</code>.</li>
+<li><strong>Remove the <code>adventure</code> import</strong>, we don&#39;t need that</li>
+<li><strong>Change <code>scene</code> to be an <code>@Input</code></strong></li>
+<li><strong>Make the clickhandler an <code>@Output</code></strong></li>
+<li>Change the handler to <strong>emit clicked option objects</strong></li>
+<li><strong>Remove the adventure title</strong> from the template</li>
+</ul>
+</div></section><section class="slide num numB" data-pos="5-6-7">
+<span class="pos">5-6-7</span>
+<div class="slidecontent">
+<p>Back in <strong><code>app.ts</code></strong> we must..</p>
+<ul>
+<li>Change the template to <strong>use the scene element</strong></li>
+<li>But still show the <strong>adventure title</strong> above the scene</li>
+<li>Feed the scene element <strong>the current <code>scene</code></strong></li>
+<li><strong>Connect the scene element output to the click handler</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="5-6-8">
+<span class="pos">5-6-8</span>
+<div class="slidecontent"><p>If you took on the <strong>reset option challenge</strong> in the earlier exercise, we <strong>need <code>gameOver</code> state in both</strong> <code>AppComponent</code> and <code>SceneComponent</code>, and probably a <strong>new <code>Output</code> from <code>scene</code></strong> for the reset clicking.</p>
+<p>Alternatively, have the reset button in the <code>AppComponent</code> template instead, separate from the scene options.</p>
+</div></section><section class="slide num numC" data-pos="5-6-9">
+<span class="pos">5-6-9</span>
+<div class="slidecontent">
+<p>Finally, for <code>SceneComponent</code> to be available in the <code>AppComponent</code> template, we must <strong>add it to the <code>Declarations</code> array</strong> of our module in <code>module.ts</code>.</p>
+</div></section><section class="slide" data-pos="5-6-10">
+<span class="pos">5-6-10</span>
+<div class="slidecontent"><p>Now, after all that work, <strong>bundle</strong> and <strong>fire up the new version</strong>.</p>
+<p>And if everything went according to plan, <strong>things will work exactly as before</strong>!</p>
+</div></section>
+</section>
+<!--ENDSECTION6--><!--ENDCHAPTERCONTENT-->
+        
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var basehref = window.location.href.replace(/chapter\d.*?$/,'')
+
+      document.addEventListener("keydown",function(e){
+        var code = e.which || e.keyCode;
+        if (code===13){
+          window.location.href = basehref+"index.html?from="+(5-1);
+        } else if (code >= 49 && code <= 6+48) {
+          window.location.hash = "#/" + (code-48+1+0);
+        }
+        if (5 < 13) {
+          if (code===99){ // the letter C for next Chapter
+            window.location.href = basehref+"chapter"+(5+1)+".html"
+          }
+        }
+      });
+    </script>
+    <script src="mc2/scripts/head.js" type="text/javascript"></script>
+    <script src="mc2/scripts/reveal.js" type="text/javascript"></script>
+    <script src="mc2/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    showNotes: false,
+    transition: 'slide',
+    dependencies: [
+      { src: 'mc2/scripts/plugin/notes/notes.js', async: true }
+    ]
+  })
+
+    window.onload = function(){
+
+      var links = document.querySelectorAll("a.link");
+      for(var i=0;i<links.length;i++){
+        var link = links[i];
+        link.innerHTML = link.innerHTML.replace(/ /g,'&nbsp;')
+      }
+      var posElem = document.getElementById('pos')
+      function updateReference(){
+        setTimeout(function(){
+          var currentpos = document.querySelector('section.present[data-pos]')
+          if (currentpos){
+            posElem.innerHTML = currentpos.getAttribute('data-pos')
+          } else {
+            posElem.innerHTML = ''
+          }
+          if (document.querySelector('.present.chaptertitle')){
+            document.body.classList.add('atchaptertitle');
+          } else {
+            document.body.classList.remove('atchaptertitle');
+          }
+        },10)
+      }
+
+      window.addEventListener("hashchange",updateReference);
+
+      updateReference();
+    };
+
+    </script>
+    <!--STARTCOURSESPECIFICSCRIPTS--><script type="text/javascript" src="scripts/streams.js"></script><!--ENDCOURSESPECIFICSCRIPTS-->
+  </body>
+</html>

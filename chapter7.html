@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Forms</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="icon" type="image/x-icon" href="mc2/images/favicon.ico">
+
+    <link rel="stylesheet" href="mc2/styles/reveal.css">
+    <link rel="stylesheet" href="mc2/styles/theme.css" id="theme">
+    <link rel="stylesheet" href="mc2/styles/code.css">
+    <!--STARTCOURSESPECIFICSTYLES--><link rel="stylesheet" href="styles/mystyles.css">
+<link rel="stylesheet" href="styles/streams.css"><!--ENDCOURSESPECIFICSTYLES-->
+  </head>
+
+  <body>
+    <div id="pos"></div>
+    <div class="reveal">
+      <div class="slides">
+        <section class="slide chaptertitle">
+          <div class="slidecontent">
+            <div class="chapternumber"> chapter 7 of 13 </div>
+            <h1>Forms</h1>
+            <span>we all love them</p>
+</span>
+          </div>
+        </section>
+        
+        <!--STARTSECTIONINDEX--><section class="slide sectionlist">
+  <div class="slidecontent">
+    <h3>Sections in this chapter</h3>
+    <ol>
+    <li><a href="#/2">Two&#8209;way&nbsp;data&nbsp;binding</a></li>
+<li><a href="#/3">Forms</a></li>
+<li><a href="#/4">Validation</a></li>
+<li><a href="#/5">Reactive&nbsp;forms</a></li>
+<li><a href="#/6">Template&nbsp;referencing</a></li>
+<li><a href="#/7">Gamebook&nbsp;&#8209;&nbsp;extras</a></li>
+    </ol>
+  </div>
+</section>
+<!--ENDSECTIONINDEX-->
+        <!--STARTCHAPTERCONTENT--><!--STARTSECTION1--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 1/6</div>
+      <h3>Two-way data binding</h3>
+      <p>Going both ways at once</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="7-1-1">
+<span class="pos">7-1-1</span>
+<div class="slidecontent"><p>Before we can even begin to get into forms, we need to talk about <strong>two-way data binding</strong>. In essence, making a <strong>form element synced to a model value</strong>.</p>
+</div></section><section class="slide" data-pos="7-1-2">
+<span class="pos">7-1-2</span>
+<div class="slidecontent"><p>Previously we went <strong>full circle</strong> in the communication:</p>
+<p><img src="resources/diagrams/view-model.svg" alt=""></p>
+</div></section><section class="slide" data-pos="7-1-3">
+<span class="pos">7-1-3</span>
+<div class="slidecontent"><p>But there is a <strong>common special case</strong> that warrants extra mention - what if an element in the UI wants to <strong>both display and mutate</strong> a value?</p>
+</div></section><section class="slide" data-pos="7-1-4">
+<span class="pos">7-1-4</span>
+<div class="slidecontent"><p>Here is the <strong>simplest possible example</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> [<span class="hljs-attr">value</span>]=<span class="hljs-string">"name"</span> (<span class="hljs-attr">input</span>)=<span class="hljs-string">"name = $event.target.value"</span>&gt;</span>
+</code></pre>
+<p>The <code>input</code> element both <strong>reads and writes to the <code>name</code> model variable</strong>.</p>
+</div></section><section class="slide" data-pos="7-1-5">
+<span class="pos">7-1-5</span>
+<div class="slidecontent"><p>This means that <strong>if <code>name</code> was changed by someone else, the element would update</strong>!</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>
+  Edit name:
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> [<span class="hljs-attr">value</span>]=<span class="hljs-string">"name"</span> (<span class="hljs-attr">input</span>)=<span class="hljs-string">"name = $event.target.value"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"name = 'Batman'"</span>&gt;</span>put on costume<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>I'm {{name}}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+</code></pre>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> AppComponent {
+  name = <span class="hljs-string">'Bruce'</span>
+}
+</code></pre>
+</div></section><section class="slide" data-pos="7-1-6">
+<span class="pos">7-1-6</span>
+<div class="slidecontent"><p>We just did two-way binding on a <strong>text field</strong>...</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span>
+  [<span class="hljs-attr">value</span>]=<span class="hljs-string">"val"</span> (<span class="hljs-attr">input</span>)=<span class="hljs-string">"val = $event.target.value"</span>&gt;</span>
+</code></pre>
+<p>...but it works equally well on <strong>other input types</strong>, for instance a <strong>check box</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"checkbox"</span>
+  [<span class="hljs-attr">checked</span>]=<span class="hljs-string">"val"</span> (<span class="hljs-attr">change</span>)=<span class="hljs-string">"val = $event.target.checked"</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="7-1-7">
+<span class="pos">7-1-7</span>
+<div class="slidecontent"><p>If we compare them...</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span>
+  [<span class="hljs-attr">value</span>]=<span class="hljs-string">"val"</span> (<span class="hljs-attr">input</span>)=<span class="hljs-string">"val = $event.target.value"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"checkbox"</span>
+  [<span class="hljs-attr">checked</span>]=<span class="hljs-string">"val"</span> (<span class="hljs-attr">change</span>)=<span class="hljs-string">"val = $event.target.checked"</span>&gt;</span>
+</code></pre>
+<p>...we see that <strong>3 things differ</strong> depending on input type:</p>
+<ul>
+<li>The <strong>property name</strong> to bind to</li>
+<li>The <strong>event name</strong> to listen to</li>
+<li>The <strong>value location</strong> in the event object</li>
+</ul>
+</div></section><section class="slide" data-pos="7-1-8">
+<span class="pos">7-1-8</span>
+<div class="slidecontent"><p>To help <strong>abstract away these differences</strong>, Angular comes with a <strong>prebuilt <code>ngModel</code> directive</strong>. Our previous examples...</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span>
+  [<span class="hljs-attr">value</span>]=<span class="hljs-string">"val"</span> (<span class="hljs-attr">input</span>)=<span class="hljs-string">"val = $event.target.value"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"checkbox"</span>
+  [<span class="hljs-attr">checked</span>]=<span class="hljs-string">"val"</span> (<span class="hljs-attr">change</span>)=<span class="hljs-string">"val = $event.target.checked"</span>&gt;</span>
+</code></pre>
+<p>...would <strong>become this</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span>
+  [<span class="hljs-attr">ngModel</span>]=<span class="hljs-string">"val"</span> (<span class="hljs-attr">ngModelChange</span>)=<span class="hljs-string">"val = $event"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"checkbox"</span>
+  [<span class="hljs-attr">ngModel</span>]=<span class="hljs-string">"val"</span> (<span class="hljs-attr">ngModelChange</span>)=<span class="hljs-string">"val = $event"</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="7-1-9">
+<span class="pos">7-1-9</span>
+<div class="slidecontent"><p>Looking at the new code in detail...</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span>
+  [<span class="hljs-attr">ngModel</span>]=<span class="hljs-string">"val"</span> (<span class="hljs-attr">ngModelChange</span>)=<span class="hljs-string">"val = $event"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"checkbox"</span>
+  [<span class="hljs-attr">ngModel</span>]=<span class="hljs-string">"val"</span> (<span class="hljs-attr">ngModelChange</span>)=<span class="hljs-string">"val = $event"</span>&gt;</span>
+</code></pre>
+<p>...we see that <code>ngModel</code> <strong>dealt with the 3 differences</strong> like this:</p>
+<ul>
+<li>The <strong>property</strong> is exposed as <code>ngModel</code></li>
+<li>The <strong>event</strong> is exposed as <code>ngModelChange</code></li>
+<li>The event object becomes the <strong>value</strong></li>
+</ul>
+</div></section><section class="slide question" data-pos="7-1-10">
+<span class="pos">7-1-10</span>
+<div class="slidecontent">
+<p>Wait - sometimes there are <strong>many different events</strong> we could bind to, like on a text field.</p>
+<p><strong>How does <code>ngModel</code> decide the exact event</strong>?</p>
+</div></section><section class="slide answer" data-pos="7-1-11">
+<span class="pos">7-1-11</span>
+<div class="slidecontent">
+<p>Good question! It always go for the <strong>real-time approach</strong>.</p>
+</div></section><section class="slide question" data-pos="7-1-12">
+<span class="pos">7-1-12</span>
+<div class="slidecontent">
+<p>And, the <strong>homogenisation</strong> offered by <code>ngModel</code> seems like a <strong>very small win</strong>. What&#39;s the big deal?</p>
+<p>We&#39;re all web developers, we know what events and properties to bind to!</p>
+</div></section><section class="slide answer" data-pos="7-1-13">
+<span class="pos">7-1-13</span>
+<div class="slidecontent">
+<p>Again a good question! The win would indeed be small, if not for the fact that <strong>this exact pattern</strong>...</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> [<span class="hljs-attr">ngModel</span>]=<span class="hljs-string">"val"</span> (<span class="hljs-attr">ngModelChange</span>)=<span class="hljs-string">"val = $event"</span>&gt;</span>
+</code></pre>
+<p>...can be expressed with the <strong><code>bindon-</code> syntax</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">bindon-ngModel</span>=<span class="hljs-string">"val"</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="7-1-14">
+<span class="pos">7-1-14</span>
+<div class="slidecontent"><p>...and the <strong><code>bindon-</code> syntax</strong>...</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">bindon-ngModel</span>=<span class="hljs-string">"val"</span>&gt;</span>
+</code></pre>
+<p>...has a <strong>shorthand</strong>!</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> [(<span class="hljs-attr">ngModel</span>)]=<span class="hljs-string">"val"</span>&gt;</span>
+</code></pre>
+<p>This is lovingly called the <strong>banana box syntax</strong>.</p>
+</div></section><section class="slide" data-pos="7-1-15">
+<span class="pos">7-1-15</span>
+<div class="slidecontent"><p>So just to come full circle, our <strong>two previous examples</strong>...</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span>
+  [<span class="hljs-attr">value</span>]=<span class="hljs-string">"val"</span> (<span class="hljs-attr">input</span>)=<span class="hljs-string">"val = $event.target.value"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"checkbox"</span>
+  [<span class="hljs-attr">checked</span>]=<span class="hljs-string">"val"</span> (<span class="hljs-attr">change</span>)=<span class="hljs-string">"val = $event.target.checked"</span>&gt;</span>
+</code></pre>
+<p>...would <strong>become this</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> [(<span class="hljs-attr">ngModel</span>)]=<span class="hljs-string">"val"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"checked"</span> [(<span class="hljs-attr">ngModel</span>)]=<span class="hljs-string">"val"</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="7-1-16">
+<span class="pos">7-1-16</span>
+<div class="slidecontent"><p>To use <code>ngModel</code> you must have <strong>imported <code>FormsModule</code></strong> into your app module.</p>
+<pre><code><span class="hljs-keyword">import</span> { FormsModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;
+
+@NgModule({
+    imports: [ BrowserModule, FormsModule ],
+    <span class="hljs-regexp">//</span> ...<span class="hljs-keyword">and</span> the rest
+})
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AppModule</span> {}</span>
+</code></pre></div></section><section class="slide" data-pos="7-1-17">
+<span class="pos">7-1-17</span>
+<div class="slidecontent"><p>We <strong>recap this whole syntax trip</strong> in the <a href="resources/supportsite/demos/twoway" target="_blank">Two-way Databinding</a> demo.</p>
+</div></section><section class="slide question" data-pos="7-1-18">
+<span class="pos">7-1-18</span>
+<div class="slidecontent">
+<p>Would it be fair to say that <strong><code>ngModel</code> could have been called <code>ngModelValue</code></strong>, since it <strong>connects one value in the model to an input</strong>? </p>
+<p><img src="resources/diagrams/ngmodelvalue.svg" alt=""></p>
+</div></section><section class="slide answer" data-pos="7-1-19">
+<span class="pos">7-1-19</span>
+<div class="slidecontent">
+<p><strong>Yes</strong>!!</p>
+<p>(...although it <strong>also does more things</strong>, as we&#39;ll see later on when we talk about <strong>forms</strong>...)</p>
+</div></section>
+</section>
+<!--ENDSECTION1-->
+<!--STARTSECTION2--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 2/6</div>
+      <h3>Forms</h3>
+      <p>fill in the blanks</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="7-2-1">
+<span class="pos">7-2-1</span>
+<div class="slidecontent"><p>There are <strong>two different takes</strong> on forms in Angular:</p>
+<ul>
+<li><strong>Template-driven forms</strong> where the definitions are in the template. Similar to AngularJS, and likely the most common way of doing it.</li>
+<li><strong>Reactive forms</strong> (sometimes called model-driven) where the definition is in the class. More testable, scales better, but also more verbose.</li>
+</ul>
+<p>We&#39;ll <strong>focus primarily on template-driven forms</strong>, although with a quick look at reactive forms later on.</p>
+</div></section><section class="slide question" data-pos="7-2-2">
+<span class="pos">7-2-2</span>
+<div class="slidecontent">
+<p>Looking at the <a href="https://angular.io/docs/ts/latest/guide/forms.html">Forms section in the official docs</a>, or the index of any Angular book, there seems to be <strong>a whole lot to say about forms</strong>.</p>
+<p>Yet <strong>you only offer one measly section</strong>, how come?</p>
+</div></section><section class="slide answer" data-pos="7-2-3">
+<span class="pos">7-2-3</span>
+<div class="slidecontent">
+<p>Mainly because we&#39;re <strong>staying true to our manifesto</strong> - we want to <strong>explain the way of thinking</strong>, but not <strong>lose too much time on details</strong>.</p>
+<p>With forms you need to <strong>grokk the basic setup</strong>, which we&#39;re walking through here, after which it is easy enough to fill in the details.</p>
+</div></section><section class="slide" data-pos="7-2-4">
+<span class="pos">7-2-4</span>
+<div class="slidecontent"><p>Also, we actually have <strong>three sections</strong>, as we&#39;ll be looking at validation and reactive forms separately. :)</p>
+</div></section><section class="slide list" data-pos="7-2-5">
+<span class="pos">7-2-5</span>
+<div class="slidecontent">
+<p>So, now we&#39;re going to <strong>dig into template-driven forms</strong>! Specifically, we&#39;ll talk about:</p>
+<ul>
+<li><span>a</span>the <strong><code>ngForm</code> directive</strong></li>
+<li><span>b</span><strong>hooking up inputs</strong></li>
+<li><span>c</span><strong>aggregated info</strong></li>
+<li><span>d</span><strong>generated classes</strong></li>
+</ul>
+</div></section><section class="slide num numA" data-pos="7-2-6">
+<span class="pos">7-2-6</span>
+<div class="slidecontent">
+<p>The <strong><code>ngForm</code> directive</strong> is at the heart of it all. Angular will <strong>automatically create it on form elements</strong>.</p>
+<p>In other words, if we snoop at the <a href="https://github.com/angular/angular/blob/2.0.2/modules/%40angular/forms/src/directives/ng_form.ts#L62">source code</a>, we should see <strong><code>form</code> used as selector</strong>!</p>
+</div></section><section class="slide" data-pos="7-2-7">
+<span class="pos">7-2-7</span>
+<div class="slidecontent"><p>The <code>ngForm</code> directive contains a <strong>whole lot of functionality</strong> related to the form. Commonly you&#39;ll want to <strong>hook into this within the form</strong>, which is why it is a common practice to <strong>set a reference to it</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> #<span class="hljs-attr">f</span>=<span class="hljs-string">"ngForm"</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide num numB" data-pos="7-2-8">
+<span class="pos">7-2-8</span>
+<div class="slidecontent">
+<p>To <strong>make inputs part of the <code>ngForm</code> aggregation</strong>, we must:</p>
+<ul>
+<li><strong>use the <code>ngModel</code> directive</strong>, even if not bound to anything</li>
+<li>give it a <strong>name</strong>, as in regular HTML</li>
+</ul>
+<pre><code>&lt;<span class="hljs-selector-tag">input</span> name=<span class="hljs-string">"lastName"</span> ngModel&gt;
+</code></pre></div></section><section class="slide num numC" data-pos="7-2-9">
+<span class="pos">7-2-9</span>
+<div class="slidecontent">
+<p>Now, through <code>ngModel</code>, we can <strong>access aggregated info</strong> for the whole form and do things like <strong>checking overall validity</strong>...</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> [<span class="hljs-attr">disabled</span>]=<span class="hljs-string">"!f.form.valid"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"Submit"</span>&gt;</span>
+</code></pre>
+<p>...or <strong>accessing individual values</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"checkName(f.value.lastName)"</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide num numD" data-pos="7-2-10">
+<span class="pos">7-2-10</span>
+<div class="slidecontent">
+<p>Also, much like in AngularJS, there are lots of <strong>auto-generated CSS classes</strong> to make life easier:</p>
+<ul>
+<li><code>ng-pristine</code> and <code>ng-dirty</code></li>
+<li><code>ng-untouched</code> and <code>ng-touched</code></li>
+<li><code>ng-valid</code> and <code>ng-invalid</code></li>
+</ul>
+<p>These are applied to the <strong>form element</strong> as well as <strong>individual form controls</strong>.</p>
+</div></section><section class="slide" data-pos="7-2-11">
+<span class="pos">7-2-11</span>
+<div class="slidecontent"><p><strong>See it all in action</strong> in the <a href="resources/supportsite/demos/form" target="_blank">Form</a> demo!</p>
+</div></section>
+</section>
+<!--ENDSECTION2-->
+<!--STARTSECTION3--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 3/6</div>
+      <h3>Validation</h3>
+      <p>Attaching the polygraph</p>
+</p>
+    </div>
+  </section>
+  <section class="slide list" data-pos="7-3-1">
+<span class="pos">7-3-1</span>
+<div class="slidecontent">
+<p>Now for some <strong>words on validation</strong>! Specifically we&#39;ll discuss</p>
+<ul>
+<li><span>a</span>disabling native validation</li>
+<li><span>b</span>mimicking HTML5 validation</li>
+<li><span>c</span>checking validity</li>
+<li><span>d</span>writing custom validation</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="7-3-2">
+<span class="pos">7-3-2</span>
+<div class="slidecontent">
+<p>Modern browsers all have <strong>native validation behaviour</strong>, tying in to the HTML5 validation attributes. So if an <strong>input looks like this</strong>...</p>
+<pre><code>&lt;<span class="hljs-selector-tag">input</span> required&gt;
+</code></pre><p>...and the input is <strong>empty</strong>, the browser would <strong>somehow hint that it is currently invalid</strong>.</p>
+</div></section><section class="slide" data-pos="7-3-3">
+<span class="pos">7-3-3</span>
+<div class="slidecontent"><p>But in a web app you likely <strong>want control over that yourself</strong>! Fortunately HTML5 has an <strong>attribute to opt out</strong> - just attach <strong><code>novalidate</code></strong> on the form:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> #<span class="hljs-attr">f</span>=<span class="hljs-string">"ngForm"</span> <span class="hljs-attr">novalidate</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide num numB" data-pos="7-3-4">
+<span class="pos">7-3-4</span>
+<div class="slidecontent">
+<p>As you might have guessed, the <code>FormsModule</code> includes <strong>directives for all HTML5 validation arguments</strong>;</p>
+<ul>
+<li>required</li>
+<li>minlength</li>
+<li>maxlength</li>
+<li>pattern</li>
+</ul>
+</div></section><section class="slide" data-pos="7-3-5">
+<span class="pos">7-3-5</span>
+<div class="slidecontent"><p>In other words, <strong>simply use the attributes as you normally would</strong>, and they will be picked up by Angular.</p>
+</div></section><section class="slide num numC" data-pos="7-3-6">
+<span class="pos">7-3-6</span>
+<div class="slidecontent">
+<p>And, as we already spoiled in the previous section, you can <strong>access aggregated validation</strong> through <code>ngForm</code>, checking...</p>
+<ul>
+<li><strong>validity of individual elements</strong> or</li>
+<li>the <strong>form as a whole</strong>.</li>
+</ul>
+</div></section><section class="slide num numD" data-pos="7-3-7">
+<span class="pos">7-3-7</span>
+<div class="slidecontent">
+<p>Of course, still true to the...</p>
+<blockquote>
+<p>Angular is built with Angular</p>
+</blockquote>
+<p>...adage, the <strong>API that these directives were implemented with</strong> is <strong>available to you</strong>.</p>
+<p>Which means we can build <strong>custom validation</strong>!</p>
+</div></section><section class="slide" data-pos="7-3-8">
+<span class="pos">7-3-8</span>
+<div class="slidecontent"><p>Custom validators are simply <strong>directives</strong> that <strong>implement this <code>validate</code> method</strong>:</p>
+<pre><code>validate(ctrl: FormControl){
+  // <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span> <span class="hljs-keyword">if</span> valid, <span class="hljs-keyword">otherwise</span> { [category]: {valid: <span class="hljs-literal">false</span>} }
+}
+</code></pre></div></section><section class="slide" data-pos="7-3-9">
+<span class="pos">7-3-9</span>
+<div class="slidecontent"><p>To <strong>make Angular understand that the directive is a validator</strong>, we must dance this dance:</p>
+<pre><code>@Directive({
+  selector: '[<span class="hljs-string">myattribname</span>][<span class="hljs-symbol">ngModel</span>]',
+  providers: [{
+<span class="hljs-code">    provide: NG_VALIDATORS,</span>
+<span class="hljs-code">    useExisting: forwardRef(() =&gt; MyClassName),</span>
+<span class="hljs-code">    multi: true</span>
+  }]
+})
+class MyClassName { ... }
+</code></pre><p>This is <strong>likely to change</strong>, perhaps by introducing a new <code>@Validator</code> decorator.</p>
+</div></section><section class="slide" data-pos="7-3-10">
+<span class="pos">7-3-10</span>
+<div class="slidecontent"><p>You can <strong>see an example of this</strong> in the <a href="resources/supportsite/demos/validation" target="_blank">Custom validation</a> demo.</p>
+</div></section>
+</section>
+<!--ENDSECTION3-->
+<!--STARTSECTION4--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 4/6</div>
+      <h3>Reactive forms</h3>
+      <p>let the model do the driving</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="7-4-1">
+<span class="pos">7-4-1</span>
+<div class="slidecontent"><p>See:</p>
+<ul>
+<li><a href="resources/supportsite/demos/form_reactive" target="_blank">Reactive form</a> demo</li>
+<li><a href="resources/supportsite/demos/validation_reactive" target="_blank">Reactive validation</a> demo</li>
+</ul>
+</div></section>
+</section>
+<!--ENDSECTION4-->
+<!--STARTSECTION5--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 5/6</div>
+      <h3>Template referencing</h3>
+      <p>strings attached</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="7-5-1">
+<span class="pos">7-5-1</span>
+<div class="slidecontent"><p>Consider a <strong>simple app</strong> where we have</p>
+<ul>
+<li>the <strong>latest submitted name</strong></li>
+<li>an <strong>input field</strong> where you can type a new name</li>
+<li>a <strong>button which submits</strong> the input content</li>
+</ul>
+<p><img src="resources/images/submission.png" alt=""></p>
+</div></section><section class="slide" data-pos="7-5-2">
+<span class="pos">7-5-2</span>
+<div class="slidecontent"><p>This is a (slightly) <strong>more difficult problem</strong> than just doing a two-way data binding. Back then the <strong>change listener and value belong to the same element</strong>.</p>
+<p><img src="resources/diagrams/moredifficult.svg" alt=""></p>
+<p>But now they are on <strong>different elements</strong>!</p>
+</div></section><section class="slide" data-pos="7-5-3">
+<span class="pos">7-5-3</span>
+<div class="slidecontent"><p>We solve it in the <a href="resources/supportsite/demos/submitname_binding" target="_blank">Submit binding</a> demo by <strong>tracking the field content</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> [(<span class="hljs-attr">ngModel</span>)]=<span class="hljs-string">"fieldValue"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"submitName()"</span>&gt;</span>Submit!<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Latest submission: {{submission}}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+</code></pre>
+<p>...and <strong>use that for submission</strong> on clicks:</p>
+<pre><code class="lang-typescript">submitName() {
+  <span class="hljs-keyword">this</span>.submission = <span class="hljs-keyword">this</span>.fieldValue;
+}
+</code></pre>
+</div></section><section class="slide" data-pos="7-5-4">
+<span class="pos">7-5-4</span>
+<div class="slidecontent"><p>You could however argue that this is somewhat <strong>unclean</strong>, as <strong><code>fieldValue</code> isn&#39;t really part of our model</strong>.</p>
+<p>Still, we <strong>must have access to the field contents</strong>. Is there perhaps a way to <strong>reference</strong> the field to query its value?</p>
+</div></section><section class="slide" data-pos="7-5-5">
+<span class="pos">7-5-5</span>
+<div class="slidecontent"><p>Indeed there is, and they&#39;re called <strong>refs</strong>! Add it like this:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">ref-field</span>&gt;</span>
+</code></pre>
+<p>...and we can <strong>use that reference in siblings or children</strong> in the template:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"submitName(field.value)"</span>&gt;</span>click!<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="7-5-6">
+<span class="pos">7-5-6</span>
+<div class="slidecontent"><p>Much like with <code>bind-</code> and <code>on-</code>, there is a <strong>shorthand for the <code>ref-</code> prefix</strong>...</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">ref-field</span>&gt;</span>
+</code></pre>
+<p>...that uses the <strong><code>#</code> character instead</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> #<span class="hljs-attr">field</span>&gt;</span>
+</code></pre>
+<p><strong>Try this out</strong> in the <a href="resources/supportsite/demos/submitname_ref" target="_blank">Submit Reference</a> demo.</p>
+</div></section><section class="slide" data-pos="7-5-7">
+<span class="pos">7-5-7</span>
+<div class="slidecontent"><p>We can also <strong>reach refences from the model</strong> by using the <strong><code>@ViewChild</code></strong> decorator:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> AppComponent {
+  fetchedValue: <span class="hljs-built_in">string</span>
+  <span class="hljs-meta">@ViewChild</span>(<span class="hljs-string">'field'</span>) input: ElementRef
+  submitName() {
+    <span class="hljs-keyword">this</span>.fetchedValue = <span class="hljs-keyword">this</span>.input.nativeElement.value;
+  }
+}
+</code></pre>
+<p>Now we <strong>don&#39;t have to pass the reference from the template</strong>, which feels a bit cleaner. <strong>Try this out</strong> in the <a href="resources/supportsite/demos/submitname_viewchild" target="_blank">Submit ViewChild</a> demo.</p>
+</div></section><section class="slide" data-pos="7-5-8">
+<span class="pos">7-5-8</span>
+<div class="slidecontent"><p>We should also note that <strong><code>@ViewChild</code> can find node by other means than references</strong>, the API is very flexible.</p>
+</div></section>
+</section>
+<!--ENDSECTION5-->
+<!--STARTSECTION6--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 6/6</div>
+      <h3>Gamebook - extras</h3>
+      <p>i want more</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="7-6-1">
+<span class="pos">7-6-1</span>
+<div class="slidecontent"><p>As per usual;</p>
+<ol>
+<li><strong>copy the folder of the previous version</strong>,</li>
+<li><strong>paste it</strong> right next to that version, and</li>
+<li>give it the name <strong><code>FF07-moremoremore</code></strong>.</li>
+</ol>
+</div></section><section class="slide" data-pos="7-6-2">
+<span class="pos">7-6-2</span>
+<div class="slidecontent"><p>The smart thing would be to <strong>leave well enough alone</strong>, but that wouldn&#39;t be any fun.</p>
+<p>Instead, let&#39;s find an excuse to <strong>cram a form into our app</strong> somewhere! How about allowing the player to <strong>name his character</strong> and have the <strong>name be used in the adventure</strong>?</p>
+</div></section><section class="slide" data-pos="7-6-3">
+<span class="pos">7-6-3</span>
+<div class="slidecontent"><p>It could look <strong>something like this</strong>:</p>
+<p><img src="resources/images/nameform.png" alt=""></p>
+</div></section><section class="slide" data-pos="7-6-4">
+<span class="pos">7-6-4</span>
+<div class="slidecontent"><p>Ideally we would want to <strong>display the form when the game starts</strong>, but that would require a bunch of other changes.</p>
+<p>So let&#39;s go with simply <strong>always showing the form up top</strong>, as in the previous screenshot.</p>
+</div></section><section class="slide list" data-pos="7-6-5">
+<span class="pos">7-6-5</span>
+<div class="slidecontent">
+<p>Here&#39;s the plan:</p>
+<ul>
+<li><span>a</span><strong>add <code>name</code> to <code>gameState</code></strong></li>
+<li><span>b</span>create a <strong><code>NameForm</code> component</strong></li>
+<li><span>c</span><strong>hook up <code>NameForm</code></strong> to <code>AppComponent</code></li>
+<li><span>d</span>make <strong><code>SceneComponent</code> receive <code>gameState</code></strong></li>
+<li><span>e</span>put <strong>name placeholders in adventure data</strong></li>
+<li><span>f</span>make a <strong>playername pipe</strong></li>
+<li><span>g</span>have <strong><code>SceneComponent</code> use the pipe</strong></li>
+<li><span>h</span><strong>wire everything up</strong></li>
+</ul>
+</div></section><section class="slide num numA" data-pos="7-6-6">
+<span class="pos">7-6-6</span>
+<div class="slidecontent">
+<p>First we must <strong>change <code>gameState</code></strong> to also <strong>contain the name</strong>. This means...</p>
+<ul>
+<li>make the <strong>default state contain a name</strong> in the <code>StateHandler</code> load method</li>
+<li>update the <strong>TypeScript interface</strong> if you&#39;re using those</li>
+</ul>
+</div></section><section class="slide num numB" data-pos="7-6-7">
+<span class="pos">7-6-7</span>
+<div class="slidecontent">
+<p>Now for the tough part - creating a <strong><code>NameForm</code> component</strong>!</p>
+<p><img src="resources/diagrams/formcomp.svg" alt=""></p>
+<p>It will</p>
+<ul>
+<li>receive the <strong>current name as input</strong></li>
+<li><strong>output the new name</strong> on form submission</li>
+</ul>
+</div></section><section class="slide" data-pos="7-6-8">
+<span class="pos">7-6-8</span>
+<div class="slidecontent"><p>In other words, the <strong><code>NameForm</code> class</strong> should look something like this:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> NameForm {
+  <span class="hljs-meta">@Input</span>() currentName: <span class="hljs-built_in">string</span>
+  <span class="hljs-meta">@Output</span>() newName = <span class="hljs-keyword">new</span> EventEmitter&lt;<span class="hljs-built_in">string</span>&gt;()
+  onSubmit(plrname: <span class="hljs-built_in">string</span>){
+    <span class="hljs-keyword">this</span>.newName.emit(plrname)
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="7-6-9">
+<span class="pos">7-6-9</span>
+<div class="slidecontent"><p>The <strong><code>NameForm</code> template</strong> is of course the complicated part, but you can <strong>steal pretty much everything</strong> from the <a href="resources/supportsite/demos/form" target="_blank">Form</a> demo!</p>
+<p>As in the demo you should have <strong>some simple validation</strong>, like a minimum (and maybe maximum) character count.</p>
+</div></section><section class="slide num numC" data-pos="7-6-10">
+<span class="pos">7-6-10</span>
+<div class="slidecontent">
+<p>Now let&#39;s <strong>use <code>NameForm</code> in <code>AppComponent</code></strong>! This means...</p>
+<ul>
+<li><strong>adding <code>NameForm</code> to the template</strong></li>
+<li><strong>passing in the current name</strong></li>
+<li>creating a <strong><code>newName</code> method that updates <code>gameState</code></strong> (and remember to save!)</li>
+<li><strong>hook up <code>newName</code> to <code>NameForm</code> output</strong></li>
+</ul>
+</div></section><section class="slide num numD" data-pos="7-6-11">
+<span class="pos">7-6-11</span>
+<div class="slidecontent">
+<p>Since the <strong><code>SceneComponent</code> will need the player name</strong>, we might as well <strong>pass it all of <code>gameState</code></strong>.</p>
+<p>Normally we&#39;d be <strong>wary to share too much</strong>, but it stands to reason that <strong>future state</strong> such as inventory, health, etc, would <strong>also be shown in the scene view</strong>.</p>
+</div></section><section class="slide num numE" data-pos="7-6-12">
+<span class="pos">7-6-12</span>
+<div class="slidecontent">
+<p>Time to <strong>update the adventure data</strong> to use the name! Add a <code>PLAYERNAME</code> placeholder to relevant positions in the texts.</p>
+</div></section><section class="slide num numF" data-pos="7-6-13">
+<span class="pos">7-6-13</span>
+<div class="slidecontent">
+<p>Now we need to <strong>create a pipe to exchange the placeholder</strong>!</p>
+<p>If you haven&#39;t already, look at the <strong>Pipe section</strong> in the <strong>Appendix Various chapter</strong>, and also the <strong><a href="resources/supportsite/demos/pipe" target="_blank">Pipe</a> demo</strong>.</p>
+</div></section><section class="slide" data-pos="7-6-14">
+<span class="pos">7-6-14</span>
+<div class="slidecontent"><p>Our pipe should take a block of text and <strong>replace <code>PLAYERNAME</code> with the current name</strong>.</p>
+<p>How do we get hold of playername? Why, by using the <strong>StateHandler service</strong> of course!</p>
+</div></section><section class="slide" data-pos="7-6-15">
+<span class="pos">7-6-15</span>
+<div class="slidecontent"><p>Note that to force our pipe to be applied whenever something changes, we <strong>must set it to be impure</strong> (see the last part of the Pipe section).</p>
+</div></section><section class="slide num numG" data-pos="7-6-16">
+<span class="pos">7-6-16</span>
+<div class="slidecontent">
+<p>With that done we must <strong>use the pipe in the <code>SceneComponent</code> template</strong> where we display the scene text:</p>
+<pre><code>{{currentScene.desc | plrname}}
+</code></pre></div></section><section class="slide num numH" data-pos="7-6-17">
+<span class="pos">7-6-17</span>
+<div class="slidecontent">
+<p>Finally we must wire things up by <strong>updating our <code>NgModule</code></strong> to <strong>expose the <code>NameForm</code> and the new pipe</strong>.</p>
+</div></section><section class="slide" data-pos="7-6-18">
+<span class="pos">7-6-18</span>
+<div class="slidecontent"><p>That was a long treck, but now you should have a <strong>fully functioning personalised adventure</strong>, increasing the immersion a thousand times! :)</p>
+</div></section>
+</section>
+<!--ENDSECTION6--><!--ENDCHAPTERCONTENT-->
+        
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var basehref = window.location.href.replace(/chapter\d.*?$/,'')
+
+      document.addEventListener("keydown",function(e){
+        var code = e.which || e.keyCode;
+        if (code===13){
+          window.location.href = basehref+"index.html?from="+(7-1);
+        } else if (code >= 49 && code <= 6+48) {
+          window.location.hash = "#/" + (code-48+1+0);
+        }
+        if (7 < 13) {
+          if (code===99){ // the letter C for next Chapter
+            window.location.href = basehref+"chapter"+(7+1)+".html"
+          }
+        }
+      });
+    </script>
+    <script src="mc2/scripts/head.js" type="text/javascript"></script>
+    <script src="mc2/scripts/reveal.js" type="text/javascript"></script>
+    <script src="mc2/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    showNotes: false,
+    transition: 'slide',
+    dependencies: [
+      { src: 'mc2/scripts/plugin/notes/notes.js', async: true }
+    ]
+  })
+
+    window.onload = function(){
+
+      var links = document.querySelectorAll("a.link");
+      for(var i=0;i<links.length;i++){
+        var link = links[i];
+        link.innerHTML = link.innerHTML.replace(/ /g,'&nbsp;')
+      }
+      var posElem = document.getElementById('pos')
+      function updateReference(){
+        setTimeout(function(){
+          var currentpos = document.querySelector('section.present[data-pos]')
+          if (currentpos){
+            posElem.innerHTML = currentpos.getAttribute('data-pos')
+          } else {
+            posElem.innerHTML = ''
+          }
+          if (document.querySelector('.present.chaptertitle')){
+            document.body.classList.add('atchaptertitle');
+          } else {
+            document.body.classList.remove('atchaptertitle');
+          }
+        },10)
+      }
+
+      window.addEventListener("hashchange",updateReference);
+
+      updateReference();
+    };
+
+    </script>
+    <!--STARTCOURSESPECIFICSCRIPTS--><script type="text/javascript" src="scripts/streams.js"></script><!--ENDCOURSESPECIFICSCRIPTS-->
+  </body>
+</html>

@@ -1,0 +1,25 @@
+digraph {
+  bgcolor = transparent
+  rankdir = TD
+
+  statement -> effect [dir=none]
+  expression -> value [dir=none]
+
+  statement [label="statement"]
+  expression [label="expression"]
+
+  effect [label="is an\ninstruction"]
+  value [label="has a\nvalue"]
+
+  effect, value [shape=box]
+
+  statement -> expression [color=transparent]
+
+  statement -> expression [style=dashed,label="sometimes\ncontains\nor is an"]
+
+  statement -> expression [color=transparent]
+
+
+  {rank=same;statement,expression}
+  {rank=same;effect,value}
+}

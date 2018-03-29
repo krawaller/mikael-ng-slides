@@ -1,0 +1,35 @@
+digraph {
+  rankdir = LR;
+  bgcolor = transparent
+  # EC2 [label="", color=transparent]
+  #EC2 -> EC3
+  EC3 [label="ECMAScript 3"]
+  EC4 [label="ECMAScript 4\n(never completed)", style=dashed]
+  EC5 [label="ECMAScript 5"]
+  EC6 [label="ECMAScript 2015\n(ES6, ES.next, Harmony)"]
+  EC7 [label="ECMAScript 2016\n(ES7)"]
+  EC8 [label=".", style=dashed, color=transparent, fontcolor=transparent]
+  EC3 -> EC4 [style=dashed]
+  EC3 -> EC5 -> EC6 -> EC7
+  EC7 -> EC8 [style=dashed]
+
+  EC3desc [label="\"old\" JavaScript"]
+  EC4desc [label="too many features\nto count", style=dashed]
+  EC5desc [label="strict mode,\nstatic methods, ..."]
+  EC6desc [label="modules, classes,\narrow functions, ..."]
+  EC7desc [label="very small release"]
+
+  EC3 -> EC3desc [arrowhead=none]
+  EC4 -> EC4desc [arrowhead=none, style=dashed]
+  EC5 -> EC5desc [arrowhead=none]
+  EC6 -> EC6desc [arrowhead=none]
+  EC7 -> EC7desc [arrowhead=none]
+
+  {rank=same; EC3, EC3desc}
+  {rank=same; EC4, EC4desc}
+  {rank=same; EC5, EC5desc}
+  {rank=same; EC6, EC6desc}
+  {rank=same; EC7, EC7desc}
+
+  EC3desc, EC4desc, EC5desc, EC6desc, EC7desc [shape=box]
+}

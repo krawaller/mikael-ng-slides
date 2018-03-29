@@ -1,0 +1,18 @@
+digraph {
+  bgcolor = transparent
+  rankdir = TD
+  Component -> View
+  Component -> Model
+  Model -> properties
+  Model -> methods
+  Model -> hooks
+  View -> selector
+  View -> template
+
+  View [label="View\n(metadata)"]
+  Model [label="Model\n(class)"]
+
+  properties -> template [constraint=none, color=red]
+  template -> methods [constraint=none, color=red]
+  methods -> properties [constraint=none, color=red]
+}

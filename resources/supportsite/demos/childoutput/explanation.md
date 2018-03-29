@@ -1,0 +1,1 @@
+Demonstrating receiving output from a child component.

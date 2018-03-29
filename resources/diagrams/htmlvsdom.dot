@@ -1,0 +1,21 @@
+digraph {
+  bgcolor = transparent
+  rankdir = LR
+  html -> attribute [dir=none]
+  dom -> property [dir=none]
+
+  {rank=same;html,attribute}
+  {rank=same;dom,property}
+
+  html -> dom [label="spawns"]
+
+  html [label="HTML\nelement"]
+  dom [label="DOM\nnode"]
+
+  attribute, property [shape=box]
+  attribute [label="attributes"]
+  property [label="properties"]
+
+  attribute -> property [label="initializes\n(sometimes)"]
+
+}

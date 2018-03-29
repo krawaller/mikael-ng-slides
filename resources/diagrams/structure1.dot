@@ -1,0 +1,11 @@
+digraph {
+  rankdir = TD;
+  bgcolor = transparent;
+  c1, c2, c3, c4, c5, c6 [label="Comp"];
+  c1 -> c2
+  c1 -> c3
+  c2 -> c4
+  c2 -> c5
+  c3 -> c6
+  c3 -> c5 [color=transparent]
+}

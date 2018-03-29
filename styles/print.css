@@ -1,0 +1,34 @@
+.equality {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.equality img {
+  border: 0;
+  height: 140px;
+  display: inline-block;
+  background: none;
+  box-shadow: none;
+}
+
+.equality span {
+  display: inline-block;
+  padding: 0 15px;
+  font-size: 70px;
+}
+
+
+img[src="resources/images/ffexample.png"],
+img[src="resources/images/ff.jpg"]
+ {
+  max-width: 250px;
+}
+
+.poop {scoop:true;}
+
+img[src="resources/images/smileyupsidedown.svg"] {
+  max-width: 40px !important;
+  margin: 0 !important;
+  margin-left: 200px !important;
+}

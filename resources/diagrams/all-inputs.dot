@@ -1,0 +1,8 @@
+digraph {
+  bgcolor = transparent
+  rankdir = TD
+  inputs -> component
+  dependencies -> component
+  elements -> component
+  component [shape=box]
+}

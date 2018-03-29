@@ -1,0 +1,17 @@
+digraph {
+  bgcolor = transparent
+  rankdir = TD
+
+  HTML -> nested [dir=none]
+  JS -> logic [dir=none]
+  Template -> needs [dir=none]
+  Angular -> choseng2 [dir=none]
+  React -> choser [dir=none]
+
+  nested [shape=box,label="expresses\nnested data"]
+  logic [shape=box,label="expresses\nlogic"]
+  needs [shape=box,label="needs data\nand logic"]
+  choseng2 [shape=box,label="chose\nHTML+logic"]
+  choser [shape=box,label="chose\nJS+nested data"]
+
+}

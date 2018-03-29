@@ -1,0 +1,1 @@
+Demonstrating a stand-alone component usage.

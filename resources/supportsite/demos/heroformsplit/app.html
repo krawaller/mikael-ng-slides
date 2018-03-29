@@ -1,0 +1,8 @@
+<div class="container">
+  <div *ngIf="editmode">
+    <heroform [model]="model" (submit)="onSubmit($event)"></heroform>
+  </div>
+  <div *ngIf="!editmode">
+    <submission [model]="model" (edit)="onEdit()"></submission>
+  </div>
+</div>

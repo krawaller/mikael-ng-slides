@@ -1,0 +1,24 @@
+digraph {
+  bgcolor = transparent
+  rankdir = LR
+  subgraph cluster_source {
+    label="source code"
+    file3 -> file2 -> root
+    file1 -> root
+  }
+  subgraph cluster_build {
+    label="build step"
+    webpack
+    webpack2 [label="webpack"]
+    compileTemplBuild
+  }
+  subgraph cluster_run {
+    label="browser runtime"
+    SystemJS
+    compileTemplates -> run
+    {rank=same;SystemJS,compileTemplates}
+  }
+  root -> compileTemplBuild -> webpack2 -> run
+  root -> webpack -> compileTemplates
+  root -> SystemJS -> compileTemplates
+}

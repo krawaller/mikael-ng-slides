@@ -1,0 +1,21 @@
+digraph {
+  rankdir = TD;
+  bgcolor = transparent;
+  c1, c2, c3, c4, c5, c6 [label="Comp"];
+  c1 -> c2
+  c1 -> c3
+  c2 -> c4
+  c2 -> c5
+  c3 -> c6
+  c3 -> c5 [color=transparent]
+
+  s1, s2 [label="Dep", shape="rectangle", color=blue, fontcolor=blue];
+
+  s1 -> c1 [constraint=none, color=blue];
+  s1 -> c2 [constraint=none, color=blue];
+  s2 -> c2 [constraint=none, color=blue];
+  s2 -> c5 [constraint=none, color=blue];
+
+  {rank=same; c1, s1}
+  {rank=same; c2, s2}
+}

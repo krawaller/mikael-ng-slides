@@ -1,0 +1,30 @@
+digraph {
+  rankdir = TD
+  bgcolor = transparent
+
+  subgraph cluster_before {
+    label="before"
+    input -> event
+    input -> value [dir=back]
+    event -> value [style=dashed]
+    {rank=same; event, value}
+  }
+
+  invis [label=" ",color=transparent,fontcolor=transparent,bgcolor=transparent]
+
+  subgraph cluster_now {
+    label="now"
+    input2 [label="input"]
+    value2 [label="value"]
+    event2 [label="event"]
+    input2 -> value2 [dir=back]
+    button -> event2
+    event2 -> value2 [style=dashed]
+    button -> input2 [dir=back, color=red, label="?", fontcolor=red]
+    {rank=same;button,input2}
+    {rank=same;event2,value2}
+  }
+
+  value, value2, event, event2 [shape=box]
+
+}

@@ -1,0 +1,41 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  start [label="import path"]
+  iscore [shape=diamond, label="is core?"]
+  ispath [shape=diamond, label="path begins\nwith './', '/' or '../'?"]
+  isfile [shape=diamond, label="is file?"]
+  ispack [shape=diamond, label="dir has\npackage.json?"]
+  ismain [shape=diamond, label="package.json\nspecifies main?"]
+
+  module [shape=box, label="set path to\nnode_modules/path"]
+
+  loadfile [label="load file\nat path"]
+  loadcore [label="load core\nmodule"]
+  loadmain [label="load file\nspecified in `main`"]
+  loadindex [label="load index.js\nat path"]
+
+  start -> iscore
+  iscore -> ispath [label="no"]
+  iscore -> loadcore [label="yes"]
+  ispath:e -> module:w [label="no"]
+  ispath -> isfile [label="yes"]
+  module -> isfile
+  isfile -> ispack [label="no"]
+  isfile -> loadfile [label="yes"]
+  ispack:e -> ismain:w [label="yes"]
+  ispack -> loadindex [label="no"]
+  ismain -> loadmain [label="yes"]
+  ismain -> loadindex [label="no"]
+
+  loadindex -> loadmain [color=transparent]
+  module -> ispack [color=transparent]
+  module -> bogus [color=transparent]
+  bogus -> ismain [color=transparent]
+  bogus [label=" ", color=transparent, fontcolor=transparent]
+
+  {rank=same; isfile, ispath, loadfile}
+  {rank=same; iscore, loadcore}
+  {rank=same; module, ispack, loadindex}
+  {rank=same; ismain, loadmain, bogus}
+}

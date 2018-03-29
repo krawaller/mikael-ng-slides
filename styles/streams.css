@@ -1,0 +1,165 @@
+
+
+/*
+The main container for a single stream. The background-color here will be covered up once it goes
+active when a user clicks on it.
+*/
+body div.stream {
+  height: 50px;
+  background-color: #3884B9;
+  display: flex;
+  margin-top: 1em;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+/*
+The box to the left inside a stream that described the stream (and sometimes holds html controls).
+This box is invisible until the stream has started.
+*/
+div.stream .streamdescription {
+  width: 130px;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+
+  background-color: #3884B9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: opacity 0.6s ease;
+  opacity: 0;
+  font-size: 15px;
+  padding: 0 5px;
+}
+
+div.stream.streamstarted > .streamdescription {
+  opacity: 1;
+}
+
+/*
+The part to the right of the description where actual events are shown in a stream.
+*/
+div.stream .streamevents {
+  background-color: #EAEAEA;
+  flex-grow: 1;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+div.stream.streamstarted > .streamevents {
+  opacity: 1;
+}
+
+/*
+This creates the dashed line inside the streamevents container.
+*/
+div.stream .streamevents:before {
+  content: " ";
+  display: block;
+  position: absolute;
+  height: 1px;
+  width: 100%;
+  margin-top: 25px;
+  border-top: 1px dashed #CCC;
+}
+
+
+/*
+A single event bubble in the stream! It will move rightwards using a transition,
+and then be programmatically removed
+*/
+div.stream .streamevents > .streamevent {
+  border: 2px solid #282828;
+  display: inline;
+  position: absolute;
+  background-color: transparent;
+  top: 10px;
+  padding: 4px 10px;
+  left: -25px;
+  transition: left 8s linear;
+  background-color: white;
+  z-index: 10;
+  font-size: 16px;
+  color: #282828;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+div.stream .streamevent.streamactive {
+  left: 105%;
+}
+
+/*
+The stream definition. Shown in larger size before the stream is started, then animated down to
+the bottom right corner.
+*/
+div.stream .streamcode {
+  position: absolute;
+  font-family: monospace;
+  right: 24px;
+  font-size: 16px;
+  color: #FFF;
+  bottom: 15px;
+  transition: right 0.6s ease, bottom 0.6s ease, color 0.6s ease, font-size 0.6s ease;
+}
+
+div.stream.streamstarted .streamcode {
+  font-size: 12px;
+  right: 4px;
+  color: #000;
+  bottom: 1px;
+}
+div#stream_pong .streamnotstarted .streamcode {
+    font-size: 16px; /* because this stream's code is too damn long to fit otherwise :) */
+}
+
+
+
+
+/*
+The ID of the stream, shown because sometimes stream codes contain references to other streams.
+Before a stream is started it is shown in large size to the left, then it is made smaller and
+animated slightly to the right in order to leave room for the stream description.
+*/
+div.stream .streamid {
+  font-size: 29px;
+  top: 4px;
+  color: #FFF;
+  left: 9px;
+  position: absolute;
+  font-family: monospace;
+  transition: left 0.6s ease, top 0.6s ease, font-size 0.6s ease, color 0.6s ease;
+  z-index: 5;
+}
+
+div.stream.streamstarted .streamid {
+  top: 0;
+  left: 144px;    /* Keep in sync with streamdescription length!! (+4) */
+  font-size: 12px;
+  color: #000;
+}
+
+
+    /** i moved the button styles to the main speech.css, to apply them to all stream + app buttons! **/
+
+
+
+/*
+Below are just some minor styles for specific stream descriptions
+*/
+
+div.stream .streamdescription input {
+  max-width: 100px;
+}
+
+div.stream #bluesquare {
+  background-color: blue;
+  color: white;
+}

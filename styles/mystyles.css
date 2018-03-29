@@ -1,0 +1,73 @@
+/** my course-specific styles **/
+
+.reveal img[src^="resources/diagrams/"] {
+    background-color: #EEE;
+    border-radius: 13px;
+    padding: 7px;
+}
+
+.reveal img[src^="resources/images/confirm"] {
+    border: none;
+    background: none;
+    box-shadow: none;
+}
+
+.needsblocklists ul {
+  display: block;
+}
+
+
+
+/*
+The Equality boxes are also prevalent throughout
+*/
+.equality {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.reveal section .equality img {
+  border: 0;
+  height: 140px;
+  display: inline-block;
+  background: none;
+  box-shadow: none;
+  border: none;
+}
+
+.equality span {
+  display: inline-block;
+  padding: 0 15px;
+  font-size: 70px;
+}
+
+
+
+.reveal a[href^="resources/supportsite/demos/"] {
+  display: inline-block;
+  border-radius: 15px;
+  padding: 1px;
+  background-color: white;
+  text-decoration: none;
+  padding-left: 27px;
+  padding-right: 7px;  
+  background-position: 3px center;
+  background-repeat: no-repeat;
+  font-family: monospace;
+  background-image: url(../resources/images/monitor24.png);
+  font-size: 0.8em;
+}
+
+
+.smaller {
+    font-size: 0.4em !important;
+}
+
+.small {
+    font-size: 0.6em !important;
+}
+
+.medium {
+    font-size: 0.8em !important;
+}

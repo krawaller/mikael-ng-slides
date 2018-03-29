@@ -1,0 +1,1 @@
+Demonstrating how to pass elements to a component.

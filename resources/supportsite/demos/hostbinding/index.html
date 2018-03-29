@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo</title>
+
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+</head>
+
+<body data-demoid="hostbinding">
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div data-file='main_ts'>main.ts</div><div data-file='app_ts'>app.ts</div><div data-file='togglable_ts'>togglable.ts</div><div data-file='togglable2_ts'>togglable2.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule, Component }      <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-keyword">import</span> { AppComponent  } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app'</span>;
+<span class="hljs-keyword">import</span> Togglable <span class="hljs-keyword">from</span> <span class="hljs-string">'./togglable'</span>
+<span class="hljs-keyword">import</span> Togglable2 <span class="hljs-keyword">from</span> <span class="hljs-string">'./togglable2'</span>
+
+
+<span class="hljs-meta">@NgModule</span>({
+    imports:      [ BrowserModule ],
+    declarations: [ AppComponent, Togglable, Togglable2 ],
+    bootstrap:    [ AppComponent ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);</code></pre><pre id='app_ts-source'><code><span class="hljs-keyword">import</span> { Component, HostListener } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+
+<span class="hljs-keyword">import</span> Togglable <span class="hljs-keyword">from</span> <span class="hljs-string">'./togglable'</span>
+<span class="hljs-keyword">import</span> Togglable2 <span class="hljs-keyword">from</span> <span class="hljs-string">'./togglable2'</span>
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">`
+    &lt;p togglable&gt;Click to make me highlighted!&lt;/p&gt;
+    &lt;p togglable2="pretty"&gt;Click to make me pretty!&lt;/p&gt;
+  `</span>,
+  styles: [<span class="hljs-string">'.pretty { border: 3px solid red; }'</span>,<span class="hljs-string">'.highlighted { border: 3px solid yellow; }'</span>]
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {}
+</code></pre><pre id='togglable_ts-source'><code><span class="hljs-keyword">import</span> { Directive, HostBinding, HostListener } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+
+<span class="hljs-meta">@Directive</span>({
+  selector: <span class="hljs-string">'[togglable]'</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> Togglable {
+  <span class="hljs-meta">@HostListener</span>(<span class="hljs-string">'click'</span>) toggle() { <span class="hljs-keyword">this</span>.toggled = !<span class="hljs-keyword">this</span>.toggled }
+  <span class="hljs-meta">@HostBinding</span>(<span class="hljs-string">'class.highlighted'</span>) toggled: <span class="hljs-built_in">boolean</span> = <span class="hljs-literal">false</span>
+}
+</code></pre><pre id='togglable2_ts-source'><code><span class="hljs-keyword">import</span> { Directive, Input, HostListener, ElementRef, Renderer } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+
+<span class="hljs-meta">@Directive</span>({
+  selector: <span class="hljs-string">'[togglable2]'</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> Togglable {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> el: ElementRef, <span class="hljs-keyword">private</span> renderer: Renderer</span>){}
+  <span class="hljs-meta">@Input</span>(<span class="hljs-string">'togglable2'</span>) toggleClass = <span class="hljs-string">'foobar'</span> 
+  <span class="hljs-meta">@HostListener</span>(<span class="hljs-string">'click'</span>) toggle() {
+    <span class="hljs-keyword">this</span>.renderer.setElementClass(
+      <span class="hljs-keyword">this</span>.el.nativeElement,
+      <span class="hljs-keyword">this</span>.toggleClass,
+      (<span class="hljs-keyword">this</span>.toggled = !<span class="hljs-keyword">this</span>.toggled)
+    )
+  }
+  toggled: <span class="hljs-built_in">boolean</span> = <span class="hljs-literal">false</span>
+}
+</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+function select(id){
+  let button = document.querySelector(`[data-file=${id}]`);
+  if (button){
+    document.querySelectorAll('.sources .active').forEach(function(elem){
+      elem.classList.remove('active')
+    });
+    button.classList.add('active');
+    document.getElementById(id + '-source').classList.add('active');
+  } else {
+    console.log("Warning, couldn't find source file", id);
+  }
+}
+
+document.querySelectorAll('.sourcenav > *').forEach(
+  elem => elem.addEventListener('click', function(e){
+    location.hash = '#' + this.getAttribute("data-file");
+    e.preventDefault();
+  })
+);
+
+window.addEventListener("hashchange", function(){
+  select(location.hash.replace('#',''));
+});
+
+select( (location.hash || '').replace('#','') || 'app_ts' );
+
+  </script>
+  <script charset="utf-8" src="../../lib/demos.js"></script>
+</body>
+
+</html>

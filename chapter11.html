@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Appendix: NgModules</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="icon" type="image/x-icon" href="mc2/images/favicon.ico">
+
+    <link rel="stylesheet" href="mc2/styles/reveal.css">
+    <link rel="stylesheet" href="mc2/styles/theme.css" id="theme">
+    <link rel="stylesheet" href="mc2/styles/code.css">
+    <!--STARTCOURSESPECIFICSTYLES--><link rel="stylesheet" href="styles/mystyles.css">
+<link rel="stylesheet" href="styles/streams.css"><!--ENDCOURSESPECIFICSTYLES-->
+  </head>
+
+  <body>
+    <div id="pos"></div>
+    <div class="reveal">
+      <div class="slides">
+        <section class="slide chaptertitle">
+          <div class="slidecontent">
+            <div class="chapternumber"> chapter 11 of 13 </div>
+            <h1>Appendix: NgModules</h1>
+            <span>fitting the pieces together</p>
+</span>
+          </div>
+        </section>
+        
+        <!--STARTSECTIONINDEX--><section class="slide sectionlist">
+  <div class="slidecontent">
+    <h3>Sections in this chapter</h3>
+    <ol>
+    <li><a href="#/2">Introducing&nbsp;NgModule</a></li>
+<li><a href="#/3">Module&nbsp;scoping</a></li>
+<li><a href="#/4">Module&nbsp;motivation</a></li>
+<li><a href="#/5">Root&nbsp;module</a></li>
+<li><a href="#/6">AoT&nbsp;vs&nbsp;JiT</a></li>
+    </ol>
+  </div>
+</section>
+<!--ENDSECTIONINDEX-->
+        <!--STARTCHAPTERCONTENT--><!--STARTSECTION1--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 1/5</div>
+      <h3>Introducing NgModule</h3>
+      <p>or package or barrel or glob or</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="11-1-1">
+<span class="pos">11-1-1</span>
+<div class="slidecontent"><p>When AngularJS came out, there was <strong>no native module solution</strong> for JavaScript.</p>
+<p>AngularJS therefore <strong>included a module system as part of the framework</strong>.</p>
+</div></section><section class="slide" data-pos="11-1-2">
+<span class="pos">11-1-2</span>
+<div class="slidecontent"><p><strong>Initially</strong> this was seen as a <strong>big advantage</strong> of AngularJS.</p>
+<p>But <strong>after ES6 introduced native modules</strong>, having to work with the AngularJS modules <strong>felt stale and limited</strong>.</p>
+</div></section><section class="slide" data-pos="11-1-3">
+<span class="pos">11-1-3</span>
+<div class="slidecontent"><p>That&#39;s just <strong>one of many examples</strong> of how <strong>time ran away from AngularJS</strong>.</p>
+<p>Which is also the motivation behind the new Angular: <strong>keep the good ideas</strong> but <strong>take advantage of modern features</strong>.</p>
+</div></section><section class="slide" data-pos="11-1-4">
+<span class="pos">11-1-4</span>
+<div class="slidecontent"><p>So in Angular we expected to <strong>use native modules</strong>, and not having to deal with a parallel homebrew solution.</p>
+<p>And, indeed, <strong>this was the case</strong>...</p>
+</div></section><section class="slide" data-pos="11-1-5">
+<span class="pos">11-1-5</span>
+<div class="slidecontent"><p>...<strong>until one of the last release candidates</strong>, which <strong>introduced <code>NgModules</code></strong>.</p>
+<p>Now, suddenly, we would <strong>modularise our code using ES6 modules</strong> as usual, but that code was in turn <strong>split into <code>NgModules</code></strong>.</p>
+</div></section><section class="slide" data-pos="11-1-6">
+<span class="pos">11-1-6</span>
+<div class="slidecontent"><p>And, of course, this is <strong>exactly</strong> the kind of thing we <strong>wanted to get away from</strong>!</p>
+</div></section><section class="slide" data-pos="11-1-7">
+<span class="pos">11-1-7</span>
+<div class="slidecontent"><p>Unsurprisingly this addition was <strong>heavily critisized</strong>, both for <strong>coming so late</strong> and for being a</p>
+<blockquote>
+<p>   solution in search of a problem</p>
+</blockquote>
+</div></section><section class="slide question" data-pos="11-1-8">
+<span class="pos">11-1-8</span>
+<div class="slidecontent">
+<p>But, so, <strong>why did they do it</strong>?</p>
+</div></section><section class="slide answer" data-pos="11-1-9">
+<span class="pos">11-1-9</span>
+<div class="slidecontent">
+<p>Many reasons! However, before we delve into that we&#39;ll first take a look at <strong>how <code>NgModules</code> work</strong>!</p>
+</div></section>
+</section>
+<!--ENDSECTION1-->
+<!--STARTSECTION2--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 2/5</div>
+      <h3>Module scoping</h3>
+      <p>lines of sight</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="11-2-1">
+<span class="pos">11-2-1</span>
+<div class="slidecontent"><p>An <strong><code>NgModule</code></strong>, similar to modules in AngularJS, is mainly a <strong>scoped container for application parts</strong>.</p>
+</div></section><section class="slide" data-pos="11-2-2">
+<span class="pos">11-2-2</span>
+<div class="slidecontent"><p>Let&#39;s say we have these <strong>three NgModules</strong>:</p>
+<p><img src="resources/diagrams/modules.svg" alt=""></p>
+<ul>
+<li><strong><code>Module1</code></strong> defines <code>CompA</code> and <code>CompB</code></li>
+<li><strong><code>Module2</code></strong> defines <code>CompC</code></li>
+<li><strong><code>RootModule</code></strong> defines <code>RootComp</code></li>
+</ul>
+</div></section><section class="slide" data-pos="11-2-3">
+<span class="pos">11-2-3</span>
+<div class="slidecontent"><p>Now, if <strong><code>RootModule</code> imports the other two</strong>:</p>
+<p><img src="resources/diagrams/modulesusage.svg" alt=""></p>
+</div></section><section class="slide" data-pos="11-2-4">
+<span class="pos">11-2-4</span>
+<div class="slidecontent"><p>...then the <strong>lines of sight</strong> will be:</p>
+<p><img src="resources/diagrams/modulesusagelines.svg" alt=""></p>
+<ul>
+<li><strong><code>RootComp</code></strong> can use everything</li>
+<li><strong><code>CompA</code> and <code>CompB</code></strong> can use each other</li>
+<li><strong><code>CompC</code></strong> can&#39;t use any other component</li>
+</ul>
+</div></section><section class="slide" data-pos="11-2-5">
+<span class="pos">11-2-5</span>
+<div class="slidecontent"><p>But if <strong><code>CompB</code> isn&#39;t exported</strong>:</p>
+<p><img src="resources/diagrams/modulesusagehidden.svg" alt=""></p>
+</div></section><section class="slide" data-pos="11-2-6">
+<span class="pos">11-2-6</span>
+<div class="slidecontent"><p>...then the <strong>lines of sight become</strong>:</p>
+<p><img src="resources/diagrams/modulesusagehiddenlines.svg" alt=""></p>
+<ul>
+<li><strong><code>RootComp</code></strong> can use <code>CompA</code> and <code>CompC</code></li>
+<li><strong><code>CompA</code> and <code>CompB</code></strong> can use each other</li>
+<li><strong><code>CompC</code></strong> can&#39;t use any other component</li>
+</ul>
+</div></section><section class="slide" data-pos="11-2-7">
+<span class="pos">11-2-7</span>
+<div class="slidecontent"><p>Here&#39;s the code for <strong><code>Module1</code></strong> in the final version of the example:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@NgModule</span>({
+  exports:      [ CompA ],
+  declarations: [ CompA, CompB ]
+})
+<span class="hljs-keyword">class</span> Module1 {}
+</code></pre>
+<p>Note how <strong>only <code>CompA</code> is exported</strong>.</p>
+</div></section><section class="slide" data-pos="11-2-8">
+<span class="pos">11-2-8</span>
+<div class="slidecontent"><p>And for completion, here&#39;s <strong><code>Module2</code></strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@NgModule</span>({
+  exports:      [ CompC ],
+  declarations: [ CompC ]
+})
+<span class="hljs-keyword">class</span> Module2 {}
+</code></pre>
+</div></section><section class="slide" data-pos="11-2-9">
+<span class="pos">11-2-9</span>
+<div class="slidecontent"><p>...and <strong><code>RootModule</code></strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@NgModule</span>({
+  imports:      [ Module1, Module2 ],
+  declarations: [ RootComp ],
+  bootstrap:    [ RootComp ]
+})
+<span class="hljs-keyword">class</span> RootModule {}
+</code></pre>
+</div></section><section class="slide" data-pos="11-2-10">
+<span class="pos">11-2-10</span>
+<div class="slidecontent"><p>We could <strong>summarize the sight rules</strong> like this -</p>
+<p>A <strong>component can see</strong>:</p>
+<ul>
+<li>all other <strong>components defined in the same module</strong></li>
+<li>all <strong>exported components in imported modules</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="11-2-11">
+<span class="pos">11-2-11</span>
+<div class="slidecontent"><p>Although we&#39;ve just talked about components, the <strong>same thing applies to <code>Directives</code> and <code>Pipes</code></strong>.</p>
+</div></section><section class="slide question" data-pos="11-2-12">
+<span class="pos">11-2-12</span>
+<div class="slidecontent">
+<p>Wait - <strong>what&#39;s the point</strong> of <strong>defining but not exporting</strong> something?</p>
+</div></section><section class="slide answer" data-pos="11-2-13">
+<span class="pos">11-2-13</span>
+<div class="slidecontent">
+<p>Likely what you&#39;re not exporting is an <strong>implementation detail of something you ARE exporting</strong>.</p>
+<p>In our example, <strong><code>CompB</code> is probably used by <code>CompA</code></strong>, but <strong>wouldn&#39;t make sense to use on its own</strong> or anywhere else.</p>
+</div></section><section class="slide question" data-pos="11-2-14">
+<span class="pos">11-2-14</span>
+<div class="slidecontent">
+<p>Also - what if we are creating a 3rd party <strong>library of components</strong>? Won&#39;t it be a 
+<strong>headache for the root module to export all components</strong>?</p>
+</div></section><section class="slide answer" data-pos="11-2-15">
+<span class="pos">11-2-15</span>
+<div class="slidecontent">
+<p>It would be, if not for the fact that we can <strong>export modules</strong>. So the <strong>root module</strong> of such a library would <strong>look like this</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@NgModule</span>({
+  imports: [ Module1, Module2, Module3, ... ],
+  exports: [ Module1, Module2, Module3, ... ]
+})
+<span class="hljs-keyword">class</span> RootModule {}
+</code></pre>
+</div></section><section class="slide question" data-pos="11-2-16">
+<span class="pos">11-2-16</span>
+<div class="slidecontent">
+<p>And, <strong>why are modules classes</strong> anyway? Would we <strong>ever write something inside the class declaration</strong> for an <code>NgModule</code>?</p>
+</div></section><section class="slide answer" data-pos="11-2-17">
+<span class="pos">11-2-17</span>
+<div class="slidecontent">
+<p>No, we never would. They likely went with that just to have a <strong>consistent look</strong> with how <strong>other application parts are defined</strong>, that is, <strong>class declarations</strong> with <strong>decorated metadata</strong>.</p>
+</div></section>
+</section>
+<!--ENDSECTION2-->
+<!--STARTSECTION3--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 3/5</div>
+      <h3>Module motivation</h3>
+      <p>Digging into the why</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="11-3-1">
+<span class="pos">11-3-1</span>
+<div class="slidecontent"><p><strong>Before <code>NgModules</code></strong> were added to Angular, <strong>components could declare dependencies</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Component</span>({
+  directives: [ComponentB],
+  template: <span class="hljs-string">'...'</span>
+})
+<span class="hljs-keyword">class</span> ComponentA {...}
+</code></pre>
+<p>Now <strong><code>ComponentA</code> could use <code>ComponentB</code></strong> in its template.</p>
+</div></section><section class="slide" data-pos="11-3-2">
+<span class="pos">11-3-2</span>
+<div class="slidecontent"><p>With the introduction of <code>NgModule</code>, <strong>this API was deprecated</strong>. Now <strong>all components must belong to an <code>NgModule</code></strong>, and <strong>only <code>NgModule</code> scope allows access</strong>.</p>
+</div></section><section class="slide question" data-pos="11-3-3">
+<span class="pos">11-3-3</span>
+<div class="slidecontent">
+<p>This seems <strong>more cumbersome</strong> in every way. <strong>Why</strong> did they make this change?</p>
+</div></section><section class="slide answer" data-pos="11-3-4">
+<span class="pos">11-3-4</span>
+<div class="slidecontent">
+<p>There are <strong>many different reasons</strong>.</p>
+<p>And note that since <strong>they knew there would be backlash</strong>, they likely thought this through more than once.</p>
+</div></section><section class="slide list" data-pos="11-3-5">
+<span class="pos">11-3-5</span>
+<div class="slidecontent">
+<p>Let&#39;s go over <strong>three of the reasons</strong> behind <code>NgModule</code>:</p>
+<ul>
+<li><span>a</span>a tool for you to <strong>modularise your codebase</strong></li>
+<li><span>b</span><strong>scope selectors</strong> to lessen risk of clash</li>
+<li><span>c</span>allow easier <strong>static dependency analysis</strong> when the templates are compiled</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="11-3-6">
+<span class="pos">11-3-6</span>
+<div class="slidecontent">
+<p><code>NgModules</code> are an <strong>Angular-specific way to organise your code</strong>, often in a thematic way.</p>
+</div></section><section class="slide" data-pos="11-3-7">
+<span class="pos">11-3-7</span>
+<div class="slidecontent"><p>For <strong>example</strong>, a <strong>forum app</strong> might consist of a <strong><code>ThreadModule</code></strong>, a <strong><code>FrontpageModule</code></strong> and an <strong><code>AdminModule</code></strong>, which are then all brought in by a root <strong><code>AppModule</code></strong>.</p>
+</div></section><section class="slide num numB" data-pos="11-3-8">
+<span class="pos">11-3-8</span>
+<div class="slidecontent">
+<p>Also, <strong><code>NgModules</code> reduce risk of selector clashes</strong>. If <strong>two components have the same selector</strong>, that works fine as long as you <strong>cannot see both of them</strong>.</p>
+</div></section><section class="slide question" data-pos="11-3-9">
+<span class="pos">11-3-9</span>
+<div class="slidecontent">
+<p>Returning to the scoping example - what components could <strong>safely have the same selector</strong>?</p>
+<p><img src="resources/diagrams/modulesusagehiddenlines.svg" alt=""></p>
+</div></section><section class="slide answer" data-pos="11-3-10">
+<span class="pos">11-3-10</span>
+<div class="slidecontent">
+<p>Only <strong><code>CompB</code> and <code>CompC</code></strong>, since <strong>no module sees both of them</strong>.</p>
+</div></section><section class="slide num numC" data-pos="11-3-11">
+<span class="pos">11-3-11</span>
+<div class="slidecontent">
+<p>The third and final reason: <strong><code>NgModules</code> make static analysis easier</strong>, especially for AoT compilation.</p>
+<p>More information <a href="https://github.com/angular/angular/issues/10552#issuecomment-241556913">here</a>.</p>
+</div></section><section class="slide question" data-pos="11-3-12">
+<span class="pos">11-3-12</span>
+<div class="slidecontent">
+<p>The <strong>first reason seems really weak</strong>, and the <strong>second seems periferal</strong>. Is it fair to say that the <strong>third reason is the most important one</strong>?</p>
+</div></section><section class="slide answer" data-pos="11-3-13">
+<span class="pos">11-3-13</span>
+<div class="slidecontent">
+<p>Yes, absolutely. It might <strong>seem not to matter for small / simple apps</strong>, but as soon as you</p>
+<ul>
+<li><strong>scale up</strong> or do</li>
+<li><strong>advanced bootstrapping</strong> or</li>
+<li><strong>lazy loading</strong>,</li>
+</ul>
+<p>...it becomes <strong>really important</strong>.</p>
+</div></section><section class="slide" data-pos="11-3-14">
+<span class="pos">11-3-14</span>
+<div class="slidecontent"><p>So, really, the <strong>Angular team deserves credit</strong> for making a <strong>necessary but tough decision</strong> that they knew would <strong>cause lots of backlash</strong>, and would only be <strong>understood by a minority</strong>.</p>
+</div></section>
+</section>
+<!--ENDSECTION3-->
+<!--STARTSECTION4--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 4/5</div>
+      <h3>Root module</h3>
+      <p>Where it all begins</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="11-4-1">
+<span class="pos">11-4-1</span>
+<div class="slidecontent"><p>So, <strong>Angular applications</strong> are made up by <strong>one or more <code>NgModule</code>:s</strong>.</p>
+<p>Of these, exactly 1 is a <strong>root module</strong>. Let&#39;s find out what those are!</p>
+</div></section><section class="slide" data-pos="11-4-2">
+<span class="pos">11-4-2</span>
+<div class="slidecontent"><p>As the name suggests, the root module is <strong>the root of the application</strong>. More precisely, it&#39;s <strong>the <code>NgModule</code> we bootstrap from</strong>:</p>
+<pre><code><span class="hljs-selector-tag">platformBrowserDynamic</span>()<span class="hljs-selector-class">.bootstrapModule</span>(AppModule);
+</code></pre><p>Usually this module is <strong>called <code>AppModule</code></strong>, although the name has no technical meaning.</p>
+</div></section><section class="slide" data-pos="11-4-3">
+<span class="pos">11-4-3</span>
+<div class="slidecontent"><p>For a module to be boostrappable it must <strong>say which component to bootstrap from</strong>, so that&#39;s another trait of a root module. This is done in the <strong><code>bootstrap</code> property</strong>:</p>
+<pre><code><span class="hljs-variable">@NgModule</span>({
+    <span class="hljs-attribute">imports</span>:      [ BrowserModule ],
+    <span class="hljs-attribute">declarations</span>: [ AppComponent ],
+    <span class="hljs-attribute">bootstrap</span>:    [ AppComponent ] <span class="hljs-comment">// &lt;--- bootstrap comp!</span>
+})
+class AppModule {}
+</code></pre></div></section><section class="slide" data-pos="11-4-4">
+<span class="pos">11-4-4</span>
+<div class="slidecontent"><p>The root module is also responsible for <strong>importing global dependencies</strong>. If we&#39;re running in the browser we need <strong><code>BrowserModule</code></strong>, so that&#39;s another root module giveaway:</p>
+<pre><code><span class="hljs-variable">@NgModule</span>({
+    <span class="hljs-attribute">imports</span>:      [ BrowserModule ], <span class="hljs-comment">// &lt;--- global browser stuff</span>
+    <span class="hljs-attribute">declarations</span>: [ AppComponent ],
+    <span class="hljs-attribute">bootstrap</span>:    [ AppComponent ]
+})
+class AppModule {}
+</code></pre></div></section><section class="slide" data-pos="11-4-5">
+<span class="pos">11-4-5</span>
+<div class="slidecontent"><p>One the <strong>small scale</strong> of the demos and exercises in this course there really is <strong>no need for more modules beyond the root module</strong>, so we will simply let that one <strong>import and declare everything</strong>.</p>
+</div></section><section class="slide" data-pos="11-4-6">
+<span class="pos">11-4-6</span>
+<div class="slidecontent"><p>But in a larger app the <strong>scoping becomes important</strong>, and at that point you have to <strong>plan out what the <code>RootModule</code> should provide</strong> for the rest.</p>
+</div></section>
+</section>
+<!--ENDSECTION4-->
+<!--STARTSECTION5--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 5/5</div>
+      <h3>AoT vs JiT</h3>
+      <p>Prebaked vs Made to order</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="11-5-1">
+<span class="pos">11-5-1</span>
+<div class="slidecontent"><p>We&#39;ve already mentioned the <strong>two options for template compilation</strong> a few times:</p>
+<table class="deflist">
+  <tbody>
+    <tr>
+      <td>AoT</td><td>Compile <strong>Ahead of Time</strong> in a build step</td>
+    </tr>
+    <tr>
+      <td>JiT</td><td>Compile <strong>Just in Time</strong> in the browser</td>
+    </tr>
+  </tbody>
+</table></div></section><section class="slide" data-pos="11-5-2">
+<span class="pos">11-5-2</span>
+<div class="slidecontent"><p>To revisit the infrastructure chain, we either do this (<strong>AoT</strong>):</p>
+<p><img src="resources/diagrams/chain-precomp-highlight.svg" alt=""></p>
+</div></section><section class="slide" data-pos="11-5-3">
+<span class="pos">11-5-3</span>
+<div class="slidecontent"><p>...or this (<strong>JiT</strong>):</p>
+<p><img src="resources/diagrams/chain-webpack-highlight.svg" alt=""></p>
+</div></section><section class="slide" data-pos="11-5-4">
+<span class="pos">11-5-4</span>
+<div class="slidecontent"><p>The <strong>advantage of build-step compilation</strong> is that we get a <strong>smaller package</strong></p>
+<p>The price for that advantage is <strong>added build complexity</strong>.</p>
+</div></section><section class="slide" data-pos="11-5-5">
+<span class="pos">11-5-5</span>
+<div class="slidecontent"><p>We&#39;ll now take a look at <strong>what the two approaches look like in practice</strong>!</p>
+</div></section><section class="slide" data-pos="11-5-6">
+<span class="pos">11-5-6</span>
+<div class="slidecontent"><p>We have <strong>already been doing JiT</strong> in previous examples:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> AppModule <span class="hljs-keyword">from</span> <span class="hljs-string">'./main.ts'</span>;
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre>
+<p>Inside the <strong><code>bootstrapModule</code></strong> code, the <strong>template compilation</strong> is taken care of.</p>
+</div></section><section class="slide" data-pos="11-5-7">
+<span class="pos">11-5-7</span>
+<div class="slidecontent"><p>Look again at our <strong>JiT</strong> setup:</p>
+<pre><code><span class="hljs-keyword">import</span> AppModule <span class="hljs-keyword">from</span> <span class="hljs-string">'./main.ts'</span>;
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre><p>In <strong>AoT</strong>, that would become the following:</p>
+<pre><code><span class="hljs-keyword">import</span> AppModuleNgFactory <span class="hljs-keyword">from</span> <span class="hljs-string">'./main.ngfactory'</span>;
+platformBrowser().bootstrapModuleFactory(AppModuleNgFactory);
+</code></pre></div></section><section class="slide" data-pos="11-5-8">
+<span class="pos">11-5-8</span>
+<div class="slidecontent"><p>The <strong><code>main.ngfactory</code></strong> file is created by the <code>ngc</code> command line tool, which lives in the <code>@angular/compiler-cli</code> package.</p>
+<p>See more details in the <a href="https://angular.io/guide/aot-compiler">official Ahead-of-Time compilation guide</a>!</p>
+</div></section>
+</section>
+<!--ENDSECTION5--><!--ENDCHAPTERCONTENT-->
+        
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var basehref = window.location.href.replace(/chapter\d.*?$/,'')
+
+      document.addEventListener("keydown",function(e){
+        var code = e.which || e.keyCode;
+        if (code===13){
+          window.location.href = basehref+"index.html?from="+(11-1);
+        } else if (code >= 49 && code <= 5+48) {
+          window.location.hash = "#/" + (code-48+1+0);
+        }
+        if (11 < 13) {
+          if (code===99){ // the letter C for next Chapter
+            window.location.href = basehref+"chapter"+(11+1)+".html"
+          }
+        }
+      });
+    </script>
+    <script src="mc2/scripts/head.js" type="text/javascript"></script>
+    <script src="mc2/scripts/reveal.js" type="text/javascript"></script>
+    <script src="mc2/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    showNotes: false,
+    transition: 'slide',
+    dependencies: [
+      { src: 'mc2/scripts/plugin/notes/notes.js', async: true }
+    ]
+  })
+
+    window.onload = function(){
+
+      var links = document.querySelectorAll("a.link");
+      for(var i=0;i<links.length;i++){
+        var link = links[i];
+        link.innerHTML = link.innerHTML.replace(/ /g,'&nbsp;')
+      }
+      var posElem = document.getElementById('pos')
+      function updateReference(){
+        setTimeout(function(){
+          var currentpos = document.querySelector('section.present[data-pos]')
+          if (currentpos){
+            posElem.innerHTML = currentpos.getAttribute('data-pos')
+          } else {
+            posElem.innerHTML = ''
+          }
+          if (document.querySelector('.present.chaptertitle')){
+            document.body.classList.add('atchaptertitle');
+          } else {
+            document.body.classList.remove('atchaptertitle');
+          }
+        },10)
+      }
+
+      window.addEventListener("hashchange",updateReference);
+
+      updateReference();
+    };
+
+    </script>
+    <!--STARTCOURSESPECIFICSCRIPTS--><script type="text/javascript" src="scripts/streams.js"></script><!--ENDCOURSESPECIFICSCRIPTS-->
+  </body>
+</html>

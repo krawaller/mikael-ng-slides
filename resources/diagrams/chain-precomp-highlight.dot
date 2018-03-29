@@ -1,0 +1,16 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  subgraph cluster_buildstep {
+    label="build step"
+    transpiler
+    bundler
+    templateCompiler
+  }
+  subgraph cluster_browser {
+    label="browser"
+    run
+  }
+  source -> transpiler -> bundler -> templateCompiler -> run
+  templateCompiler [label="compile templates",color=red,fontcolor=red]
+}

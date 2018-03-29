@@ -1,0 +1,23 @@
+digraph {
+  bgcolor = transparent
+  rankdir = TD
+
+  CSSsel [label="CSS\nselector"]
+
+  desc [label="element\ndescriptions"]
+
+  combinators [label="combinators"]
+
+  CSSsel:w -> desc
+
+  CSSsel:e -> combinators
+
+  descfoo [shape=box; label="describes a\nsingle element"]
+
+  combfoo [shape=box; label="combines many\ndescriptions"]
+
+  desc -> descfoo [dir=none]
+
+  combinators -> combfoo [dir=none]
+
+}

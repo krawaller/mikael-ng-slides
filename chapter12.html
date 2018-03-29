@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Appendix: Directives</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="icon" type="image/x-icon" href="mc2/images/favicon.ico">
+
+    <link rel="stylesheet" href="mc2/styles/reveal.css">
+    <link rel="stylesheet" href="mc2/styles/theme.css" id="theme">
+    <link rel="stylesheet" href="mc2/styles/code.css">
+    <!--STARTCOURSESPECIFICSTYLES--><link rel="stylesheet" href="styles/mystyles.css">
+<link rel="stylesheet" href="styles/streams.css"><!--ENDCOURSESPECIFICSTYLES-->
+  </head>
+
+  <body>
+    <div id="pos"></div>
+    <div class="reveal">
+      <div class="slides">
+        <section class="slide chaptertitle">
+          <div class="slidecontent">
+            <div class="chapternumber"> chapter 12 of 13 </div>
+            <h1>Appendix: Directives</h1>
+            <span>From molecules to atoms</p>
+</span>
+          </div>
+        </section>
+        <section class="slide">
+
+<div class="slidecontent"><p>This appendix chapter takes a <strong>closer look at directives</strong> - what kinds are there, and <strong>how do we make our own</strong>?</p>
+</div></section>
+        <!--STARTSECTIONINDEX--><section class="slide sectionlist">
+  <div class="slidecontent">
+    <h3>Sections in this chapter</h3>
+    <ol>
+    <li><a href="#/3">Node&nbsp;manipulation</a></li>
+<li><a href="#/4">Server&nbsp;safety</a></li>
+<li><a href="#/5">Consorting&nbsp;with&nbsp;the&nbsp;host</a></li>
+<li><a href="#/6">Case&nbsp;study&nbsp;&#8209;&nbsp;host</a></li>
+<li><a href="#/7">Structure&nbsp;directives</a></li>
+    </ol>
+  </div>
+</section>
+<!--ENDSECTIONINDEX-->
+        <!--STARTCHAPTERCONTENT--><!--STARTSECTION1--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 1/5</div>
+      <h3>Node manipulation</h3>
+      <p>regaining control</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="12-1-1">
+<span class="pos">12-1-1</span>
+<div class="slidecontent"><p>So - directives! We&#39;ve seen that there are <strong>three different kinds</strong>:</p>
+<ul>
+<li><strong>Components</strong> who have their own template</li>
+<li><strong>Structure directives</strong> who also change the HTML structure</li>
+<li>regular <strong>Directives</strong> who just manipulate the element they&#39;re attached to</li>
+</ul>
+</div></section><section class="slide" data-pos="12-1-2">
+<span class="pos">12-1-2</span>
+<div class="slidecontent"><p>Most of the <strong>built-in directives</strong> we&#39;ve been using, except for the <code>*</code>-prefixed <code>ngIf</code> and <code>ngFor</code>, belong to the <strong>latter category</strong>.</p>
+<p>Let&#39;s now talk about <strong>custom directives</strong> in that category, starting with: <strong>what&#39;s the point</strong>?</p>
+</div></section><section class="slide" data-pos="12-1-3">
+<span class="pos">12-1-3</span>
+<div class="slidecontent"><p>A big <strong>reason for using a framework</strong> is to not having to <strong>deal with the DOM</strong>. And indeed, with Angular, you don&#39;t have to.</p>
+<p>But <strong>sometimes you need to</strong>! How, then, do we <strong>take back control</strong> from Angular?</p>
+</div></section><section class="slide" data-pos="12-1-4">
+<span class="pos">12-1-4</span>
+<div class="slidecontent"><p>A <strong>common scenario</strong> is that we want to use <strong>some other library</strong> that needs DOM access. For instance, we might have a <strong>jQuery plugin</strong> that we want to attach to an element.</p>
+<p>So, how do we go about getting a <strong>reference to an element</strong>?</p>
+</div></section><section class="slide" data-pos="12-1-5">
+<span class="pos">12-1-5</span>
+<div class="slidecontent"><p>The key is the <strong>built-in dependency called <code>ElementRef</code></strong>. If we define our <code>@Directive</code>&#39;s class constructor like this...</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> myElement: ElementRef</span>){}
+</code></pre>
+<p>...we can access that reference elsewhere:</p>
+<pre><code class="lang-typescript">someClickHandler(){
+  <span class="hljs-comment">// do stuff with this.myElement.nativeElement</span>
+}
+</code></pre>
+</div></section><section class="slide" data-pos="12-1-6">
+<span class="pos">12-1-6</span>
+<div class="slidecontent"><p>Alternatively, if it is a one-off mutation, <strong>do it straight in the constructor</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> myElement: ElementRef</span>){
+  <span class="hljs-keyword">this</span>.myElement.nativeElement.doSomethingUseful();
+}
+</code></pre>
+<p>Note that this is <strong>safe if we&#39;re in a directive</strong>, while a <strong>component should use a lifecycle hook</strong> to ensure we have been rendered.</p>
+</div></section><section class="slide" data-pos="12-1-7">
+<span class="pos">12-1-7</span>
+<div class="slidecontent"><p>For an example that <strong>uses this technique to wrap a jQuery plugin</strong>, check out the <a href="resources/supportsite/demos/elementmanip" target="_blank">Element manipulation</a> demo.</p>
+<p>Or - another common example - <strong>setting autofocus to an element</strong> which you can see in the <a href="resources/supportsite/demos/autofocus" target="_blank">Autofocus</a> demo.</p>
+</div></section>
+</section>
+<!--ENDSECTION1-->
+<!--STARTSECTION2--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 2/5</div>
+      <h3>Server safety</h3>
+      <p>Cut the cord to the DOM</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="12-2-1">
+<span class="pos">12-2-1</span>
+<div class="slidecontent"><p>The <strong><code>autofocus</code> demo</strong> we saw earlier was <strong>implemented like this</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> Focus {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> elRef: ElementRef</span>) {}
+  ngOnInit() {
+    <span class="hljs-keyword">this</span>.elRef.nativeElement.focus()
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="12-2-2">
+<span class="pos">12-2-2</span>
+<div class="slidecontent"><p>There is <strong>one big drawback</strong> with that code; what happens if we attempt to <strong>render this app on the server</strong>?</p>
+<p>There <strong>won&#39;t be a DOM node</strong>, so presumably things will go boom.</p>
+</div></section><section class="slide" data-pos="12-2-3">
+<span class="pos">12-2-3</span>
+<div class="slidecontent"><p>The solution is to <strong>communicate intent</strong> of node manipulation instead of actually performing it.</p>
+<p>That way, <strong>if we&#39;re on the server</strong>, those <strong>intents can simply be ignored</strong>.</p>
+</div></section><section class="slide" data-pos="12-2-4">
+<span class="pos">12-2-4</span>
+<div class="slidecontent"><p>We accomplish this by using the <strong><code>Renderer</code></strong> as proxy:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> Focus {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> rndr: Renderer, <span class="hljs-keyword">public</span> elRef: ElementRef</span>) {}
+  ngOnInit() {
+    <span class="hljs-keyword">this</span>.rndr.invokeElementMethod(
+      <span class="hljs-keyword">this</span>.elRef.nativeElement, <span class="hljs-string">'focus'</span>, []
+    );
+  }
+}
+</code></pre>
+</div></section><section class="slide question" data-pos="12-2-5">
+<span class="pos">12-2-5</span>
+<div class="slidecontent">
+<p>Wait - why is this:</p>
+<pre><code><span class="hljs-keyword">this</span>.rndr.invokeElementMethod(
+  <span class="hljs-keyword">this</span>.elRef.nativeElement, <span class="hljs-string">'focus'</span>, []
+);
+</code></pre><p>...so much better than this?</p>
+<pre><code>this<span class="hljs-selector-class">.elRef</span><span class="hljs-selector-class">.nativeElement</span><span class="hljs-selector-class">.focus</span>()
+</code></pre></div></section><section class="slide answer" data-pos="12-2-6">
+<span class="pos">12-2-6</span>
+<div class="slidecontent">
+<p>Since the <code>Renderer</code> is injected, we can have a <strong>special server version</strong> which simply <strong>doesn&#39;t do anything</strong> in <code>invokeElementMethod</code>.</p>
+</div></section><section class="slide" data-pos="12-2-7">
+<span class="pos">12-2-7</span>
+<div class="slidecontent"><p>While, if we used the first version...</p>
+<pre><code>this<span class="hljs-selector-class">.elRef</span><span class="hljs-selector-class">.nativeElement</span><span class="hljs-selector-class">.focus</span>()
+</code></pre><p>...we would have to make <strong>mock elements</strong> to prevent errors, which would be <strong>much more complicated</strong>.</p>
+</div></section>
+</section>
+<!--ENDSECTION2-->
+<!--STARTSECTION3--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 3/5</div>
+      <h3>Consorting with the host</h3>
+      <p>let me count the ways</p>
+</p>
+    </div>
+  </section>
+  <section class="slide list" data-pos="12-3-1">
+<span class="pos">12-3-1</span>
+<div class="slidecontent">
+<p>We&#39;re now going to look at <strong>three ways to interact with the host</strong> element:</p>
+<ul>
+<li><span>a</span>Referencing the element</li>
+<li><span>b</span>Listening to events</li>
+<li><span>c</span>Binding to properties</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="12-3-2">
+<span class="pos">12-3-2</span>
+<div class="slidecontent">
+<p>First off, by <strong>asking for an <code>ElementRef</code> in the constructor</strong> we can get a reference to the host element:</p>
+<pre><code><span class="hljs-keyword">class</span> {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> el: ElementRef</span>){}
+  <span class="hljs-comment">/* rest of the code can access `this.el` */</span>
+}
+</code></pre></div></section><section class="slide" data-pos="12-3-3">
+<span class="pos">12-3-3</span>
+<div class="slidecontent"><p>On <code>this.el</code> we find the <strong><code>nativeElement</code> property</strong> which <strong>points to the actual DOM node</strong>.</p>
+</div></section><section class="slide num numB" data-pos="12-3-4">
+<span class="pos">12-3-4</span>
+<div class="slidecontent">
+<p>So just saw how we can use <strong><code>ElementRef</code></strong> to <strong>access the parent node to which the directive is attached</strong>.</p>
+<p>Theoretically, that&#39;s all we need to do whatever we want, including <strong>attaching eventhandlers</strong>.</p>
+</div></section><section class="slide" data-pos="12-3-5">
+<span class="pos">12-3-5</span>
+<div class="slidecontent"><p>Here&#39;s what that could look like when <strong>using the reference</strong>:</p>
+<pre><code><span class="hljs-class"><span class="hljs-keyword">class</span> </span>{
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-keyword">private</span> el: ElementRef){}
+  handleClick() { <span class="hljs-comment">/* do something */</span> }
+  ngOnInit() {
+    <span class="hljs-keyword">this</span>.el.nativeElement.addEventListener(
+      <span class="hljs-string">'click'</span>,<span class="hljs-keyword">this</span>.handleClick
+    )
+  }
+}
+</code></pre><p>...but reverting to the <strong>regular DOM API</strong> like this feels very <strong>primitive</strong>!</p>
+</div></section><section class="slide" data-pos="12-3-6">
+<span class="pos">12-3-6</span>
+<div class="slidecontent"><p>Angular therefore offers a shorthand through the <strong><code>HostListener</code></strong> decorator:</p>
+<pre><code><span class="hljs-class"><span class="hljs-keyword">class</span> </span>{
+  <span class="hljs-meta">@HostListener(<span class="hljs-meta-string">'click'</span>)</span> handleClick() { <span class="hljs-comment">/* do something */</span> }
+}
+</code></pre></div></section><section class="slide num numC" data-pos="12-3-7">
+<span class="pos">12-3-7</span>
+<div class="slidecontent">
+<p>Similarly, using the ref to <strong>control host properties</strong> would be convoluted:</p>
+<pre><code><span class="hljs-keyword">class</span> {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> el: ElementRef</span>){}
+  active: <span class="hljs-built_in">boolean</span>
+  updateHost() {
+    <span class="hljs-keyword">let</span> method = <span class="hljs-keyword">this</span>.active ? <span class="hljs-string">'add'</span> : <span class="hljs-string">'remove'</span>;
+    <span class="hljs-keyword">this</span>.el.nativeElement.classList[method](<span class="hljs-string">'highlighted'</span>)
+  }
+  <span class="hljs-comment">/* and some code to update `active` */</span>
+}
+</code></pre></div></section><section class="slide" data-pos="12-3-8">
+<span class="pos">12-3-8</span>
+<div class="slidecontent"><p>Therefore there is a powerful shorthand to <strong>bind to host properties</strong>:</p>
+<pre><code><span class="hljs-class"><span class="hljs-keyword">class</span> {</span>
+  <span class="hljs-meta">@HostBinding</span>(<span class="hljs-string">'class.highlighted'</span>) <span class="hljs-string">active:</span> <span class="hljs-keyword">boolean</span>
+  <span class="hljs-comment">/* and some code to update `active` */</span>
+}
+</code></pre><p>Much slicker, and again, note how <strong>no reference is needed</strong>!</p>
+</div></section>
+</section>
+<!--ENDSECTION3-->
+<!--STARTSECTION4--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 4/5</div>
+      <h3>Case study - host</h3>
+      <p>Putting the host to the test</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="12-4-1">
+<span class="pos">12-4-1</span>
+<div class="slidecontent"><p>To internalise what we just walked through, lets <strong>convert a component to use these APIs</strong>!</p>
+</div></section><section class="slide" data-pos="12-4-2">
+<span class="pos">12-4-2</span>
+<div class="slidecontent"><p>Here&#39;s the <strong>template</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> [<span class="hljs-attr">class.highlighted</span>]=<span class="hljs-string">"flag"</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"toggle"</span>&gt;</span>
+  someKindOfContent
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+<p>When <strong><code>flag</code> is true</strong> the <strong><code>highlighted</code> class is set</strong>.</p>
+</div></section><section class="slide" data-pos="12-4-3">
+<span class="pos">12-4-3</span>
+<div class="slidecontent"><p>Here&#39;s the <strong>component</strong> with the <strong>event handler</strong> and <strong>state</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> {
+  flag: <span class="hljs-built_in">boolean</span> = <span class="hljs-literal">false</span>
+  toggle(){
+    <span class="hljs-keyword">this</span>.flag = !<span class="hljs-keyword">this</span>.flag;
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="12-4-4">
+<span class="pos">12-4-4</span>
+<div class="slidecontent"><p>The <strong>entire definition</strong> (almost):</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Component</span>({
+  template: <span class="hljs-string">`&lt;div [class.highlighted]="flag" (click)="toggle"&gt;
+    someKindOfContent
+  &lt;/div&gt;`</span>,
+  styles: [<span class="hljs-string">'.highlight {background-color: red;}'</span>]
+})
+<span class="hljs-keyword">class</span> {
+  flag: <span class="hljs-built_in">boolean</span> = <span class="hljs-literal">false</span>
+  toggle(){
+    <span class="hljs-keyword">this</span>.flag = !<span class="hljs-keyword">this</span>.flag;
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="12-4-5">
+<span class="pos">12-4-5</span>
+<div class="slidecontent"><p>In essence; <strong>clicking the component toggles the <code>highlighted</code> class</strong>.</p>
+<p>Now imagine that we have <strong>many components behave in the same way</strong>. Let&#39;s therefore <strong>move the behaviour to a directive</strong>!</p>
+</div></section><section class="slide" data-pos="12-4-6">
+<span class="pos">12-4-6</span>
+<div class="slidecontent"><p>We want to be able to use it like thus:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">highlighttoggle</span>&gt;</span>someKindOfContent<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="12-4-7">
+<span class="pos">12-4-7</span>
+<div class="slidecontent"><p>That means we need <strong>something like this</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Directive</span>({ selector: <span class="hljs-string">'[highlighttoggle]'</span> })
+<span class="hljs-keyword">class</span> {}
+</code></pre>
+</div></section><section class="slide" data-pos="12-4-8">
+<span class="pos">12-4-8</span>
+<div class="slidecontent"><p>Our directive must <strong>house the flag state</strong> and <strong>have a method to toggle it</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Directive</span>({ selector: <span class="hljs-string">'[highlighttoggle]'</span> })
+<span class="hljs-keyword">class</span> {
+  flag: <span class="hljs-built_in">boolean</span> = <span class="hljs-literal">false</span>
+  toggle(){
+    <span class="hljs-keyword">this</span>.flag = !<span class="hljs-keyword">this</span>.flag
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="12-4-9">
+<span class="pos">12-4-9</span>
+<div class="slidecontent"><p>We <strong>make the method run</strong> whenever the <strong>host is clicked</strong> by adding the <strong><code>HostListener</code></strong> decorator:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Directive</span>({ selector: <span class="hljs-string">'[highlighttoggle]'</span> })
+<span class="hljs-keyword">class</span> {
+  flag: <span class="hljs-built_in">boolean</span> = <span class="hljs-literal">false</span>
+  <span class="hljs-meta">@HostListener</span>(<span class="hljs-string">'click'</span>) toggle(){
+    <span class="hljs-keyword">this</span>.flag = !<span class="hljs-keyword">this</span>.flag
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="12-4-10">
+<span class="pos">12-4-10</span>
+<div class="slidecontent"><p>And finally <strong>bind the flag to the host class</strong> using <strong><code>HostBinding</code></strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Directive</span>({ selector: <span class="hljs-string">'[highlighttoggle]'</span> })
+<span class="hljs-keyword">class</span> {
+  <span class="hljs-meta">@HostBinding</span>(<span class="hljs-string">'class.highlighted'</span>) flag: <span class="hljs-built_in">boolean</span> = <span class="hljs-literal">false</span>
+  <span class="hljs-meta">@HostListener</span>(<span class="hljs-string">'click'</span>) toggle(){
+    <span class="hljs-keyword">this</span>.flag = !<span class="hljs-keyword">this</span>.flag
+  }
+}
+</code></pre>
+<p>Try this out in the <a href="resources/supportsite/demos/highlighter" target="_blank">Highlighter Directive</a> demo!</p>
+</div></section>
+</section>
+<!--ENDSECTION4-->
+<!--STARTSECTION5--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 5/5</div>
+      <h3>Structure directives</h3>
+      <p>Redrawing the map</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="12-5-1">
+<span class="pos">12-5-1</span>
+<div class="slidecontent"><p><strong>Structure directives</strong> are a common label applied to directives that <strong>change the template</strong> of the elements they are attached to.</p>
+</div></section><section class="slide" data-pos="12-5-2">
+<span class="pos">12-5-2</span>
+<div class="slidecontent"><p>You&#39;ve already seen <strong><code>ngFor</code></strong> and <strong><code>ngIf</code></strong>, two <strong>built-in structure directives</strong>.</p>
+</div></section><section class="slide list" data-pos="12-5-3">
+<span class="pos">12-5-3</span>
+<div class="slidecontent">
+<p>Let&#39;s consider <strong>what we would need</strong> to implement such a directive!</p>
+<ul>
+<li><span>a</span>we need <strong>the original template</strong></li>
+<li><span>b</span>we need <strong>the host container</strong></li>
+</ul>
+</div></section><section class="slide num numA" data-pos="12-5-4">
+<span class="pos">12-5-4</span>
+<div class="slidecontent">
+<p>For example, in the case of <code>ngFor</code>, we must have a <strong>reference to the host template</strong> in order to be able to <strong>repeat it once per item</strong> in the list.</p>
+</div></section><section class="slide" data-pos="12-5-5">
+<span class="pos">12-5-5</span>
+<div class="slidecontent"><p>We achieve this through injecting a <strong><code>templateRef</code></strong> from <code>@angular/core</code>:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> templateRef: TemplateRef&lt;<span class="hljs-built_in">any</span>&gt;</span>)
+</code></pre>
+</div></section><section class="slide num numB" data-pos="12-5-6">
+<span class="pos">12-5-6</span>
+<div class="slidecontent">
+<p>We also need a way to <strong>communicate to the host view container</strong> what we have decided that the content should be.</p>
+<p>Again using <code>ngFor</code> as an example, when we have repeated the template once per item we need <strong>somewhere to pass them off to</strong>!</p>
+</div></section><section class="slide" data-pos="12-5-7">
+<span class="pos">12-5-7</span>
+<div class="slidecontent"><p>This is the role fulfilled by the <strong><code>ViewContainerRef</code></strong>, also injected from <code>@angular/core</code>:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> viewContainer: ViewContainerRef</span>)
+</code></pre>
+</div></section><section class="slide" data-pos="12-5-8">
+<span class="pos">12-5-8</span>
+<div class="slidecontent"><p>Now that we have the pieces, let&#39;s use them to <strong>implement an <code>unless</code> directive</strong>!</p>
+<p>It should function as a <strong>direct inverse to <code>ngIf</code></strong>...</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> *<span class="hljs-attr">unless</span>=<span class="hljs-string">"flag"</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+<p>...and <strong>only show the content if the expression is false</strong>.</p>
+</div></section><section class="slide" data-pos="12-5-9">
+<span class="pos">12-5-9</span>
+<div class="slidecontent"><p>Remember, the <strong><code>*</code> is just a shorthand</strong> for the full template syntax:</p>
+<pre><code><span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">unless</span>=<span class="hljs-string">"flag"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+</code></pre></div></section><section class="slide" data-pos="12-5-10">
+<span class="pos">12-5-10</span>
+<div class="slidecontent"><p>Let&#39;s <strong>get started</strong> by <strong>creating a <code>Directive</code> definition</strong>!</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Directive</span>({})
+<span class="hljs-keyword">class</span> UnlessDirective {}
+</code></pre>
+</div></section><section class="slide" data-pos="12-5-11">
+<span class="pos">12-5-11</span>
+<div class="slidecontent"><p>We want our directive to be <strong>applied to all elements with an <code>unless</code> attribute</strong>, so we set up the corresponding <strong>selector</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Directive</span>({ selector: <span class="hljs-string">'[unless]'</span> })
+<span class="hljs-keyword">class</span> UnlessDirective {}
+</code></pre>
+</div></section><section class="slide" data-pos="12-5-12">
+<span class="pos">12-5-12</span>
+<div class="slidecontent"><p>Since we know we need the <strong>template</strong> and the <strong>host view</strong>, let&#39;s <strong>inject both in the constructor</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Directive</span>({ selector: <span class="hljs-string">'[unless]'</span> })
+<span class="hljs-keyword">class</span> UnlessDirective {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params">
+    <span class="hljs-keyword">private</span> templateRef: TemplateRef&lt;<span class="hljs-built_in">any</span>&gt;,
+    <span class="hljs-keyword">private</span> viewContainer: ViewContainerRef
+  </span>) { }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="12-5-13">
+<span class="pos">12-5-13</span>
+<div class="slidecontent"><p>We also need to <strong>register the <code>unless</code> property as an input</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Directive</span>({ selector: <span class="hljs-string">'[unless]'</span> })
+<span class="hljs-keyword">class</span> UnlessDirective {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"> ... </span>) { }
+  <span class="hljs-meta">@Input</span>() <span class="hljs-keyword">set</span> unless(condition: <span class="hljs-built_in">boolean</span>) {}
+}
+</code></pre>
+</div></section><section class="slide" data-pos="12-5-14">
+<span class="pos">12-5-14</span>
+<div class="slidecontent"><p>And, <strong>depending on the truthiness of the condition</strong>, we either want to <strong>display the template</strong> or simply <strong>display nothing</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Input</span>() <span class="hljs-keyword">set</span> unless(condition: <span class="hljs-built_in">boolean</span>) {
+  <span class="hljs-keyword">if</span> (!condition)
+    <span class="hljs-comment">// show the template as per normal</span>
+  <span class="hljs-keyword">else</span>
+    <span class="hljs-comment">// show nothing!</span>
+}
+</code></pre>
+</div></section><section class="slide" data-pos="12-5-15">
+<span class="pos">12-5-15</span>
+<div class="slidecontent"><p>We accomplish this through the <strong><code>.createEmbeddedView</code> and <code>.clear</code> methods of <code>viewContainer</code></strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Input</span>() <span class="hljs-keyword">set</span> unless(condition: <span class="hljs-built_in">boolean</span>) {
+  <span class="hljs-keyword">if</span> (!condition)
+    <span class="hljs-keyword">this</span>.viewContainer.createEmbeddedView(<span class="hljs-keyword">this</span>.templateRef);
+  <span class="hljs-keyword">else</span>
+    <span class="hljs-keyword">this</span>.viewContainer.clear();
+}
+</code></pre>
+</div></section><section class="slide" data-pos="12-5-16">
+<span class="pos">12-5-16</span>
+<div class="slidecontent"><p>Here&#39;s the <strong>full code</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Directive</span>({ selector: <span class="hljs-string">'[unless]'</span> })
+<span class="hljs-keyword">class</span> UnlessDirective {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params">
+    <span class="hljs-keyword">private</span> templateRef: TemplateRef&lt;<span class="hljs-built_in">any</span>&gt;,
+    <span class="hljs-keyword">private</span> viewContainer: ViewContainerRef
+  </span>) { }
+  <span class="hljs-meta">@Input</span>() <span class="hljs-keyword">set</span> unless(condition: <span class="hljs-built_in">boolean</span>) {
+    <span class="hljs-keyword">if</span> (!condition)
+      <span class="hljs-keyword">this</span>.viewContainer.createEmbeddedView(<span class="hljs-keyword">this</span>.templateRef);
+    <span class="hljs-keyword">else</span>
+      <span class="hljs-keyword">this</span>.viewContainer.clear();
+  }
+}
+</code></pre>
+<p>See this in action in the <a href="resources/supportsite/demos/unless" target="_blank">Unless Directive</a> demo!</p>
+</div></section>
+</section>
+<!--ENDSECTION5--><!--ENDCHAPTERCONTENT-->
+        
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var basehref = window.location.href.replace(/chapter\d.*?$/,'')
+
+      document.addEventListener("keydown",function(e){
+        var code = e.which || e.keyCode;
+        if (code===13){
+          window.location.href = basehref+"index.html?from="+(12-1);
+        } else if (code >= 49 && code <= 5+48) {
+          window.location.hash = "#/" + (code-48+1+1);
+        }
+        if (12 < 13) {
+          if (code===99){ // the letter C for next Chapter
+            window.location.href = basehref+"chapter"+(12+1)+".html"
+          }
+        }
+      });
+    </script>
+    <script src="mc2/scripts/head.js" type="text/javascript"></script>
+    <script src="mc2/scripts/reveal.js" type="text/javascript"></script>
+    <script src="mc2/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    showNotes: false,
+    transition: 'slide',
+    dependencies: [
+      { src: 'mc2/scripts/plugin/notes/notes.js', async: true }
+    ]
+  })
+
+    window.onload = function(){
+
+      var links = document.querySelectorAll("a.link");
+      for(var i=0;i<links.length;i++){
+        var link = links[i];
+        link.innerHTML = link.innerHTML.replace(/ /g,'&nbsp;')
+      }
+      var posElem = document.getElementById('pos')
+      function updateReference(){
+        setTimeout(function(){
+          var currentpos = document.querySelector('section.present[data-pos]')
+          if (currentpos){
+            posElem.innerHTML = currentpos.getAttribute('data-pos')
+          } else {
+            posElem.innerHTML = ''
+          }
+          if (document.querySelector('.present.chaptertitle')){
+            document.body.classList.add('atchaptertitle');
+          } else {
+            document.body.classList.remove('atchaptertitle');
+          }
+        },10)
+      }
+
+      window.addEventListener("hashchange",updateReference);
+
+      updateReference();
+    };
+
+    </script>
+    <!--STARTCOURSESPECIFICSCRIPTS--><script type="text/javascript" src="scripts/streams.js"></script><!--ENDCOURSESPECIFICSCRIPTS-->
+  </body>
+</html>

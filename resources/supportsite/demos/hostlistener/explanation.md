@@ -1,0 +1,1 @@
+Showing off `hostlistener` (normally used in an attribute directive)

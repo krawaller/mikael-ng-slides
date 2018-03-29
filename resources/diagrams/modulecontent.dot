@@ -1,0 +1,11 @@
+digraph {
+  bgcolor = transparent
+  subgraph cluster_mod {
+    label="published module"
+    tests
+    documentation
+    source
+    distribution
+    pack [label="package.json"]
+  }
+}

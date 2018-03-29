@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Components 102</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="icon" type="image/x-icon" href="mc2/images/favicon.ico">
+
+    <link rel="stylesheet" href="mc2/styles/reveal.css">
+    <link rel="stylesheet" href="mc2/styles/theme.css" id="theme">
+    <link rel="stylesheet" href="mc2/styles/code.css">
+    <!--STARTCOURSESPECIFICSTYLES--><link rel="stylesheet" href="styles/mystyles.css">
+<link rel="stylesheet" href="styles/streams.css"><!--ENDCOURSESPECIFICSTYLES-->
+  </head>
+
+  <body>
+    <div id="pos"></div>
+    <div class="reveal">
+      <div class="slides">
+        <section class="slide chaptertitle">
+          <div class="slidecontent">
+            <div class="chapternumber"> chapter 4 of 13 </div>
+            <h1>Components 102</h1>
+            <span>Much wants more</p>
+</span>
+          </div>
+        </section>
+        
+        <!--STARTSECTIONINDEX--><section class="slide sectionlist">
+  <div class="slidecontent">
+    <h3>Sections in this chapter</h3>
+    <ol>
+    <li><a href="#/3">Gamebook&nbsp;&#8209;&nbsp;state</a></li>
+<li><a href="#/4">Catching&nbsp;View&nbsp;events</a></li>
+<li><a href="#/5">Lifecycle&nbsp;hooks</a></li>
+<li><a href="#/6">Politics</a></li>
+<li><a href="#/7">Debugging&nbsp;Angular&nbsp;apps</a></li>
+<li><a href="#/8">Gamebook&nbsp;&#8209;&nbsp;page&nbsp;turning</a></li>
+    </ol>
+  </div>
+</section>
+<!--ENDSECTIONINDEX-->
+        <!--STARTCHAPTERCONTENT--><!--STARTSECTION1--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 1/6</div>
+      <h3>Gamebook - state</h3>
+      <p>storing position</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="4-1-1">
+<span class="pos">4-1-1</span>
+<div class="slidecontent"><p>Before we get started on advanced component API:s, let&#39;s do a little <strong>exercise prelude</strong>!</p>
+</div></section><section class="slide" data-pos="4-1-2">
+<span class="pos">4-1-2</span>
+<div class="slidecontent"><p>As before;</p>
+<ol>
+<li><strong>copy the folder of the previous version</strong>,</li>
+<li><strong>paste it</strong> right next to that version, and</li>
+<li>give it the name <strong><code>FF03-state</code></strong>.</li>
+</ol>
+</div></section><section class="slide list" data-pos="4-1-3">
+<span class="pos">4-1-3</span>
+<div class="slidecontent">
+<p>So! The plan is to <strong>introduce <code>gameState</code></strong> to our model, which should <strong>store the progress</strong> the player makes.</p>
+<p>Here&#39;s the plan:</p>
+<ul>
+<li><span>a</span>Design the shape of the <code>GameState</code> data</li>
+<li><span>b</span>Add a <code>startState</code> prop to the <code>adventure</code> data</li>
+<li><span>c</span>Add a <code>gameState</code> prop to the component</li>
+<li><span>d</span>Turn <code>scene</code> into a computed property</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="4-1-4">
+<span class="pos">4-1-4</span>
+<div class="slidecontent">
+<p>We begin by figuring out what the <strong>state of a game session</strong> looks like.</p>
+<p>It really only needs to track <strong>one single thing</strong>, namely the <strong>key of the current page</strong>!</p>
+</div></section><section class="slide" data-pos="4-1-5">
+<span class="pos">4-1-5</span>
+<div class="slidecontent"><p>But as the future might bring more stuff, let&#39;s put that into an <strong>object</strong> so we can add more things later!</p>
+<p>So our state looks something like this:</p>
+<pre><code class="lang-typescript">{
+  atScene: <span class="hljs-string">'corridor'</span>
+}
+</code></pre>
+</div></section><section class="slide" data-pos="4-1-6">
+<span class="pos">4-1-6</span>
+<div class="slidecontent"><p>If you&#39;re following along with the TypeScript stuff we should of course <strong>create an interface</strong> for this object, called <code>GameState</code> or something similar.</p>
+</div></section><section class="slide num numB" data-pos="4-1-7">
+<span class="pos">4-1-7</span>
+<div class="slidecontent">
+<p>It makes sense for the <strong>starting state</strong> to be <strong>part of the adventure data</strong>.</p>
+<p>After all, only the author of the adventure knows <strong>which page to start at</strong> (and how much gold to begin with, etc).</p>
+</div></section><section class="slide" data-pos="4-1-8">
+<span class="pos">4-1-8</span>
+<div class="slidecontent"><p>Therefore, <strong>add a new <code>startState</code> prop to adventure</strong> in <code>data.ts</code>, containing an initial game state object with <code>atScene</code> pointing to the first page of the adventure.</p>
+<p>Of course we only have one page right now, so use that as starting page!</p>
+</div></section><section class="slide" data-pos="4-1-9">
+<span class="pos">4-1-9</span>
+<div class="slidecontent"><p>If you have an <strong><code>Adventure</code> interface</strong> that must now be <strong>updated to allow a <code>startState</code> prop</strong> of type <code>GameState</code>.</p>
+</div></section><section class="slide num numC" data-pos="4-1-10">
+<span class="pos">4-1-10</span>
+<div class="slidecontent">
+<p>Now, <strong>add a <code>gameState</code> property</strong> (or another name of your choosing) to our component class in <code>app.ts</code>, and <strong>initialise it</strong> to the start state according to the adventure.</p>
+<pre><code class="lang-typescript">  gameState = <span class="hljs-keyword">this</span>.adventure.startState;
+</code></pre>
+</div></section><section class="slide num numD" data-pos="4-1-11">
+<span class="pos">4-1-11</span>
+<div class="slidecontent">
+<p>Finally, let&#39;s <strong>turn our attention to the <code>scene</code> prop</strong>.</p>
+<p>Right now we manually point it to the scene object inside the adventure:</p>
+<pre><code><span class="hljs-attribute">  scene</span> = this.adenture.scenes[<span class="hljs-string">'corridor'</span>];
+</code></pre></div></section><section class="slide" data-pos="4-1-12">
+<span class="pos">4-1-12</span>
+<div class="slidecontent"><p>But this doesn&#39;t make sense anymore, since the <strong>current scene can be computed</strong> by looking at <code>gameState</code> and <code>adventure</code>!</p>
+<p>We might even risk introducing <strong>out-of-sync bugs</strong> if <code>gameState</code> and <code>scene</code> don&#39;t agree!</p>
+</div></section><section class="slide" data-pos="4-1-13">
+<span class="pos">4-1-13</span>
+<div class="slidecontent"><p>We should therefore <strong>turn <code>scene</code> into a computed property</strong>.</p>
+<p>Make <code>scene</code> a getter by <strong>using the <code>get</code> keyword and turning it into a method</strong>, which <strong>returns the correct scene</strong> by reading from <code>gameState</code> and <code>adventure</code>.</p>
+</div></section><section class="slide" data-pos="4-1-14">
+<span class="pos">4-1-14</span>
+<div class="slidecontent"><p>For an <strong>example</strong> how that is done, see the <a href="resources/supportsite/demos/computedprop" target="_blank">Computed Property</a> demo.</p>
+</div></section><section class="slide" data-pos="4-1-15">
+<span class="pos">4-1-15</span>
+<div class="slidecontent"><p>Now <strong>our small refactoring is done</strong>! Rebuild, and if it all fits together it will <strong>again work just like before</strong>.</p>
+</div></section>
+</section>
+<!--ENDSECTION1-->
+<!--STARTSECTION2--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 2/6</div>
+      <h3>Catching View events</h3>
+      <p>What&#39;s up?</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="4-2-1">
+<span class="pos">4-2-1</span>
+<div class="slidecontent"><p>Now we take a look at <strong>the other half of the cycle</strong>!</p>
+<p><img src="resources/diagrams/view-model-events.svg" alt=""></p>
+</div></section><section class="slide" data-pos="4-2-2">
+<span class="pos">4-2-2</span>
+<div class="slidecontent"><p>Here is a <strong>super simple event catching example</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Component</span>({
+    selector: <span class="hljs-string">'app'</span>,
+    template: <span class="hljs-string">`
+      &lt;button on-click="flag = !flag"&gt;Toggle!&lt;/button&gt;
+      &lt;p&gt;Flag? {{flag}}&lt;/p&gt;
+    `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  flag = <span class="hljs-literal">false</span>
+}
+</code></pre>
+</div></section><section class="slide" data-pos="4-2-3">
+<span class="pos">4-2-3</span>
+<div class="slidecontent"><p>Take a <strong>closer look at the event handler</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">on-click</span>=<span class="hljs-string">"flag = !flag"</span>&gt;</span>Toggle!<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+</code></pre>
+<p>The <code>on-click</code> attribute will be <strong>executed as code</strong> when the event happens.</p>
+<p>Note that <code>on-click</code> is <strong>not a native DOM event handler</strong>. That would have been called <code>onclick</code>.</p>
+</div></section><section class="slide" data-pos="4-2-4">
+<span class="pos">4-2-4</span>
+<div class="slidecontent"><p>But we really <strong>shouldn&#39;t mutate values in the view</strong> so let us <strong>call a method instead</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Component</span>({
+    selector: <span class="hljs-string">'app'</span>,
+    template: <span class="hljs-string">`
+      &lt;button on-click="toggle()"&gt;Toggle!&lt;/button&gt;
+      &lt;p&gt;Flag? {{flag}}&lt;/p&gt;
+    `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  flag = <span class="hljs-literal">false</span>
+  toggle() {
+    <span class="hljs-keyword">this</span>.flag = !<span class="hljs-keyword">this</span>.flag;
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="4-2-5">
+<span class="pos">4-2-5</span>
+<div class="slidecontent"><p>Remember that we are <strong>not attaching a function</strong> but <strong>writing code that will run</strong> when the event happens. So <strong>don&#39;t write this</strong>...</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">on-click</span>=<span class="hljs-string">"toggle"</span>&gt;</span>Toggle!<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+</code></pre>
+<p>...since you likely mean this:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">on-click</span>=<span class="hljs-string">"toggle()"</span>&gt;</span>Toggle!<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="4-2-6">
+<span class="pos">4-2-6</span>
+<div class="slidecontent"><p>Similar to how <code>[attr]</code> is a shortcut for <code>bind-attr</code>, we can use <strong><code>(event)</code> instead of  <code>on-event</code></strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"toggle()"</span>&gt;</span>Toggle!<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="4-2-7">
+<span class="pos">4-2-7</span>
+<div class="slidecontent"><p>In case we are interested in event data, like if we catch a <code>keyup</code> event from an <code>input</code> element, Angular <strong>automatically creates an <code>$event</code> variable</strong> containing the DOM event object:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Component</span>({
+    selector: <span class="hljs-string">'app'</span>,
+    template: <span class="hljs-string">`
+      &lt;input (keyup)="myName = $event.target.value"&gt;
+      &lt;p&gt;Who am I? {{myName}}&lt;/p&gt;
+    `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  myName: <span class="hljs-built_in">string</span>
+}
+</code></pre>
+<p>See this in the <a href="resources/supportsite/demos/catch_event_variable" target="_blank">Catch event variable</a> demo</p>
+</div></section><section class="slide" data-pos="4-2-8">
+<span class="pos">4-2-8</span>
+<div class="slidecontent"><p>As noted before we prefer to have <strong>value mutations in the model</strong>, so we should <strong>pass the event to the model</strong> instead:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> (<span class="hljs-attr">keyup</span>)=<span class="hljs-string">"setName($event.target.value)"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Who am I? {{myName}}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+</code></pre>
+<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> AppComponent {
+  myName: <span class="hljs-built_in">string</span>
+  setName(txt) {
+    <span class="hljs-keyword">this</span>.myName = txt;
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="4-2-9">
+<span class="pos">4-2-9</span>
+<div class="slidecontent"><p>Much like the <strong>template expressions</strong> are <em>sort of</em> JavaScript, so are the <strong>template statements</strong> that we use as event handlers. Most importantly, they also can <strong>only reach values and methods on the model</strong>.</p>
+<p>There are <strong>more details</strong> in the <a href="https://angular.io/docs/ts/latest/guide/template-syntax.html#!#template-statements">Template statement</a> sections of the official docs.</p>
+</div></section>
+</section>
+<!--ENDSECTION2-->
+<!--STARTSECTION3--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 3/6</div>
+      <h3>Lifecycle hooks</h3>
+      <p>the lifespan milestones</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="4-3-1">
+<span class="pos">4-3-1</span>
+<div class="slidecontent"><p>We won&#39;t be using them in our project or go into too much detail, but we&#39;d be amiss if we didn&#39;t mention the <strong>lifecycle hooks</strong>.</p>
+<p>These are magical method names that will be <strong>invoked at certain points</strong> in the lifecycle of a directive.</p>
+</div></section><section class="slide" data-pos="4-3-2">
+<span class="pos">4-3-2</span>
+<div class="slidecontent"><p>For example, <strong><code>ngOnInit</code></strong> is called after the first render, and <strong><code>ngOnDestroy</code></strong> when it leaves the DOM.</p>
+<p>You can see the <a href="https://angular.io/docs/ts/latest/guide/lifecycle-hooks.html">full list of methods</a> in the official docs, together with a demo component that shows off them all.</p>
+</div></section>
+</section>
+<!--ENDSECTION3-->
+<!--STARTSECTION4--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 4/6</div>
+      <h3>Politics</h3>
+      <p>let&#39;s talk about the elephant</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="4-4-1">
+<span class="pos">4-4-1</span>
+<div class="slidecontent"><p>Let&#39;s zoom out for a while and <strong>discuss what we&#39;ve just learned</strong>. All of those directives can be called a <strong>DSL for templating</strong>, and <strong>most templating solutions have corresponding solutions</strong>.</p>
+</div></section><section class="slide" data-pos="4-4-2">
+<span class="pos">4-4-2</span>
+<div class="slidecontent"><p>The reason is simple - we&#39;re <strong>working in HTML</strong> which <strong>isn&#39;t a logical language</strong>, but since we <strong>need logic</strong> in our template we <strong>have to add it</strong> somehow.</p>
+</div></section><section class="slide" data-pos="4-4-3">
+<span class="pos">4-4-3</span>
+<div class="slidecontent"><p>This is in stark <strong>contrast to React</strong>, which <strong>expresses the templates in JavaScript</strong>. If you <strong>need a loop</strong> in a React component, you&#39;ll use a <strong>regular JavaScript loop</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> Chores = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">props</span>)</span>{
+  <span class="hljs-keyword">var</span> renderedChores = props.chores.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">chore,n</span>)</span>{
+    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{n}</span>&gt;</span>{chore}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span></span>;
+  });
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h4</span>&gt;</span>My chores:<span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>{renderedChores}<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+}
+</code></pre>
+</div></section><section class="slide" data-pos="4-4-4">
+<span class="pos">4-4-4</span>
+<div class="slidecontent"><p>But! Since we need to <strong>output HTML</strong> in the end, React instead has a <strong>DSL for expressing nested data in JS</strong>, namely the weird xml syntax you saw inside the return statement.</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">return</span> (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h4</span>&gt;</span>My chores:<span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>{renderedChores}<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+);
+</code></pre>
+</div></section><section class="slide" data-pos="4-4-5">
+<span class="pos">4-4-5</span>
+<div class="slidecontent"><p>Because here&#39;s the <strong>foundational problem</strong> - we...</p>
+<ul>
+<li><strong>express UI:s as nested data</strong></li>
+<li><strong>perform logic to define the UI</strong></li>
+</ul>
+<p>...so we need <strong>both logic and nested data at the same time</strong>.</p>
+</div></section><section class="slide" data-pos="4-4-6">
+<span class="pos">4-4-6</span>
+<div class="slidecontent"><p>It all <strong>boils down to this</strong>:</p>
+<p><img src="resources/diagrams/theappproblem.svg" alt=""></p>
+</div></section>
+</section>
+<!--ENDSECTION4-->
+<!--STARTSECTION5--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 5/6</div>
+      <h3>Debugging Angular apps</h3>
+      <p>bug hunting tools &amp; tricks</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="4-5-1">
+<span class="pos">4-5-1</span>
+<div class="slidecontent"><p>When debugging Angular apps, <strong>regular JS debugging tricks</strong> still apply to a large extent.</p>
+<p>And the king of those is; make sure that you <strong>know the browser dev tools</strong>!</p>
+</div></section><section class="slide list" data-pos="4-5-2">
+<span class="pos">4-5-2</span>
+<div class="slidecontent">
+<p>We&#39;ll walk through <strong>three tips</strong> for debugging Angular apps:</p>
+<ul>
+<li><span>a</span>Augury</li>
+<li><span>b</span>Bound JSON output</li>
+<li><span>c</span>Logger services</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="4-5-3">
+<span class="pos">4-5-3</span>
+<div class="slidecontent">
+<p><a href="https://augury.angular.io/">Angular Augury</a> is a <strong>Chrome dev tools extension</strong> for Angular debugging, serving much the same purpose as Ng-Inspector and Batarang for AngularJS.</p>
+<p><img src="resources/images/augury-logo.svg" style="max-width:100px; border: none; background-color: inherit;"></p>
+</div></section><section class="slide" data-pos="4-5-4">
+<span class="pos">4-5-4</span>
+<div class="slidecontent"><p>Here&#39;s an in-action <strong>screenshot</strong> of what Augury looks like:</p>
+<p><img src="resources/images/augury-action.png" alt=""></p>
+</div></section><section class="slide" data-pos="4-5-5">
+<span class="pos">4-5-5</span>
+<div class="slidecontent"><p>As you can see, Augury shows us</p>
+<ul>
+<li>The <strong>component tree</strong></li>
+<li>Component <strong>state</strong></li>
+</ul>
+<p>It also gives us powerful tooling around <strong>dependency graphs</strong> and <strong>route overviews</strong>.</p>
+</div></section><section class="slide" data-pos="4-5-6">
+<span class="pos">4-5-6</span>
+<div class="slidecontent"><p>For components with <strong><code>Output</code></strong>s, Augury let&#39;s you <strong>trigger outputs</strong> for easy experimenting:</p>
+<p><img src="resources/images/augury-output.png" alt=""></p>
+</div></section><section class="slide" data-pos="4-5-7">
+<span class="pos">4-5-7</span>
+<div class="slidecontent"><p>Augury also has a <strong>bunch of other features</strong> that makes it well worth getting to know.</p>
+<p>Of course, given the fickle nature of Angular, Augury is in <strong>heavy development</strong>.</p>
+</div></section><section class="slide" data-pos="4-5-8">
+<span class="pos">4-5-8</span>
+<div class="slidecontent"><p>Also, note that <strong>Augury requires a web server</strong> to function! It <strong>won&#39;t work over the <code>file://</code> protocol</strong>.</p>
+</div></section><section class="slide num numB" data-pos="4-5-9">
+<span class="pos">4-5-9</span>
+<div class="slidecontent">
+<p>Now for a neat trick to <strong>debug component state</strong>!</p>
+<p>Take our gamebook project for example, which now has <code>gameState</code>:</p>
+<pre><code class="lang-typescript">gameState: GameState = {
+  atScene: <span class="hljs-keyword">this</span>.adventure.startsAt
+}
+</code></pre>
+</div></section><section class="slide" data-pos="4-5-10">
+<span class="pos">4-5-10</span>
+<div class="slidecontent"><p>Imagine how later on it will become <strong>much more complex</strong>:</p>
+<pre><code class="lang-typescript">gameState: GameState = {
+  atScene: <span class="hljs-keyword">this</span>.adventure.startsAt,
+  gold: <span class="hljs-number">5</span>,
+  inventory: [<span class="hljs-string">'sword'</span>, <span class="hljs-string">'shield'</span>],
+  hp: <span class="hljs-number">12</span>,
+  xp: <span class="hljs-number">3</span>
+}
+</code></pre>
+</div></section><section class="slide" data-pos="4-5-11">
+<span class="pos">4-5-11</span>
+<div class="slidecontent"><p>It is quite common for apps to be <strong>driven by a central state</strong> like this, and for that state to <strong>change frequently</strong>.</p>
+<p>Debugging will then often mean to <strong>check the contents of that state</strong>. How do we easily do that?</p>
+</div></section><section class="slide" data-pos="4-5-12">
+<span class="pos">4-5-12</span>
+<div class="slidecontent"><p>A <strong>naïve way</strong> to debug this would be to sprinkle...</p>
+<pre><code class="lang-typescript"><span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.gameState);
+</code></pre>
+<p>...in various places. This works ok, but quickly becomes <strong>cumbersome</strong>.</p>
+</div></section><section class="slide" data-pos="4-5-13">
+<span class="pos">4-5-13</span>
+<div class="slidecontent"><p>Now for the trick: by <strong>adding this line to the template</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">pre</span>&gt;</span>{{gameState | json}}<span class="hljs-tag">&lt;/<span class="hljs-name">pre</span>&gt;</span>
+</code></pre>
+<p>...we get a <strong>see the state live</strong> directly in the view!</p>
+<p><img src="resources/images/jsondebug.png" alt=""></p>
+</div></section><section class="slide" data-pos="4-5-14">
+<span class="pos">4-5-14</span>
+<div class="slidecontent"><p>Try this out in the <a href="resources/supportsite/demos/jsondebug" target="_blank">JSON debug</a> demo!</p>
+<p>AngularJS developers will recognise this, as the <strong>exact same thing was possible in AngularJS</strong>!</p>
+</div></section><section class="slide num numC" data-pos="4-5-15">
+<span class="pos">4-5-15</span>
+<div class="slidecontent">
+<p>While debugging an app, you inevitably start <strong>sprinkling <code>console.log</code> calls</strong> here and there.</p>
+<p>And, equally inevitably, <strong>forget to remove some of them</strong> before production...</p>
+</div></section><section class="slide" data-pos="4-5-16">
+<span class="pos">4-5-16</span>
+<div class="slidecontent"><p>To <strong>mitigate that</strong>, and to <strong>allow for more powerful logging features</strong>, it is common practice to instead use a <strong><code>Logger</code> service</strong>.</p>
+<p>In its simplest form this just <strong>implements a <code>log</code> method</strong>:</p>
+<pre><code><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Logger</span> {</span>
+  <span class="hljs-built_in">log</span>(msg: any)   { console.<span class="hljs-built_in">log</span>(msg); }
+}
+</code></pre></div></section><section class="slide" data-pos="4-5-17">
+<span class="pos">4-5-17</span>
+<div class="slidecontent"><p>You would then inject this into your component or whatnot...</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">constructor</span><span class="hljs-params">(<span class="hljs-keyword">private</span> logger: Logger)</span><span class="hljs-comment">{}</span></span>
+</code></pre><p>...and use the logging where needed:</p>
+<pre><code><span class="hljs-function"><span class="hljs-title">someComplexMethod</span><span class="hljs-params">()</span></span>{
+  let result = <span class="hljs-comment">/* complex calculation */</span>
+  this<span class="hljs-selector-class">.logger</span><span class="hljs-selector-class">.log</span>(result)
+}
+</code></pre></div></section><section class="slide" data-pos="4-5-18">
+<span class="pos">4-5-18</span>
+<div class="slidecontent"><p>Using a <code>Logger</code>service in this way means that you...</p>
+<ul>
+<li>can ship a <strong>&quot;mute&quot; <code>Logger</code></strong> in production instead of removing log statements</li>
+<li>hook in <strong>other functionality</strong> such as <strong>writing logs to files</strong>, etc</li>
+</ul>
+</div></section>
+</section>
+<!--ENDSECTION5-->
+<!--STARTSECTION6--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 6/6</div>
+      <h3>Gamebook - page turning</h3>
+      <p>Actual interaction</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="4-6-1">
+<span class="pos">4-6-1</span>
+<div class="slidecontent"><p>As before;</p>
+<ol>
+<li><strong>copy the folder of the previous version</strong>,</li>
+<li><strong>paste it</strong> right next to that version, and</li>
+<li>give it the name <strong><code>FF04-interaction</code></strong>.</li>
+</ol>
+</div></section><section class="slide list" data-pos="4-6-2">
+<span class="pos">4-6-2</span>
+<div class="slidecontent">
+<p>The time has finally come to <strong>implement page turning</strong>! Here&#39;s the plan;</p>
+<ul>
+<li><span>a</span><strong>Add more scenes</strong> to the <code>adventure</code> data</li>
+<li><span>b</span>Turn the <strong>option data into objects</strong> with links</li>
+<li><span>c</span>Make <strong>option clicking</strong> update game state</li>
+</ul>
+</div></section><section class="slide num numA" data-pos="4-6-3">
+<span class="pos">4-6-3</span>
+<div class="slidecontent">
+<p>To turn between pages we <strong>need more than one page</strong>, so <strong>add a few more</strong> to the adventure in the <code>data.ts</code> file!</p>
+<pre><code>const adventure = {
+  title: <span class="hljs-string">'A strange adventure'</span>,
+  startState: {atScene: <span class="hljs-string">'house'</span>},
+  scenes: {
+    house: { ... },
+    road: { ... },
+    ambush: { ... },
+    ...
+  }
+}
+</code></pre></div></section><section class="slide num numB" data-pos="4-6-4">
+<span class="pos">4-6-4</span>
+<div class="slidecontent">
+<p>We must also <strong>turn the option strings into objects</strong>, since they need to contain both</p>
+<ul>
+<li>the <strong>text</strong> to show</li>
+<li>which <strong>scene to move to</strong></li>
+</ul>
+<p>So for each link, turn them into objects and <strong>add the key to the target scene</strong>!</p>
+</div></section><section class="slide" data-pos="4-6-5">
+<span class="pos">4-6-5</span>
+<div class="slidecontent"><p>Again, if you&#39;re using <strong>TypeScript interfaces</strong> you must <strong>update</strong> those.</p>
+<p>To <strong>avoid the <code>Scene</code> interface growing too complex</strong> you could <strong>add a new <code>Option</code> interface</strong>, and adapt <code>Scene</code> to use that for the options!</p>
+</div></section><section class="slide num numC" data-pos="4-6-6">
+<span class="pos">4-6-6</span>
+<div class="slidecontent">
+<p>Finally the time has come to <strong>make the options clickable</strong>!</p>
+<ul>
+<li>add a <strong><code>changeScene</code></strong> method to the component that <strong>expects an option object</strong> and <strong>updates <code>gameState</code></strong> accordingly</li>
+<li>use that method as <strong>clickhandler for options</strong> with <code>(click)</code>. If you are typescripting, the clickhandler parameter type should be an <code>Option</code>!</li>
+</ul>
+</div></section><section class="slide" data-pos="4-6-7">
+<span class="pos">4-6-7</span>
+<div class="slidecontent"><p>Since we&#39;ve <strong>already wired <code>scene</code> to read from <code>gameState</code></strong> in the previous exercise, we&#39;re <strong>all done</strong>! <strong>Reward yourself</strong> by trying out your <strong>fully playable adventure</strong>.</p>
+<p>Although a humble beginning, you now have <strong>all the needed parts to make a full game book</strong>!</p>
+</div></section><section class="slide" data-pos="4-6-8">
+<span class="pos">4-6-8</span>
+<div class="slidecontent"><p>...<strong>ignoring</strong> the likely <strong>wishes for more functionality</strong> such as health points, inventory etc...</p>
+</div></section><section class="slide" data-pos="4-6-9">
+<span class="pos">4-6-9</span>
+<div class="slidecontent"><p>Now that we have state that we manipulate, don&#39;t forget to <strong>use the debug tactics</strong> you&#39;ve learned about!</p>
+</div></section><section class="slide challenge" data-pos="4-6-10">
+<span class="pos">4-6-10</span>
+<div class="slidecontent"><p><strong>Challenge</strong>: If you sailed through all of that, how about implementing an <strong>automatic reset</strong> for game-ending scenes with no options?</p>
+<p>And parhaps also adding some <strong>dramatic background-color</strong> to the end-game scenes while we&#39;re at it?</p>
+</div></section><section class="slide" data-pos="4-6-11">
+<span class="pos">4-6-11</span>
+<div class="slidecontent"><p>How would we go about all this? Well, we need to <strong>show a restart link</strong> when the scene has no options.</p>
+<p>For our <strong>model</strong>, this means we can:</p>
+<ul>
+<li>add a <strong><code>gameOver</code> getter</strong> that returns <code>true</code> if there are no options in the scene</li>
+<li>add a <strong><code>resetGame</code> method</strong> that sets <code>gameState</code> to <code>startState</code> from <code>adventure</code></li>
+</ul>
+</div></section><section class="slide" data-pos="4-6-12">
+<span class="pos">4-6-12</span>
+<div class="slidecontent"><p>And in our <strong>view</strong>:</p>
+<ul>
+<li>add a <strong>reset option <code>&lt;li&gt;</code></strong>  that<ul>
+<li>only show if <code>gameOver</code> is true</li>
+<li>calls <code>resetGame</code> when clicked</li>
+</ul>
+</li>
+<li><strong>wrap the whole template</strong> in a <code>div</code></li>
+<li>add a dynamic <strong><code>dead</code> class</strong> to the <code>div</code> using <code>[class.dead]=&quot;gameOver&quot;</code></li>
+<li>add a <strong>style for the <code>.dead</code> class</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="4-6-13">
+<span class="pos">4-6-13</span>
+<div class="slidecontent"><p>If you&#39;ve followed along, it is very likely that you now have a bug where <strong>nothing happens when we click <code>reset</code></strong>. What is going on?!</p>
+</div></section><section class="slide" data-pos="4-6-14">
+<span class="pos">4-6-14</span>
+<div class="slidecontent"><p>Here&#39;s a <strong>clue</strong>: use the <code>&lt;pre&gt;</code> debug trick to show <strong><code>adventure.startState</code></strong> on the screen. That object should of course never change, but, does it, perhaps? Why, and how do we prevent it?</p>
+</div></section><section class="slide" data-pos="4-6-15">
+<span class="pos">4-6-15</span>
+<div class="slidecontent"><p>Eventually we probably also want to have dead ends that doesn&#39;t mean that the player died but that he <strong>finished the adventure successfully</strong>. How would we <strong>distinguish between wins and losses</strong>?</p>
+<p>We leave that as a challenge challenge for you to ponder after the course! :)</p>
+</div></section>
+</section>
+<!--ENDSECTION6--><!--ENDCHAPTERCONTENT-->
+        
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var basehref = window.location.href.replace(/chapter\d.*?$/,'')
+
+      document.addEventListener("keydown",function(e){
+        var code = e.which || e.keyCode;
+        if (code===13){
+          window.location.href = basehref+"index.html?from="+(4-1);
+        } else if (code >= 49 && code <= 6+48) {
+          window.location.hash = "#/" + (code-48+1+1);
+        }
+        if (4 < 13) {
+          if (code===99){ // the letter C for next Chapter
+            window.location.href = basehref+"chapter"+(4+1)+".html"
+          }
+        }
+      });
+    </script>
+    <script src="mc2/scripts/head.js" type="text/javascript"></script>
+    <script src="mc2/scripts/reveal.js" type="text/javascript"></script>
+    <script src="mc2/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    showNotes: false,
+    transition: 'slide',
+    dependencies: [
+      { src: 'mc2/scripts/plugin/notes/notes.js', async: true }
+    ]
+  })
+
+    window.onload = function(){
+
+      var links = document.querySelectorAll("a.link");
+      for(var i=0;i<links.length;i++){
+        var link = links[i];
+        link.innerHTML = link.innerHTML.replace(/ /g,'&nbsp;')
+      }
+      var posElem = document.getElementById('pos')
+      function updateReference(){
+        setTimeout(function(){
+          var currentpos = document.querySelector('section.present[data-pos]')
+          if (currentpos){
+            posElem.innerHTML = currentpos.getAttribute('data-pos')
+          } else {
+            posElem.innerHTML = ''
+          }
+          if (document.querySelector('.present.chaptertitle')){
+            document.body.classList.add('atchaptertitle');
+          } else {
+            document.body.classList.remove('atchaptertitle');
+          }
+        },10)
+      }
+
+      window.addEventListener("hashchange",updateReference);
+
+      updateReference();
+    };
+
+    </script>
+    <!--STARTCOURSESPECIFICSCRIPTS--><script type="text/javascript" src="scripts/streams.js"></script><!--ENDCOURSESPECIFICSCRIPTS-->
+  </body>
+</html>

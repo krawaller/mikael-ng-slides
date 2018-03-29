@@ -1,0 +1,18 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  subgraph cluster_browser {
+    label="browser"
+    subgraph cluster_systemjs {
+      label="system js"
+      transpiler, bundler
+    }
+    subgraph cluster_angular {
+      label="angular bootstrap"
+      templateCompiler
+    }
+    run
+  }
+  source -> transpiler -> bundler -> templateCompiler -> run
+  templateCompiler [label="compile templates"]
+}

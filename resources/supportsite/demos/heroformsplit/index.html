@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script>document.write('<base href="' + document.location + '" />');</script>
+  <title>Demo</title>
+
+  <script src="../../lib/jquery.js"></script>
+  <script src="../../lib/shim.min.js"></script>
+  <script src="../../lib/zone.js"></script>
+  <script src="../../lib/typescript.js"></script>
+  <script src="../../lib/system.src.js"></script>
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+  <script src="../../lib/system.config.js"></script>
+  <script>
+      System.import('./main.ts');
+  </script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>Stolen from <a href="https://angular.io/docs/ts/latest/guide/forms.html">A2 guide</a></p></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div id='main_ts'>main.ts</div><div id='app_html'>app.html</div><div id='app_ts'>app.ts</div><div id='hero_ts'>hero.ts</div><div id='heroform_html'>heroform.html</div><div id='heroform_ts'>heroform.ts</div><div id='submission_html'>submission.html</div><div id='submission_ts'>submission.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule, Component }      <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { FormsModule }   <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-keyword">import</span> { AppComponent  } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.ts'</span>;
+<span class="hljs-keyword">import</span> { Hero }    <span class="hljs-keyword">from</span> <span class="hljs-string">'./hero.ts'</span>;
+<span class="hljs-keyword">import</span> Submission <span class="hljs-keyword">from</span> <span class="hljs-string">'./submission.ts'</span>
+<span class="hljs-keyword">import</span> Heroform <span class="hljs-keyword">from</span> <span class="hljs-string">'./heroform.ts'</span>
+
+
+<span class="hljs-meta">@NgModule</span>({
+    imports:      [ BrowserModule, FormsModule ],
+    declarations: [ AppComponent, Submission, Heroform ],
+    bootstrap:    [ AppComponent ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);</code></pre><pre id='app_html-source'><code><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"container"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"editmode"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">heroform</span> [<span class="hljs-attr">model</span>]=<span class="hljs-string">"model"</span> (<span class="hljs-attr">submit</span>)=<span class="hljs-string">"onSubmit($event)"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">heroform</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"!editmode"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">submission</span> [<span class="hljs-attr">model</span>]=<span class="hljs-string">"model"</span> (<span class="hljs-attr">edit</span>)=<span class="hljs-string">"onEdit()"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">submission</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre><pre id='app_ts-source'><code><span class="hljs-keyword">import</span> { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { Hero, powers }    <span class="hljs-keyword">from</span> <span class="hljs-string">'./hero.ts'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  templateUrl: <span class="hljs-string">'./app.html'</span>,
+  styles: [
+    <span class="hljs-string">'.ng-valid[required] { border-left: 5px solid #42A948; }'</span>,
+    <span class="hljs-string">'.ng-invalid { border-left: 5px solid #a94442; }'</span>
+  ]
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  model = <span class="hljs-keyword">new</span> Hero(<span class="hljs-number">18</span>, <span class="hljs-string">'Dr IQ'</span>, powers[<span class="hljs-number">0</span>], <span class="hljs-string">'Chuck Overstreet'</span>);
+  editmode = <span class="hljs-literal">false</span>;
+  onSubmit(hero) {
+    <span class="hljs-keyword">this</span>.editmode = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">this</span>.model=hero;
+  }
+  onEdit() {
+    <span class="hljs-keyword">this</span>.editmode = <span class="hljs-literal">true</span>;
+  }
+}
+</code></pre><pre id='hero_ts-source'><code><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> Hero {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params">
+    <span class="hljs-keyword">public</span> id: <span class="hljs-built_in">number</span>,
+    <span class="hljs-keyword">public</span> name: <span class="hljs-built_in">string</span>,
+    <span class="hljs-keyword">public</span> power: <span class="hljs-built_in">string</span>,
+    <span class="hljs-keyword">public</span> alterEgo?: <span class="hljs-built_in">string</span>
+  </span>) {  }
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> powers = [<span class="hljs-string">'Really Smart'</span>, <span class="hljs-string">'Super Flexible'</span>, <span class="hljs-string">'Super Hot'</span>, <span class="hljs-string">'Weather Changer'</span>];</code></pre><pre id='heroform_html-source'><code><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Hero Form<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"active"</span> (<span class="hljs-attr">ngSubmit</span>)=<span class="hljs-string">"onSubmit()"</span> #<span class="hljs-attr">heroForm</span>=<span class="hljs-string">"ngForm"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"form-group"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"name"</span>&gt;</span>Name<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"form-control"</span> <span class="hljs-attr">required</span>
+      [(<span class="hljs-attr">ngModel</span>)]=<span class="hljs-string">"model.name"</span>
+        <span class="hljs-attr">name</span>=<span class="hljs-string">"name"</span>  #<span class="hljs-attr">name</span>=<span class="hljs-string">"ngModel"</span> &gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> [<span class="hljs-attr">hidden</span>]=<span class="hljs-string">"name.valid || name.pristine"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"alert alert-danger"</span>&gt;</span>
+      Name is required
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"form-group"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"alterEgo"</span>&gt;</span>Alter Ego<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"form-control"</span>
+      [(<span class="hljs-attr">ngModel</span>)]=<span class="hljs-string">"model.alterEgo"</span>
+        <span class="hljs-attr">name</span>=<span class="hljs-string">"alterEgo"</span> &gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"form-group"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"power"</span>&gt;</span>Hero Power<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"form-control"</span> <span class="hljs-attr">required</span>
+      [(<span class="hljs-attr">ngModel</span>)]=<span class="hljs-string">"model.power"</span>
+        <span class="hljs-attr">name</span>=<span class="hljs-string">"power"</span> #<span class="hljs-attr">power</span>=<span class="hljs-string">"ngModel"</span> &gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">option</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let p of powers"</span> [<span class="hljs-attr">value</span>]=<span class="hljs-string">"p"</span>&gt;</span>{{p}}<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> [<span class="hljs-attr">hidden</span>]=<span class="hljs-string">"power.valid || power.pristine"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"alert alert-danger"</span>&gt;</span>
+      Power is required
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"btn btn-default"</span> [<span class="hljs-attr">disabled</span>]=<span class="hljs-string">"!heroForm.form.valid"</span>&gt;</span>Submit<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"button"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"btn btn-default"</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"newHero()"</span>&gt;</span>New Hero<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></code></pre><pre id='heroform_ts-source'><code><span class="hljs-keyword">import</span> { Component, Output, Input, EventEmitter } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { NgForm }    <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;
+<span class="hljs-keyword">import</span> { Hero, powers }    <span class="hljs-keyword">from</span> <span class="hljs-string">'./hero.ts'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'heroform'</span>,
+  templateUrl: <span class="hljs-string">'./heroform.html'</span>,
+  styles: [
+    <span class="hljs-string">'.ng-valid[required] { border-left: 5px solid #42A948; }'</span>,
+    <span class="hljs-string">'.ng-invalid { border-left: 5px solid #a94442; }'</span>
+  ]
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> Heroform {
+  <span class="hljs-meta">@Output</span>() submit = <span class="hljs-keyword">new</span> EventEmitter&lt;Hero&gt;()
+  <span class="hljs-meta">@Input</span>() model: Hero
+
+  powers: <span class="hljs-built_in">string</span>[] = powers
+
+  onSubmit() {
+    <span class="hljs-keyword">this</span>.submit.emit(<span class="hljs-keyword">this</span>.model);
+  }
+
+  <span class="hljs-comment">// Reset the form with a new hero AND restore 'pristine' class state</span>
+  <span class="hljs-comment">// by toggling 'active' flag which causes the form</span>
+  <span class="hljs-comment">// to be removed/re-added in a tick via NgIf</span>
+  <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> Workaround until NgForm has a reset method (#6822)</span>
+  active = <span class="hljs-literal">true</span>;
+  newHero() {
+    <span class="hljs-keyword">this</span>.model = <span class="hljs-keyword">new</span> Hero(<span class="hljs-number">42</span>, <span class="hljs-string">''</span>, <span class="hljs-string">''</span>);
+    <span class="hljs-keyword">this</span>.active = <span class="hljs-literal">false</span>;
+    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">this</span>.active = <span class="hljs-literal">true</span>, <span class="hljs-number">0</span>);
+  }
+}
+</code></pre><pre id='submission_html-source'><code><span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>You submitted the following:<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"row"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"col-xs-3"</span>&gt;</span>Name<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"col-xs-9  pull-left"</span>&gt;</span>{{ model.name }}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"row"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"col-xs-3"</span>&gt;</span>Alter Ego<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"col-xs-9 pull-left"</span>&gt;</span>{{ model.alterEgo }}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"row"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"col-xs-3"</span>&gt;</span>Power<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"col-xs-9 pull-left"</span>&gt;</span>{{ model.power }}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">br</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"btn btn-default"</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"onEdit()"</span>&gt;</span>Edit<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre><pre id='submission_ts-source'><code><span class="hljs-keyword">import</span> { Component,Input,Output,EventEmitter } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+
+<span class="hljs-keyword">import</span> { Hero }    <span class="hljs-keyword">from</span> <span class="hljs-string">'./hero.ts'</span>;
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'submission'</span>,
+  templateUrl: <span class="hljs-string">'./submission.html'</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> Submission {
+  <span class="hljs-meta">@Output</span>() edit = <span class="hljs-keyword">new</span> EventEmitter&lt;<span class="hljs-built_in">void</span>&gt;()
+  <span class="hljs-meta">@Input</span>() model: Hero
+  onEdit() { <span class="hljs-keyword">this</span>.edit.emit(); }
+}
+</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+  function select(id){
+    $('.sources .active').removeClass('active')
+    $('#'+id).addClass('active')
+    $('#'+id+'-source').addClass('active')
+  }
+
+  $('.sourcenav > *').click(function(e){ select(this.id) })
+
+  select( $('#app_ts').length ? 'app_ts' : $('.sourcenav > *:first-child').attr('id') )
+
+  </script>
+</body>
+
+</html>

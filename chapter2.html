@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Dependencies</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="icon" type="image/x-icon" href="mc2/images/favicon.ico">
+
+    <link rel="stylesheet" href="mc2/styles/reveal.css">
+    <link rel="stylesheet" href="mc2/styles/theme.css" id="theme">
+    <link rel="stylesheet" href="mc2/styles/code.css">
+    <!--STARTCOURSESPECIFICSTYLES--><link rel="stylesheet" href="styles/mystyles.css">
+<link rel="stylesheet" href="styles/streams.css"><!--ENDCOURSESPECIFICSTYLES-->
+  </head>
+
+  <body>
+    <div id="pos"></div>
+    <div class="reveal">
+      <div class="slides">
+        <section class="slide chaptertitle">
+          <div class="slidecontent">
+            <div class="chapternumber"> chapter 2 of 13 </div>
+            <h1>Dependencies</h1>
+            <span>What makes Angular tick</p>
+</span>
+          </div>
+        </section>
+        <section class="slide">
+
+<div class="slidecontent"><p>Taking a detour before getting into Angular for real, we will now tour the <strong>dependencies of the framework</strong>!</p>
+</div></section>
+        <!--STARTSECTIONINDEX--><section class="slide sectionlist">
+  <div class="slidecontent">
+    <h3>Sections in this chapter</h3>
+    <ol>
+    <li><a href="#/3">CoreJS</a></li>
+<li><a href="#/4">TypeScript</a></li>
+<li><a href="#/5">ZoneJS</a></li>
+<li><a href="#/6">Reflect&nbsp;metadata</a></li>
+<li><a href="#/7">RxJS</a></li>
+<li><a href="#/8">SystemJS</a></li>
+    </ol>
+  </div>
+</section>
+<!--ENDSECTIONINDEX-->
+        <!--STARTCHAPTERCONTENT--><!--STARTSECTION1--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 1/6</div>
+      <h3>CoreJS</h3>
+      <p>ES3 -&gt; ES5</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="2-1-1">
+<span class="pos">2-1-1</span>
+<div class="slidecontent"><p><a href="https://www.npmjs.com/package/core-js">CoreJS</a> is a node module that <strong>provides polyfills for ES5</strong> (and some more advanced features).</p>
+<p>This means we can <strong>write code in ES5</strong>, but be sure that <strong>ES3 browsers can run it</strong>.</p>
+</div></section><section class="slide" data-pos="2-1-2">
+<span class="pos">2-1-2</span>
+<div class="slidecontent"><p>As you can see, it is a <strong>very popular</strong> solution: </p>
+<p><img src="resources/images/corejs-numbers.png" alt="numbers"></p>
+</div></section><section class="slide" data-pos="2-1-3">
+<span class="pos">2-1-3</span>
+<div class="slidecontent"><p>CoreJS is <strong>not actually a dependency</strong> of Angular, but as your app is likely to end up as ES5 code (after having been chewed by TypeScript), CoreJS is an <strong>easy way to increase browser coverage</strong>.</p>
+</div></section><section class="slide" data-pos="2-1-4">
+<span class="pos">2-1-4</span>
+<div class="slidecontent"><p>A <strong>normal usage</strong> of CoreJS is to <strong>pull it in via NPM</strong>, and then <strong>reference the shim file</strong> in your main <code>index.html</code> file:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"../node_modules/core-js/client/shim.min.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="2-1-5">
+<span class="pos">2-1-5</span>
+<div class="slidecontent"><p>Note that since <strong>no code transpiling</strong> is taking place, <strong>only polyfilling is possible</strong>.</p>
+</div></section>
+</section>
+<!--ENDSECTION1-->
+<!--STARTSECTION2--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 2/6</div>
+      <h3>TypeScript</h3>
+      <p>Waiter, there are types in my JavaScript!</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="2-2-1">
+<span class="pos">2-2-1</span>
+<div class="slidecontent"><p><a href="http://typescriptlang.org">TypeScript</a> is <strong>language</strong> that <strong>compiles to JavaSript</strong>.</p>
+<p>Unlike other such languages like for example <a href="http://coffeescript.org">CoffeeScript</a>, it is a <strong>superset of JavaScript</strong>. This is important since it means that <strong>regular JavaScript is valid TypeScript</strong>.</p>
+</div></section><section class="slide" data-pos="2-2-2">
+<span class="pos">2-2-2</span>
+<div class="slidecontent"><p>So <strong>what does TypeScript add</strong>? Many things!</p>
+<p>Most importantly <strong>types</strong>, as the name suggests.</p>
+</div></section><section class="slide" data-pos="2-2-3">
+<span class="pos">2-2-3</span>
+<div class="slidecontent"><p>We can <strong>add type annotations to variables, parameters and functions</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">let</span> name: <span class="hljs-built_in">string</span> = <span class="hljs-string">'foo;'</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isAllowedIn</span>(<span class="hljs-params">age: <span class="hljs-built_in">number</span></span>): <span class="hljs-title">boolean</span> </span>{
+  <span class="hljs-keyword">return</span> age &gt;= <span class="hljs-number">18</span>;
+}
+</code></pre>
+<p>Now, if some other code <strong>violates these annotations</strong>, TypeScript would <strong>flag this as a problem</strong>. (During compilation, or even earlier, if your editor is TypeScript-aware.)</p>
+</div></section><section class="slide" data-pos="2-2-4">
+<span class="pos">2-2-4</span>
+<div class="slidecontent"><p>However, the <strong>real power of TypeScript</strong> is that it does <strong>static analysis</strong> of your code. So if we later typed this...</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">let</span> willHaveFun = isAllowedIn(<span class="hljs-number">16</span>);
+</code></pre>
+<p>...and hovered above <code>willHaveFun</code>, a TypeScript-aware editor would <strong>tell you that this is a boolean</strong>!</p>
+</div></section><section class="slide" data-pos="2-2-5">
+<span class="pos">2-2-5</span>
+<div class="slidecontent"><p>In other words, <strong>this example code</strong>...</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">let</span> name: <span class="hljs-built_in">string</span> = <span class="hljs-string">'foo;'</span>
+</code></pre>
+<p>...was <strong>unnecessarily complex</strong>, as <strong>this would be enough</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">let</span> name = <span class="hljs-string">'foo'</span>;
+</code></pre>
+<p>TypeScript <strong>sees from the assignment that <code>name</code> is a string</strong>, and will treat it as such.</p>
+</div></section><section class="slide" data-pos="2-2-6">
+<span class="pos">2-2-6</span>
+<div class="slidecontent"><p>In other words - simply by activating TypeScript we <strong>get a lot of power</strong>, even if we <strong>don&#39;t use any type annotations</strong>!</p>
+</div></section><section class="slide" data-pos="2-2-7">
+<span class="pos">2-2-7</span>
+<div class="slidecontent"><p>TypeScript <strong>isn&#39;t strictly a dependency</strong> of Angular.</p>
+<p>Yes, <strong>Angular is written in TypeScript</strong>, but that code has <strong>already been transpiled</strong> to regular JavaScript.</p>
+</div></section><section class="slide" data-pos="2-2-8">
+<span class="pos">2-2-8</span>
+<div class="slidecontent"><p>But since <strong>we will use TypeScript in our Angular code</strong>, TypeScript should be a <strong>devDependency</strong> of our project.</p>
+<p>Exactly how we use it <strong>depends on the build setup</strong>, or if we&#39;re using SystemJS.</p>
+</div></section><section class="slide question" data-pos="2-2-9">
+<span class="pos">2-2-9</span>
+<div class="slidecontent">
+<p>So... we don&#39;t have to use TypeScript. But <strong>what will we use it for</strong>?</p>
+</div></section><section class="slide answer" data-pos="2-2-10">
+<span class="pos">2-2-10</span>
+<div class="slidecontent">
+<p>The following:</p>
+<ul>
+<li>as an <strong>ES6 transpiler</strong></li>
+<li>a few <strong>type annotations</strong> for dependency injections (more on that later)</li>
+<li>for <strong>decorating classes</strong> as we saw earlier</li>
+<li><strong>class property initialisation</strong> which isn&#39;t possible in regular JS (yet)</li>
+</ul>
+</div></section><section class="slide" data-pos="2-2-11">
+<span class="pos">2-2-11</span>
+<div class="slidecontent"><p>In other words, our code will <strong>mostly be normal ES6</strong>, so don&#39;t be too scared! :)</p>
+</div></section><section class="slide" data-pos="2-2-12">
+<span class="pos">2-2-12</span>
+<div class="slidecontent"><p>In an <strong>optional part of the exercises</strong> we&#39;ll also be using <strong>TypeScript interfaces</strong>.</p>
+<p>They are <strong>very powerful</strong>, but we&#39;ll just use them to define <strong>object shapes</strong>. Kind of a <strong>data type</strong>!</p>
+</div></section><section class="slide" data-pos="2-2-13">
+<span class="pos">2-2-13</span>
+<div class="slidecontent"><p>It looks like this; in the <strong>interface definition</strong> we <strong>specify the expected properties</strong> for our object shape:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">interface</span> User {
+  name: <span class="hljs-built_in">string</span>,
+  age: <span class="hljs-built_in">number</span>
+}
+</code></pre>
+</div></section><section class="slide" data-pos="2-2-14">
+<span class="pos">2-2-14</span>
+<div class="slidecontent"><p>Now we can <strong>use the interface as a type</strong>...</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">let</span> me: User = { name: <span class="hljs-string">"David"</span>, age: <span class="hljs-number">37</span> };
+</code></pre>
+<p>...and <strong>TypeScript will ensure compliance</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-keyword">let</span> you: User = { name: <span class="hljs-string">"Bob"</span> }; <span class="hljs-comment">// angry red squiggly line</span>
+</code></pre>
+</div></section><section class="slide" data-pos="2-2-15">
+<span class="pos">2-2-15</span>
+<div class="slidecontent"><p>Note that <strong>interfaces are purely a development artifact</strong>, there&#39;ll be <strong>no trace of them in the generated JS code</strong>.</p>
+<p>Which means there&#39;s <strong>no performance or bloat penalty</strong> to using them, but we gain in <strong>code clarity</strong> and <strong>bug prevention</strong>!</p>
+</div></section><section class="slide" data-pos="2-2-16">
+<span class="pos">2-2-16</span>
+<div class="slidecontent"><p>There is a lot more to say about TypeScript that is outside the scope of the usage in Angular. In fact, we have a <a href="https://edument.se/education/categories/webdevelopment/typescript">whole course just about TypeScript</a>!</p>
+</div></section>
+</section>
+<!--ENDSECTION2-->
+<!--STARTSECTION3--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 3/6</div>
+      <h3>ZoneJS</h3>
+      <p>perimeter alarms</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="2-3-1">
+<span class="pos">2-3-1</span>
+<div class="slidecontent"><p><a href="https://github.com/angular/zone.js">ZoneJS</a> is an implementation of <em>zones</em> for JavaScript. A zone is...</p>
+<blockquote>
+<p>an execution context that persists across async tasks</p>
+</blockquote>
+</div></section><section class="slide question" data-pos="2-3-2">
+<span class="pos">2-3-2</span>
+<div class="slidecontent">
+<p>Wat?!</p>
+</div></section><section class="slide answer" data-pos="2-3-3">
+<span class="pos">2-3-3</span>
+<div class="slidecontent">
+<p>Ok, ok. Imagine this simple app...</p>
+<p><img src="resources/images/bottlesofbeer.png" alt=""></p>
+<p>...where clicking the button increases the count by 1.</p>
+</div></section><section class="slide" data-pos="2-3-4">
+<span class="pos">2-3-4</span>
+<div class="slidecontent"><p>Here&#39;s an <strong>implementation using React</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">let</span> Clicker = React.createClass({
+  <span class="hljs-attr">getInitialState</span>: <span class="hljs-function"><span class="hljs-params">()</span>=&gt;</span> ({<span class="hljs-attr">count</span>:<span class="hljs-number">3</span>}),
+  more() {
+    <span class="hljs-keyword">this</span>.setState({<span class="hljs-attr">count</span>:<span class="hljs-keyword">this</span>.state.count+<span class="hljs-number">1</span>})
+  },
+  render() {
+    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{this.state.count} bottles of beer on the wall<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{this.more}</span>&gt;</span>Buy more<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  }
+})
+</code></pre>
+</div></section><section class="slide" data-pos="2-3-5">
+<span class="pos">2-3-5</span>
+<div class="slidecontent"><p>The interesting part is the <strong>statement that is executed when we click the button</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">this</span>.setState({<span class="hljs-attr">count</span>:<span class="hljs-keyword">this</span>.state.count+<span class="hljs-number">1</span>})
+</code></pre>
+<p>The <strong>only way to change the state</strong> in React is to <strong>call <code>setState</code></strong>.</p>
+</div></section><section class="slide" data-pos="2-3-6">
+<span class="pos">2-3-6</span>
+<div class="slidecontent"><p>This also means that React <strong>only needs to update the UI when <code>setState</code> has been called</strong>, since that is the only time things can change!</p>
+</div></section><section class="slide" data-pos="2-3-7">
+<span class="pos">2-3-7</span>
+<div class="slidecontent"><p>Here&#39;s the <strong>same app in Angular</strong>:</p>
+<pre><code class="lang-typescript"><span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'clicker'</span>,
+  template: <span class="hljs-string">`
+    &lt;p&gt;{{count}} bottles of beer on the wall&lt;/p&gt;
+    &lt;button (click)="more()"&gt;Buy more&lt;/button&gt;
+  `</span>
+})
+<span class="hljs-keyword">class</span> Clicker {
+  count = <span class="hljs-number">3</span>
+  more() {
+    <span class="hljs-keyword">this</span>.count++
+  }
+}
+</code></pre>
+</div></section><section class="slide" data-pos="2-3-8">
+<span class="pos">2-3-8</span>
+<div class="slidecontent"><p>When the button is clicked, we <strong>simply mutate an instance property</strong> directly:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">this</span>.count++
+</code></pre>
+</div></section><section class="slide question" data-pos="2-3-9">
+<span class="pos">2-3-9</span>
+<div class="slidecontent">
+<p>But.. if there&#39;s no <code>setState</code> equivalent to piggyback on, <strong>how does Angular know when to update the UI</strong>?</p>
+</div></section><section class="slide answer" data-pos="2-3-10">
+<span class="pos">2-3-10</span>
+<div class="slidecontent">
+<p>Angular cheats by <strong>patching every function that can cause a change</strong>. Because there are only a finite set of times when this can happen, most importantly:</p>
+<ul>
+<li>DOM events</li>
+<li>Timeouts and intervals</li>
+<li>AJAX requests return</li>
+</ul>
+</div></section><section class="slide" data-pos="2-3-11">
+<span class="pos">2-3-11</span>
+<div class="slidecontent"><p>AngularJS did the patching by forcing developers to use <strong>Angular variants</strong> of things:</p>
+<ul>
+<li><strong><code>ng-click</code></strong> instead of regular <strong>click event</strong></li>
+<li><strong><code>$timeout</code></strong> service instead of regular <strong><code>setTimeout</code></strong></li>
+<li><strong><code>$http</code></strong> service instead of regular <strong><code>XMLHttpRequest</code></strong></li>
+</ul>
+</div></section><section class="slide" data-pos="2-3-12">
+<span class="pos">2-3-12</span>
+<div class="slidecontent"><p>These special Angular variants would <strong>call their native equivalents</strong>, but also <strong>wrap the UI updating</strong>.</p>
+</div></section><section class="slide" data-pos="2-3-13">
+<span class="pos">2-3-13</span>
+<div class="slidecontent"><p>In Angular, we <strong>patch the native methods directly</strong> instead.</p>
+<p>Except, it is actually <strong>ZoneJS who does the patching</strong> for us!</p>
+</div></section><section class="slide question" data-pos="2-3-14">
+<span class="pos">2-3-14</span>
+<div class="slidecontent">
+<p>Ok, so <strong>ZoneJS tells us when to look for changes</strong>, but - <strong>what&#39;s the point</strong>?</p>
+</div></section><section class="slide answer" data-pos="2-3-15">
+<span class="pos">2-3-15</span>
+<div class="slidecontent">
+<p>Only this: by hooking our UI update mechanics into all points where stuff can happen, we can <strong>allow devs to mutate state directly</strong>...</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">this</span>.count++
+</code></pre>
+<p>...instead of <strong>forcing them through a function</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">this</span>.setState({<span class="hljs-attr">count</span>:<span class="hljs-keyword">this</span>.state.count+<span class="hljs-number">1</span>})
+</code></pre>
+</div></section><section class="slide" data-pos="2-3-16">
+<span class="pos">2-3-16</span>
+<div class="slidecontent"><p>We <strong>use zone.js</strong> either by <strong>referencing it</strong> in the html file...</p>
+<pre><code><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"../node_modules/zone.js/dist/zone.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre><p>...or <strong><code>import</code>ing it</strong> in our app root:</p>
+<pre><code><span class="hljs-keyword">import</span> `zone.js`
+</code></pre></div></section>
+</section>
+<!--ENDSECTION3-->
+<!--STARTSECTION4--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 4/6</div>
+      <h3>Reflect metadata</h3>
+      <p>the story behind the story</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="2-4-1">
+<span class="pos">2-4-1</span>
+<div class="slidecontent"><p><a href="https://www.npmjs.com/package/reflect-metadata">Reflect Metadata</a> is...</p>
+<ul>
+<li>a <strong>proposal for a new <code>Reflect</code> global object</strong></li>
+<li>a <strong>sample implementation of that feature</strong></li>
+</ul>
+</div></section><section class="slide" data-pos="2-4-2">
+<span class="pos">2-4-2</span>
+<div class="slidecontent"><p>The <code>Reflect</code> object houses functionality that allows you to <strong>read / write metadata</strong> to / from data structures.</p>
+</div></section><section class="slide" data-pos="2-4-3">
+<span class="pos">2-4-3</span>
+<div class="slidecontent"><p>Now, the <strong>decorating itself</strong> and the weird @ syntax that it uses is <strong>not part of <code>Reflect</code></strong>. <code>Reflect</code> is merely a <strong>convenient tool</strong> to use in that process.</p>
+</div></section><section class="slide" data-pos="2-4-4">
+<span class="pos">2-4-4</span>
+<div class="slidecontent"><p><strong>Decorators are a separate proposal</strong>, as well as a <strong>competing implementation by TypeScript</strong>.</p>
+<p>Suffice to say that the situation is a bit of a mess.</p>
+</div></section><section class="slide" data-pos="2-4-5">
+<span class="pos">2-4-5</span>
+<div class="slidecontent"><p>For our use case all you need to know about <code>Reflect</code> is that <strong>Angular relies on it being available</strong>, and so we must make sure that it is by <strong>referencing it</strong> in our html file...</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"../node_modules/reflect-metadata/Reflect.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+<p>...or <strong><code>import</code> it</strong> into our codebase:</p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> <span class="hljs-string">'reflect-metadata'</span>
+</code></pre>
+</div></section><section class="slide" data-pos="2-4-6">
+<span class="pos">2-4-6</span>
+<div class="slidecontent"><p>In the future, when the native <code>Reflect</code> object stabilises, the plan is to do <strong>without Reflect metadata</strong>. But, we&#39;re not quite there yet.</p>
+</div></section>
+</section>
+<!--ENDSECTION4-->
+<!--STARTSECTION5--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 5/6</div>
+      <h3>RxJS</h3>
+      <p>Everything is a stream</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="2-5-1">
+<span class="pos">2-5-1</span>
+<div class="slidecontent"><p>Like ZoneJS, RxJS is a <strong>PeerDependency</strong>, which again means that it is up to you to <strong>make sure it is available</strong>.</p>
+</div></section><section class="slide" data-pos="2-5-2">
+<span class="pos">2-5-2</span>
+<div class="slidecontent"><p>However, unlike ZoneJS, you <strong>don&#39;t have to bring it into your project</strong>.</p>
+<p>Just make sure it <strong>sits in <code>node_modules</code></strong>, and <strong>Angular will reference it</strong> under the hood as needed.</p>
+</div></section><section class="slide" data-pos="2-5-3">
+<span class="pos">2-5-3</span>
+<div class="slidecontent"><p>So what does it do? RxJS is a <strong>stream library</strong>. What are those? They are frequently described as</p>
+<blockquote>
+<p>promises on steroids</p>
+</blockquote>
+<p>In other words, they are a <strong>tool for working with asynchronicity</strong>!</p>
+</div></section><section class="slide" data-pos="2-5-4">
+<span class="pos">2-5-4</span>
+<div class="slidecontent"><p>Here are some <strong>example streams</strong>:</p>
+<div id="stream_once"></div>
+
+<div id="stream_secs"></div>
+
+<div id="stream_tick"></div>
+
+<div id="stream_source"></div>
+
+<div id="stream_filter"></div></div></section><section class="slide" data-pos="2-5-5">
+<span class="pos">2-5-5</span>
+<div class="slidecontent"><p>This was fun! Here&#39;s <strong>a few more</strong>:</p>
+<div id="stream_click"></div>
+
+<div id="stream_speed"></div>
+
+<div id="stream_total"></div>
+
+<div id="stream_ping"></div>
+
+<div id="stream_pong"></div></div></section><section class="slide" data-pos="2-5-6">
+<span class="pos">2-5-6</span>
+<div class="slidecontent"><p>To give you a sense of the <strong>size of RxJS</strong> - remember the <strong>super simple clicker example</strong> from when we talked about zones?</p>
+<p><img src="resources/images/bottlesofbeer.png" alt=""></p>
+</div></section><section class="slide" data-pos="2-5-7">
+<span class="pos">2-5-7</span>
+<div class="slidecontent"><p>Here&#39;s an <strong>implementation written with CycleJS</strong>:</p>
+<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Clicker</span>(<span class="hljs-params">{DOM}</span>)</span>{
+  <span class="hljs-keyword">const</span> click$ = DOM.select(<span class="hljs-string">'button'</span>).events(<span class="hljs-string">'click'</span>)
+  <span class="hljs-keyword">const</span> count$ = click$.mapTo(<span class="hljs-number">1</span>).startWith(<span class="hljs-number">3</span>).scan(
+    <span class="hljs-function">(<span class="hljs-params">acc,seed</span>)=&gt;</span>(acc||<span class="hljs-number">0</span>)+seed
+  )
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">DOM</span>: count$.map(<span class="hljs-function"><span class="hljs-params">count</span>=&gt;</span> div([
+      div([count+ <span class="hljs-string">' bottles of beer on the wall'</span>]),
+      button([<span class="hljs-string">'Buy more'</span>])
+    ]))
+  };
+}
+</code></pre>
+</div></section><section class="slide" data-pos="2-5-8">
+<span class="pos">2-5-8</span>
+<div class="slidecontent"><p>CycleJS is a very different beast that is <strong>solely based on streams</strong> which makes for <strong>a very different programming experience</strong>, as you just saw!</p>
+<p>But, the details of this are a <strong>story for another time</strong>.</p>
+</div></section><section class="slide" data-pos="2-5-9">
+<span class="pos">2-5-9</span>
+<div class="slidecontent"><p>However, in CycleJS you can <strong>choose which stream library to use</strong>.</p>
+<p>Here&#39;s a <strong>size comparison</strong> for CycleJS clicker apps between <strong><code>rxjs</code></strong> and another lib called <strong><code>xstream</code></strong>:</p>
+<p><img src="resources/images/streamsizediffs.png" alt=""></p>
+</div></section><section class="slide" data-pos="2-5-10">
+<span class="pos">2-5-10</span>
+<div class="slidecontent"><p>As you noticed, <strong><code>rxjs</code> is a beast</strong>. And as streams aren&#39;t central to Angular, there&#39;s been some <strong>critisism</strong> that rxjs needlessly <strong>bloats the size of Angular apps</strong>.</p>
+</div></section><section class="slide" data-pos="2-5-11">
+<span class="pos">2-5-11</span>
+<div class="slidecontent"><p>But there are also those who <strong>appreciated the opportunity</strong> to use the precense of RxJS in Angular as an excuse to <strong>learn streams</strong> by finding a <strong>use in their apps</strong> for it!</p>
+</div></section>
+</section>
+<!--ENDSECTION5-->
+<!--STARTSECTION6--><section>
+  <section class="slide sectiontitle">
+    <div class="slidecontent">
+      <div class='sectioncount'>Section 6/6</div>
+      <h3>SystemJS</h3>
+      <p>on-demand loader</p>
+</p>
+    </div>
+  </section>
+  <section class="slide" data-pos="2-6-1">
+<span class="pos">2-6-1</span>
+<div class="slidecontent"><p><a href="https://github.com/systemjs/systemjs">SystemJS</a> is a</p>
+<blockquote>
+<p>universal dynamic module loader - loads ES6 modules, AMD, CommonJS and global scripts in the browser and NodeJS</p>
+</blockquote>
+</div></section><section class="slide" data-pos="2-6-2">
+<span class="pos">2-6-2</span>
+<div class="slidecontent"><p>This means that if your code is modularised into files using any of those formats, <strong>SystemJS</strong> will let you <strong>run that code in the browser</strong>.</p>
+</div></section><section class="slide" data-pos="2-6-3">
+<span class="pos">2-6-3</span>
+<div class="slidecontent"><p>If your code is using <strong>modern features</strong> that need to be dumbed down for the browser, SystemJS will <strong>need a transpiler</strong>.</p>
+<p>There are therefore plugins to use <strong>Babel</strong>, <strong>Traceur</strong> or <strong>TypeScript</strong>.</p>
+</div></section><section class="slide" data-pos="2-6-4">
+<span class="pos">2-6-4</span>
+<div class="slidecontent"><p>You use SystemJS by <strong>including is as a script tag</strong> in your html file:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"node_modules/systemjs/dist/system.src.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+<p>This will create the <code>System</code> global object.</p>
+</div></section><section class="slide" data-pos="2-6-5">
+<span class="pos">2-6-5</span>
+<div class="slidecontent"><p>You will then likely need to do some <strong>configuring</strong>, for example giving the path to the <code>node_modules</code> directory.</p>
+<pre><code class="lang-javascript">System.config(myConfigObj);
+</code></pre>
+<p>This is traditionally done in a <strong>separate config file</strong>:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"systemjs.config.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+</div></section><section class="slide" data-pos="2-6-6">
+<span class="pos">2-6-6</span>
+<div class="slidecontent"><p>Now you can <strong>start your application</strong> by <code>import</code>ing the module containing the starting point:</p>
+<pre><code>System.<span class="hljs-keyword">import</span>(<span class="hljs-string">'app.js'</span>);
+</code></pre></div></section><section class="slide" data-pos="2-6-7">
+<span class="pos">2-6-7</span>
+<div class="slidecontent"><p>Since SystemJS will be loading the non-starting files on the fly as they are needed, it <strong>works best if you load your html file with a web server</strong>.</p>
+<p>Otherwise you risk being hampered by disallowed cross origin HTTP requests.</p>
+</div></section><section class="slide" data-pos="2-6-8">
+<span class="pos">2-6-8</span>
+<div class="slidecontent"><p>So in essence, SystemJS is a way to do <strong>transpiling and bundling in the browser</strong>.</p>
+<p>This is useful for <strong>quick prototyping and experimenting</strong> as it means we don&#39;t need webpack/browserify or something similar, but for <strong>production it is recommended that you serve a precompiled bundle</strong>.</p>
+</div></section><section class="slide question" data-pos="2-6-9">
+<span class="pos">2-6-9</span>
+<div class="slidecontent">
+<p>What then is the <strong>connection to Angular</strong>?</p>
+</div></section><section class="slide answer" data-pos="2-6-10">
+<span class="pos">2-6-10</span>
+<div class="slidecontent">
+<p><strong>None at all</strong>! Except that they <strong>use SystemJS for their official <a href="https://angular.io/docs/ts/latest/quickstart.html">Quickstart</a></strong></p>
+<p>This is likely also the reason that it <strong>keeps popping up in 3rd party articles</strong> related to Angular.</p>
+</div></section>
+</section>
+<!--ENDSECTION6--><!--ENDCHAPTERCONTENT-->
+        
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var basehref = window.location.href.replace(/chapter\d.*?$/,'')
+
+      document.addEventListener("keydown",function(e){
+        var code = e.which || e.keyCode;
+        if (code===13){
+          window.location.href = basehref+"index.html?from="+(2-1);
+        } else if (code >= 49 && code <= 6+48) {
+          window.location.hash = "#/" + (code-48+1+1);
+        }
+        if (2 < 13) {
+          if (code===99){ // the letter C for next Chapter
+            window.location.href = basehref+"chapter"+(2+1)+".html"
+          }
+        }
+      });
+    </script>
+    <script src="mc2/scripts/head.js" type="text/javascript"></script>
+    <script src="mc2/scripts/reveal.js" type="text/javascript"></script>
+    <script src="mc2/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    showNotes: false,
+    transition: 'slide',
+    dependencies: [
+      { src: 'mc2/scripts/plugin/notes/notes.js', async: true }
+    ]
+  })
+
+    window.onload = function(){
+
+      var links = document.querySelectorAll("a.link");
+      for(var i=0;i<links.length;i++){
+        var link = links[i];
+        link.innerHTML = link.innerHTML.replace(/ /g,'&nbsp;')
+      }
+      var posElem = document.getElementById('pos')
+      function updateReference(){
+        setTimeout(function(){
+          var currentpos = document.querySelector('section.present[data-pos]')
+          if (currentpos){
+            posElem.innerHTML = currentpos.getAttribute('data-pos')
+          } else {
+            posElem.innerHTML = ''
+          }
+          if (document.querySelector('.present.chaptertitle')){
+            document.body.classList.add('atchaptertitle');
+          } else {
+            document.body.classList.remove('atchaptertitle');
+          }
+        },10)
+      }
+
+      window.addEventListener("hashchange",updateReference);
+
+      updateReference();
+    };
+
+    </script>
+    <!--STARTCOURSESPECIFICSCRIPTS--><script type="text/javascript" src="scripts/streams.js"></script><!--ENDCOURSESPECIFICSCRIPTS-->
+  </body>
+</html>

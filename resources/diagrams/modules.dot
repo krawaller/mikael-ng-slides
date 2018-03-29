@@ -1,0 +1,16 @@
+digraph {
+  rankdir = TD
+  bgcolor = transparent
+
+  Module1, Module2, RootModule [shape=box]
+
+  Module1 -> CompA 
+  Module1 -> CompB
+  
+  Module2 -> CompC
+
+  RootModule -> RootComp
+
+  RootModule -> Module1 [constraint=none,color=transparent]
+  RootModule -> Module2 [constraint=none,color=transparent]
+}

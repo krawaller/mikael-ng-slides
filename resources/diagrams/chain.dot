@@ -1,0 +1,6 @@
+digraph {
+  rankdir = LR
+  bgcolor = transparent
+  source -> transpiler -> bundler -> templateCompiler -> run
+  templateCompiler [label="compile templates"]
+}
